@@ -32,8 +32,8 @@ const Footer = () => {
                     <div className="flex items-center gap-3 mb-4">
                         <Image src="/ngf-logo.png" alt="NGF Logo" width={100} height={100} loading="lazy" />
                         <div>
-                            <p className="text-xs font-bold text-white leading-tight font-josefin">Nigeria Governors' Forum</p>
-                            <p className="text-sm text-[#5DCAA5] font-bubblegum">Public Finance Database</p>
+                            <p className="text-xs font-bold text-white leading-tight">Nigeria Governors' Forum</p>
+                            <p className="text-sm text-[#5DCAA5]">Public Finance Database</p>
                         </div>
                     </div>
                     <p className="text-sm text-[#7aad96] leading-relaxed">

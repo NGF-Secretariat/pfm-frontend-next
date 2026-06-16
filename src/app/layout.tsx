@@ -45,7 +45,7 @@ export default function RootLayout({
   `}>
       <body>
         <Topbar />
-        <main className="font-josefin min-h-screen">
+        <main className="font-geistSans min-h-screen">
           {children}
         </main>
         <Footer />

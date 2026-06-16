@@ -30,6 +30,8 @@ export interface NigeriaStatesChoroplethProps {
   height?: number;
   defaultFill?: string;
   colorScale?: (value: number) => string;
+  /** Formats tooltip numeric value (default: rounded integer). */
+  formatValue?: (value: number) => string;
 }
 
 export function NigeriaStatesChoropleth({
@@ -45,6 +47,7 @@ export function NigeriaStatesChoropleth({
   showLabels = false,
   defaultFill = "#e5e7eb",
   colorScale,
+  formatValue,
 }: NigeriaStatesChoroplethProps) {
   const reactId = useId();
   const filterId = `ng-states-shadow-${reactId.replace(/[^a-zA-Z0-9_-]/g, "")}`;
@@ -230,7 +233,7 @@ export function NigeriaStatesChoropleth({
 
       {tip ? (
         <div
-          className="pointer-events-none absolute z-20 min-w-[200px] -translate-x-1/2 -translate-y-full rounded-xl border border-border/60 bg-popover/95 p-3 shadow-xl backdrop-blur"
+          className="pointer-events-none absolute z-20 min-w-50 -translate-x-1/2 -translate-y-full rounded-xl border border-border/60 bg-popover/95 p-3 shadow-xl backdrop-blur"
           style={{ left: tip.x, top: tip.y - 8 }}
         >
           <div className="mb-1 flex items-baseline justify-between gap-2">
@@ -239,7 +242,7 @@ export function NigeriaStatesChoropleth({
           <div className="flex items-end justify-between">
             <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{valueLabel}</div>
             <div className="font-display text-base font-semibold leading-none num">
-              {Math.round(tip.value)}
+              {formatValue ? formatValue(tip.value) : Math.round(tip.value)}
             </div>
           </div>
         </div>

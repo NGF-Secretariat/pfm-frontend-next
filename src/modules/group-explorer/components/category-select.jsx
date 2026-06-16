@@ -15,7 +15,7 @@ const CategorySelect = ({ value, onChange, type }) => {
     value.forEach((item) => {
       result.push(item?.split("_").join(" ").toUpperCase());
     });
-    return result?.filter((item) => item !== "SELECT ALL CATEGORIES");
+    return result?.filter((item) => item !== "SELECT ALL CATEGORIES").join(", ");
   };
 
   const CATEGORIES = type === "pi" ? BUDGET_CATEGORIES__PI : BUDGET_CATEGORIES;
@@ -50,8 +50,10 @@ const CategorySelect = ({ value, onChange, type }) => {
         anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
         PaperProps={{
           style: {
-            minWidth: isMenu ? isMenu.clientWidth : undefined,
-            maxWidth: 400,
+            minWidth: isMenu ? Math.max(isMenu.clientWidth, 350) : undefined,
+            maxWidth: 550,
+            maxHeight: 450,
+            overflowY: "auto",
           },
         }}
       >

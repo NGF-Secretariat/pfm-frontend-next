@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -11,8 +11,16 @@ export default function Topbar() {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [showItems, setShowItems] = useState(false);
 
-  const showItems = true;
+  useEffect(() => {
+    const checkAuth = () => {
+      setShowItems(localStorage.getItem("isLoggedIn") === "true");
+    };
+    checkAuth(); // Initial check
+    window.addEventListener("authStateChanged", checkAuth);
+    return () => window.removeEventListener("authStateChanged", checkAuth);
+  }, []);
 
   const navItems = [
     { name: "Home", path: "/", show: true },
@@ -29,9 +37,9 @@ export default function Topbar() {
     { name: "Blog Post", path: "/blog-post", show: true },
     { name: "Resources", path: "https://ngfrepository.org.ng:8443/handle/123456789/5632", show: true },
     { name: "Contact Us", path: "/contact-us", show: true },
-    // { name: "Upload Data", path: "/upload", show: showItems },
-    // { name: "Analytics", path: "/analytics", show: showItems },
-    // { name: "Settings", path: "/settings", show: showItems },
+    { name: "Messages", path: "/contact-us/submissions", show: showItems },
+    { name: "Upload Data", path: "/upload", show: showItems },
+    { name: "Settings", path: "/settings", show: showItems },
   ];
 
   return (

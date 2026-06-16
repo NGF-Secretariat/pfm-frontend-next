@@ -3,6 +3,25 @@ import httpService from "./httpService";
 import * as XLSX from "xlsx/xlsx.mjs";
 
 class BudgetService {
+  getUploadedSheets() {
+    return httpService.get("/budget/uploaded-sheets");
+  }
+
+  getDistinctYears() {
+    return httpService.get("/budget/distinct-years");
+  }
+
+  getMapSnapshot(query) {
+    const params = {};
+    if (query?.year) params.year = query.year;
+    if (query?.type) params.type = query.type;
+    return httpService.get("/budget/map-snapshot", { params });
+  }
+
+  getTimeSeries() {
+    return httpService.get("/budget/time-series");
+  }
+
   get(query) {
     let states = "";
     const params = {};
@@ -34,7 +53,14 @@ class BudgetService {
         throw new Error("No results found");
       } else if (
         ["original", "actual", "revised"].includes(type) &&
-        !data?.data?.result[0][0]?.revenue_by_economuc?.year
+        !data?.data?.result?.length
+      ) {
+        toast.error("No results found");
+        throw new Error("No results found");
+      } else if (
+        ["original", "actual", "revised"].includes(type) &&
+        !data?.data?.result[0]?.revenue_by_economuc &&
+        !data?.data?.result[0]?.[0]?.revenue_by_economuc
       ) {
         toast.error("No results found");
         throw new Error("No results found");
@@ -42,36 +68,37 @@ class BudgetService {
       const budgets =
         type === "pi"
           ? data?.data?.result?.map((item) => {
+            const keys = Object.keys(item);
+            const data = {};
+            for (let key of keys) {
+              const isExist = Array.isArray(item[key])
+                ? item[key][0]
+                : item[key];
+              if (isExist) data[key] = isExist;
+            }
+            return data;
+          })
+          : data?.data?.result
+            ?.map((item) => {
+              if (Array.isArray(item)) return item[0] ?? null;
+              if (item?.revenue_by_economuc) return item;
+              return null;
+            })
+            .filter((item) => !!item)
+            .map((item) => {
+              const data = {
+                revenue_by_economic: item?.revenue_by_economuc,
+              };
               const keys = Object.keys(item);
-              const data = {};
               for (let key of keys) {
                 const isExist = Array.isArray(item[key])
                   ? item[key][0]
                   : item[key];
                 if (isExist) data[key] = isExist;
               }
+              delete data["revenue_by_economuc"];
               return data;
-            })
-          : data?.data?.result
-              ?.map((item) => {
-                if (item?.length) return item[0];
-                return null;
-              })
-              .filter((item) => !!item)
-              .map((item) => {
-                const data = {
-                  revenue_by_economic: item?.revenue_by_economuc,
-                };
-                const keys = Object.keys(item);
-                for (let key of keys) {
-                  const isExist = Array.isArray(item[key])
-                    ? item[key][0]
-                    : item[key];
-                  if (isExist) data[key] = isExist;
-                }
-                delete data["revenue_by_economuc"];
-                return data;
-              });
+            });
 
       if (type === "pi") {
         states = budgets?.map((item) => {
@@ -281,6 +308,34 @@ class BudgetService {
       id += characters[randomIndex];
     }
     return id;
+  }
+
+  mapdata() {
+    return httpService.get('/landing-page/map-budget');
+  }
+
+  timeSeriesData() {
+    return httpService.get('/landing-page/expenditure-revenue-timeseries');
+  }
+
+  zonalBreakdown() {
+    return httpService.get('/landing-page/zonal-breakdown');
+  }
+
+  distributionGraph() {
+    return httpService.get('/landing-page/distribution-graph');
+  }
+
+  subscribe(email) {
+    return httpService.post('/landing-page/subscribe', { email });
+  }
+
+  getAllStateProfiles() {
+    return httpService.get('/state-profile');
+  }
+
+  getStateProfileBySlug(slug) {
+    return httpService.get(`/state-profile/${slug}`);
   }
 }
 

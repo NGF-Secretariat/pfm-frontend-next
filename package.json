@@ -11,6 +11,7 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "@mdxeditor/editor": "^4.0.3",
     "@mui/icons-material": "^9.0.1",
     "@mui/material": "^9.0.1",
     "@tailwindcss/postcss": "^4.3.0",
@@ -23,8 +24,10 @@
     "next": "16.2.6",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "react-markdown": "^10.1.0",
     "react-to-print": "^3.3.0",
     "react-toastify": "^11.1.0",
+    "remark-gfm": "^4.0.1",
     "tailwind-merge": "^2.6.1",
     "xlsx": "^0.18.5"
   },

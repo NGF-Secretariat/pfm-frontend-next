@@ -2,81 +2,48 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { CalendarDays, ArrowLeft } from "lucide-react";
-
-const blogData: any = {
-    "digitalising-revenue": {
-        title:
-            "Digitalising Revenue Administration: Lessons for Nigeria.",
-        image: "/blogs/blog-1.jpg",
-        date: "April 29, 2026",
-        content: `
-      Digital transformation in revenue administration remains one of the
-      most important reforms for developing economies.
-
-      Nigeria continues to explore ways to modernize tax collection,
-      reduce leakages, and improve transparency across public finance systems.
-
-      The transition toward digital revenue systems improves accountability,
-      expands the tax base, and reduces inefficiencies associated with
-      manual processes.
-
-      However, challenges including infrastructure gaps, limited digital
-      literacy, and institutional resistance continue to slow implementation.
-    `,
-    },
-
-    "iran-war-oil": {
-        title:
-            "The Iran War: Impact of Rising Crude Oil Prices on Nigeria’s Mineral Revenue",
-        image: "/blogs/blog-2.jpg",
-        date: "April 9, 2026",
-        content: `
-      Rising crude oil prices have significant implications for Nigeria’s
-      mineral revenue and fiscal projections.
-
-      Oil-exporting nations often experience short-term revenue gains
-      during geopolitical crises, but long-term economic stability
-      depends on diversification and prudent fiscal management.
-    `,
-    },
-
-    "digital-tax": {
-        title:
-            "How digital tax reforms can transform Nigeria’s revenue challenges into fiscal successes",
-        image: "/blogs/blog-3.jpg",
-        date: "March 18, 2026",
-        content: `
-      Digital taxation has become increasingly relevant as governments
-      seek sustainable revenue sources in the digital economy.
-
-      Nigeria’s fiscal authorities are exploring reforms that can
-      improve compliance while supporting innovation and economic growth.
-    `,
-    },
-
-    "pfm-africa": {
-        title:
-            "Digital PFM in Action: Building Resilient and Inclusive Fiscal Systems for African Governments",
-        image: "/blogs/blog-4.jpg",
-        date: "March 18, 2026",
-        content: `
-      Across Africa, governments are adopting digital public financial
-      management systems to improve transparency, resilience,
-      and service delivery.
-
-      These reforms support evidence-based budgeting,
-      fiscal sustainability, and citizen engagement.
-    `,
-    },
-};
+import { CalendarDays, ArrowLeft, Loader2, Edit } from "lucide-react";
+import { useState, useEffect, use } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import blogService from "../../../service/blogService";
 
 export default function BlogDetailsPage({
     params,
 }: {
-    params: { slug: string };
+    params: Promise<{ slug: string }>;
 }) {
-    const blog = blogData[params.slug];
+    // Next.js 16 requires unwrapping params with use() if they are async
+    const { slug } = use(params);
+    const [blog, setBlog] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        let isMounted = true;
+        async function fetchBlog() {
+            try {
+                const res = await blogService.getBlogBySlug(slug);
+                if (isMounted && res?.data?.success) {
+                    setBlog(res.data.data);
+                }
+            } catch (err) {
+                console.error("Failed to fetch blog:", err);
+            } finally {
+                if (isMounted) setLoading(false);
+            }
+        }
+        fetchBlog();
+        return () => { isMounted = false; };
+    }, [slug]);
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center bg-[#f8faf9]">
+                <Loader2 className="w-10 h-10 text-[#1D9E75] animate-spin mb-4" />
+                <p className="text-gray-500 font-medium">Loading blog post...</p>
+            </div>
+        );
+    }
 
     if (!blog) {
         return (
@@ -92,26 +59,42 @@ export default function BlogDetailsPage({
         <section className="bg-[#f8faf9] min-h-screen py-12 px-4 sm:px-6 lg:px-10">
             <div className="max-w-5xl mx-auto">
 
-                {/* Back */}
-                <Link
-                    href="/blog-post"
-                    className="
-            inline-flex items-center gap-2
-            text-[#012c14] mb-8
-            hover:gap-4 transition-all
-          "
-                >
-                    <ArrowLeft size={18} />
-                    Back to Blog
-                </Link>
+                <div className="flex justify-between items-center mb-8">
+                    {/* Back */}
+                    <Link
+                        href="/blog-post"
+                        className="
+                            inline-flex items-center gap-2
+                            text-[#012c14]
+                            hover:gap-4 transition-all
+                        "
+                    >
+                        <ArrowLeft size={18} />
+                        Back to Blog
+                    </Link>
+
+                    {/* Edit */}
+                    {/* <Link
+                        href={`/blog-post/${blog.slug}/edit`}
+                        className="
+                            inline-flex items-center gap-2
+                            text-[#016630] font-semibold bg-green-50
+                            px-4 py-2 rounded-full hover:bg-green-100 transition-colors
+                        "
+                    >
+                        <Edit size={16} />
+                        Edit Post
+                    </Link> */}
+                </div>
 
                 {/* Hero Image */}
                 <div className="overflow-hidden rounded-3xl shadow-2xl mb-10">
-                    <Image
+                    <img
                         src={blog.image}
                         alt={blog.title}
-                        width={1400}
-                        height={700}
+                        onError={(e: any) => {
+                            e.currentTarget.src = "/ngf-logo.png";
+                        }}
                         className="w-full h-[250px] sm:h-[400px] lg:h-[500px] object-cover"
                     />
                 </div>
@@ -125,10 +108,10 @@ export default function BlogDetailsPage({
                 {/* Title */}
                 <h1
                     className="
-            text-3xl sm:text-5xl
-            font-bold text-[#012c14]
-            leading-tight mb-8
-          "
+                        text-3xl sm:text-5xl
+                        font-bold text-[#012c14]
+                        leading-tight mb-8
+                    "
                 >
                     {blog.title}
                 </h1>
@@ -136,17 +119,17 @@ export default function BlogDetailsPage({
                 {/* Content */}
                 <article
                     className="
-            prose prose-lg max-w-none
-            prose-headings:text-[#012c14]
-            prose-p:text-gray-700
-            prose-p:leading-8
-          "
+                        prose prose-lg max-w-none
+                        prose-headings:text-[#012c14]
+                        prose-p:text-gray-700
+                        prose-p:leading-8
+                        prose-a:text-[#016630] prose-a:no-underline hover:prose-a:underline
+                        prose-li:text-gray-700
+                    "
                 >
-                    {blog.content.split("\n").map((paragraph: string, index: number) => (
-                        paragraph.trim() ? (
-                            <p key={index}>{paragraph}</p>
-                        ) : null
-                    ))}
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {blog.content}
+                    </ReactMarkdown>
                 </article>
             </div>
         </section>

@@ -1,289 +1,9 @@
-// "use client";
-
-// import { useState } from "react";
-
-// const GEO_ZONES = [
-//     {
-//         name: "South West",
-//         color: "#4A6FA5",
-//         states: [
-//             { name: "Lagos", share: 51.0, color: "#3B5998" },
-//             { name: "Ogun", share: 16.0, color: "#9B59B6" },
-//             { name: "Oyo", share: 10.4, color: "#7F8C8D" },
-//             { name: "Osun", share: 6.5, color: "#27AE60" },
-//             { name: "Ondo", share: 10.6, color: "#E67E22" },
-//             { name: "Ekiti", share: 5.7, color: "#3498DB" },
-//         ],
-//     },
-//     {
-//         name: "North West",
-//         color: "#1D9E75",
-//         states: [
-//             { name: "Jigawa", share: 15.3, color: "#1ABC9C" },
-//             { name: "Kano", share: 15.8, color: "#3B5998" },
-//             { name: "Katsina", share: 15.2, color: "#E74C3C" },
-//             { name: "Kaduna", share: 17.4, color: "#E67E22" },
-//             { name: "Kebbi", share: 12.7, color: "#7F8C8D" },
-//             { name: "Sokoto", share: 11.6, color: "#9B59B6" },
-//             { name: "Zamfara", share: 12.0, color: "#2ECC71" },
-//         ],
-//     },
-//     {
-//         name: "South South",
-//         color: "#D4537E",
-//         states: [
-//             { name: "Akwa Ibom", share: 19.0, color: "#3B5998" },
-//             { name: "Bayelsa", share: 13.9, color: "#9B59B6" },
-//             { name: "Cross River", share: 10.7, color: "#2ECC71" },
-//             { name: "Delta", share: 19.5, color: "#E67E22" },
-//             { name: "Edo", share: 13.4, color: "#7F8C8D" },
-//             { name: "Rivers", share: 23.4, color: "#9B59B6" },
-//         ],
-//     },
-//     {
-//         name: "North Central",
-//         color: "#BA7517",
-//         states: [
-//             { name: "Benue", share: 13.2, color: "#3498DB" },
-//             { name: "Kogi", share: 14.0, color: "#E74C3C" },
-//             { name: "Kwara", share: 14.1, color: "#27AE60" },
-//             { name: "Nasarawa", share: 9.2, color: "#E67E22" },
-//             { name: "Niger", share: 37.5, color: "#3B5998" },
-//             { name: "Plateau", share: 12.0, color: "#9B59B6" },
-//         ],
-//     },
-//     {
-//         name: "North East",
-//         color: "#D85A30",
-//         states: [
-//             { name: "Adamawa", share: 18.1, color: "#3498DB" },
-//             { name: "Bauchi", share: 17.4, color: "#3B5998" },
-//             { name: "Borno", share: 22.9, color: "#7F8C8D" },
-//             { name: "Gombe", share: 13.7, color: "#E67E22" },
-//             { name: "Taraba", share: 16.0, color: "#27AE60" },
-//             { name: "Yobe", share: 11.9, color: "#9B59B6" },
-//         ],
-//     },
-//     {
-//         name: "South East",
-//         color: "#7F77DD",
-//         states: [
-//             { name: "Abia", share: 21.0, color: "#3498DB" },
-//             { name: "Anambra", share: 17.0, color: "#9B59B6" },
-//             { name: "Ebonyi", share: 12.4, color: "#E67E22" },
-//             { name: "Enugu", share: 27.1, color: "#E74C3C" },
-//             { name: "Imo", share: 22.5, color: "#7F8C8D" },
-//         ],
-//     },
-// ];
-
-// function PieChart({ zone }) {
-//     const [hovered, setHovered] = useState(null);
-//     const size = 200;
-//     const cx = size / 2;
-//     const cy = size / 2;
-//     const R = 80;
-
-//     let cum = 0;
-//     const slices = zone.states.map((s) => {
-//         const start = cum;
-//         cum += s.share;
-//         return { ...s, start, end: cum };
-//     });
-//     const total = cum;
-
-//     function polar(pct, radius) {
-//         const angle = (pct / total) * 2 * Math.PI - Math.PI / 2;
-//         return [cx + radius * Math.cos(angle), cy + radius * Math.sin(angle)];
-//     }
-
-//     function slicePath(s) {
-//         const [sx, sy] = polar(s.start, R);
-//         const [ex, ey] = polar(s.end, R);
-//         const large = (s.end - s.start) / total > 0.5 ? 1 : 0;
-//         return `M ${cx} ${cy} L ${sx} ${sy} A ${R} ${R} 0 ${large} 1 ${ex} ${ey} Z`;
-//     }
-
-//     function labelPos(s) {
-//         const mid = (s.start + s.end) / 2;
-//         const [lx, ly] = polar(mid, R * 1.35);
-//         return [lx, ly];
-//     }
-
-//     function linePoints(s) {
-//         const mid = (s.start + s.end) / 2;
-//         const [ix, iy] = polar(mid, R * 0.85);
-//         const [ox, oy] = polar(mid, R * 1.15);
-//         const [lx, ly] = polar(mid, R * 1.35);
-//         const isRight = lx > cx;
-//         const endX = isRight ? lx + 18 : lx - 18;
-//         return { ix, iy, ox, oy, lx, ly, endX, isRight };
-//     }
-
-//     return (
-//         <div className="flex flex-col items-center">
-//             <h3 className="text-[15px] font-bold text-[#111] mb-1 text-center">{zone.name}</h3>
-//             <div className="relative">
-//                 <svg width={size + 140} height={size + 80} viewBox={`-70 -40 ${size + 140} ${size + 80}`}>
-//                     {slices.map((s, i) => (
-//                         <g key={s.name}>
-//                             <path
-//                                 d={slicePath(s)}
-//                                 fill={s.color}
-//                                 stroke="white"
-//                                 strokeWidth="1.5"
-//                                 opacity={hovered === null || hovered === i ? 1 : 0.5}
-//                                 className="cursor-pointer transition-opacity duration-150"
-//                                 onMouseEnter={() => setHovered(i)}
-//                                 onMouseLeave={() => setHovered(null)}
-//                                 transform={hovered === i ? (() => {
-//                                     const mid = (s.start + s.end) / 2;
-//                                     const angle = (mid / total) * 2 * Math.PI - Math.PI / 2;
-//                                     return `translate(${Math.cos(angle) * 4}, ${Math.sin(angle) * 4})`;
-//                                 })() : ""}
-//                             />
-//                             {(() => {
-//                                 const { ix, iy, ox, oy, lx, ly, endX, isRight } = linePoints(s);
-//                                 return (
-//                                     <g>
-//                                         <polyline
-//                                             points={`${ox},${oy} ${lx},${ly} ${endX},${ly}`}
-//                                             fill="none"
-//                                             stroke="#999"
-//                                             strokeWidth="0.7"
-//                                         />
-//                                         <text
-//                                             x={isRight ? endX + 3 : endX - 3}
-//                                             y={ly + 1}
-//                                             textAnchor={isRight ? "start" : "end"}
-//                                             fontSize="8.5"
-//                                             fill="#333"
-//                                             fontFamily="sans-serif"
-//                                         >
-//                                             {s.name}: {s.share} %
-//                                         </text>
-//                                     </g>
-//                                 );
-//                             })()}
-//                         </g>
-//                     ))}
-//                 </svg>
-//             </div>
-//             <p className="text-[10px] text-[#aaa] mt-0">Source: NGF Public Finance Database</p>
-//         </div>
-//     );
-// }
-
-// const GeoZone = () => {
-//     const [budgetTab, setBudgetTab] = useState("original");
-
-//     return (
-//         <section className="bg-[#f5f5f5] py-6 px-6">
-//             <div className="mx-auto">
-//                 {/* Header row */}
-//                 <div className="flex items-start justify-between mb-6">
-//                     <h2 className="text-[15px] font-normal text-[#222]">
-//                         Share of Total Expenditure by Geopolitical Zone,{" "}
-//                         <span className="font-medium">
-//                             {budgetTab === "original" ? "Original Budget" : "Actual"}
-//                         </span>
-//                         , 2025
-//                     </h2>
-//                     <a href="/nigeria-state-budget" className="text-[13px] text-[#1D9E75] hover:underline font-medium whitespace-nowrap">
-//                         See all States
-//                     </a>
-//                 </div>
-
-//                 {/* 2×3 grid of pie charts */}
-//                 <div className="bg-white rounded border border-[#e0e0e0]">
-//                     <div className="grid grid-cols-3 divide-x divide-y divide-[#e8e8e8]">
-//                         {GEO_ZONES.map((zone) => (
-//                             <div key={zone.name} className="p-6 flex justify-center">
-//                                 <PieChart zone={zone} />
-//                             </div>
-//                         ))}
-//                     </div>
-//                 </div>
-//             </div>
-//         </section>
-//     );
-// };
-
-// export default GeoZone;
-
-
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import budgetService from "../service/budgetService";
 
-const GEO_ZONES = [
-    {
-        name: "South West",
-        states: [
-            { name: "Lagos", share: 51.0, color: "#3B5998" },
-            { name: "Ogun", share: 16.0, color: "#9B59B6" },
-            { name: "Oyo", share: 10.4, color: "#7F8C8D" },
-            { name: "Osun", share: 6.5, color: "#27AE60" },
-            { name: "Ondo", share: 10.6, color: "#E67E22" },
-            { name: "Ekiti", share: 5.7, color: "#3498DB" },
-        ],
-    },
-    {
-        name: "North West",
-        states: [
-            { name: "Jigawa", share: 15.3, color: "#1ABC9C" },
-            { name: "Kano", share: 15.8, color: "#3B5998" },
-            { name: "Katsina", share: 15.2, color: "#E74C3C" },
-            { name: "Kaduna", share: 17.4, color: "#E67E22" },
-            { name: "Kebbi", share: 12.7, color: "#7F8C8D" },
-            { name: "Sokoto", share: 11.6, color: "#9B59B6" },
-            { name: "Zamfara", share: 12.0, color: "#2ECC71" },
-        ],
-    },
-    {
-        name: "South South",
-        states: [
-            { name: "Akwa Ibom", share: 19.0, color: "#3B5998" },
-            { name: "Bayelsa", share: 13.9, color: "#9B59B6" },
-            { name: "Cross River", share: 10.7, color: "#2ECC71" },
-            { name: "Delta", share: 19.5, color: "#E67E22" },
-            { name: "Edo", share: 13.4, color: "#7F8C8D" },
-            { name: "Rivers", share: 23.4, color: "#9B59B6" },
-        ],
-    },
-    {
-        name: "North Central",
-        states: [
-            { name: "Benue", share: 13.2, color: "#3498DB" },
-            { name: "Kogi", share: 14.0, color: "#E74C3C" },
-            { name: "Kwara", share: 14.1, color: "#27AE60" },
-            { name: "Nasarawa", share: 9.2, color: "#E67E22" },
-            { name: "Niger", share: 37.5, color: "#3B5998" },
-            { name: "Plateau", share: 12.0, color: "#9B59B6" },
-        ],
-    },
-    {
-        name: "North East",
-        states: [
-            { name: "Adamawa", share: 18.1, color: "#3498DB" },
-            { name: "Bauchi", share: 17.4, color: "#3B5998" },
-            { name: "Borno", share: 22.9, color: "#7F8C8D" },
-            { name: "Gombe", share: 13.7, color: "#E67E22" },
-            { name: "Taraba", share: 16.0, color: "#27AE60" },
-            { name: "Yobe", share: 11.9, color: "#9B59B6" },
-        ],
-    },
-    {
-        name: "South East",
-        states: [
-            { name: "Abia", share: 21.0, color: "#3498DB" },
-            { name: "Anambra", share: 17.0, color: "#9B59B6" },
-            { name: "Ebonyi", share: 12.4, color: "#E67E22" },
-            { name: "Enugu", share: 27.1, color: "#E74C3C" },
-            { name: "Imo", share: 22.5, color: "#7F8C8D" },
-        ],
-    },
-];
+const colorPalette = ["#3B5998", "#9B59B6", "#7F8C8D", "#27AE60", "#E67E22", "#3498DB", "#2ECC71", "#E74C3C"];
 
 function DownloadMenu({ zone, svgRef }) {
     const [open, setOpen] = useState(false);
@@ -383,7 +103,6 @@ function DownloadMenu({ zone, svgRef }) {
     };
 
     const downloadXLS = () => {
-        // Simple TSV masquerading as XLS — opens in Excel
         const header = "State\tShare (%)";
         const rows = zone.states.map((s) => `${s.name}\t${s.share}`).join("\n");
         const xls = `${header}\n${rows}`;
@@ -441,10 +160,10 @@ function DownloadMenu({ zone, svgRef }) {
 function PieChart({ zone }) {
     const [hovered, setHovered] = useState(null);
     const svgRef = useRef(null);
-    const size = 200;
+    const size = 300;
     const cx = size / 2;
     const cy = size / 2;
-    const R = 80;
+    const R = 100;
 
     let cum = 0;
     const slices = zone.states.map((s) => {
@@ -478,10 +197,10 @@ function PieChart({ zone }) {
     return (
         <div className="flex flex-col items-center">
             <div className="flex items-center justify-between w-full px-1 mb-1">
-                <h3 className="text-[15px] font-bold text-[#111]">{zone.name}</h3>
+                <h3 className="text-lg font-bold text-[#111]">{zone.name}</h3>
                 <DownloadMenu zone={zone} svgRef={svgRef} />
             </div>
-            <svg ref={svgRef} width={size + 140} height={size + 80} viewBox={`-70 -40 ${size + 140} ${size + 80}`}>
+            <svg ref={svgRef} width={size + 180} height={size + 80} viewBox={`-90 -40 ${size + 180} ${size + 80}`}>
                 {slices.map((s, i) => (
                     <g key={s.name}>
                         <path
@@ -513,7 +232,7 @@ function PieChart({ zone }) {
                                         x={isRight ? endX + 3 : endX - 3}
                                         y={ly + 1}
                                         textAnchor={isRight ? "start" : "end"}
-                                        fontSize="8.5"
+                                        fontSize="12"
                                         fill="#333"
                                         fontFamily="sans-serif"
                                     >
@@ -525,32 +244,95 @@ function PieChart({ zone }) {
                     </g>
                 ))}
             </svg>
-            <p className="text-[10px] text-[#aaa]">Source: NGF Public Finance Database</p>
+            <p className="text-[12px] text-[#aaa]">Source: NGF Public Finance Database</p>
         </div>
     );
 }
 
-const GeoZone = ({ year = 2025 }) => {
+const GeoZone = () => {
+    const [zonesData, setZonesData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [year, setYear] = useState(2026); // Default fallback
+
+    useEffect(() => {
+        let cancelled = false;
+        const fetchZones = async () => {
+            try {
+                setLoading(true);
+                const res = await budgetService.zonalBreakdown();
+                if (cancelled) return;
+
+                const result = res?.data?.data?.result || [];
+
+                // Exclude 'unknown'
+                const filteredZones = result.filter(z =>
+                    z.zoneName && z.zoneName.toLowerCase() !== 'unknown'
+                );
+
+                // Find the first zone record that has data
+                const targetZones = filteredZones.filter(z => z.originalExpenditure > 0);
+
+                const targetYear = targetZones.length > 0 ? targetZones[0].year : (filteredZones[0]?.year || 2026);
+                setYear(targetYear);
+
+                // Filter for just the target year to prevent duplicates
+                const yearZones = filteredZones.filter(z => z.year === targetYear);
+
+                const formattedZones = yearZones.map(z => ({
+                    name: z.zoneName,
+                    states: Object.entries(z.states)
+                        .map(([stateName, percentages], i) => ({
+                            name: stateName,
+                            share: percentages.originalPercentage,
+                            color: colorPalette[i % colorPalette.length]
+                        }))
+                }));
+
+                setZonesData(formattedZones);
+            } catch (err) {
+                console.error(err);
+                if (!cancelled) setError("Failed to load zonal breakdown.");
+            } finally {
+                if (!cancelled) setLoading(false);
+            }
+        };
+
+        fetchZones();
+        return () => { cancelled = true; };
+    }, []);
+
+    if (loading) {
+        return <GeoZoneSkeleton />;
+    }
+
+    if (error || zonesData.length === 0) {
+        return (
+            <section className="bg-[#f8faf8] py-6 sm:py-8">
+                <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 text-center text-sm text-gray-500">
+                    {error || `No zone data available for ${year}.`}
+                </div>
+            </section>
+        );
+    }
 
     return (
-        <section className="bg-[#f8faf8] py-6 px-6">
-            <div className="mx-auto">
-                <div className="flex items-start justify-between mb-6">
-                    <h2 className="text-[15px] font-normal text-[#1D9E75]">
+        <section className="bg-[#f8faf8] py-4">
+            <div className="mx-auto w-full px-2 sm:px-4">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4 pr-0 sm:pr-2">
+                    <h2 className="text-lg font-medium text-[#1D9E75] leading-relaxed min-w-0">
                         Share of Total Expenditure by Geopolitical Zone,{" "}
-                        <span className="font-medium">
-                            Original Budget
-                        </span>,  {year}
+                        {year}
                     </h2>
                     <a href="/nigeria-state-budget" className="text-[13px] text-[#1D9E75] hover:underline font-medium whitespace-nowrap">
                         See all States
                     </a>
                 </div>
 
-                <div className="bg-white rounded-md">
-                    <div className="grid grid-cols-1 sm:grid-cols-3">
-                        {GEO_ZONES.map((zone) => (
-                            <div key={zone.name} className="p-6 flex justify-center">
+                <div className="bg-white rounded-md overflow-x-auto">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                        {zonesData.map((zone) => (
+                            <div key={zone.name} className="p-2 sm:p-3 flex justify-center min-w-0">
                                 <PieChart zone={zone} />
                             </div>
                         ))}
@@ -560,5 +342,41 @@ const GeoZone = ({ year = 2025 }) => {
         </section>
     );
 };
+
+function PieChartSkeleton() {
+    return (
+        <div className="flex flex-col items-center w-full max-w-[300px] animate-pulse p-2">
+            <div className="flex items-center justify-between w-full px-1 mb-4">
+                <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+                <div className="h-4 bg-gray-200 rounded w-6"></div>
+            </div>
+            <div className="w-[180px] h-[180px] rounded-full bg-gray-100 mt-2"></div>
+            <div className="h-2 bg-gray-200 rounded w-1/2 mt-8"></div>
+        </div>
+    );
+}
+
+function GeoZoneSkeleton() {
+    return (
+        <section className="bg-[#f8faf8] py-6 sm:py-8">
+            <div className="mx-auto w-full px-4 sm:px-6 lg:px-8">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-6 pr-0 sm:pr-2">
+                    <div className="h-4 bg-gray-200 rounded w-2/3 sm:w-1/3 animate-pulse"></div>
+                    <div className="h-4 bg-gray-200 rounded w-24 animate-pulse"></div>
+                </div>
+
+                <div className="bg-white rounded-md overflow-x-auto">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 min-w-0">
+                        {[1, 2, 3, 4, 5, 6].map((i) => (
+                            <div key={i} className="p-4 sm:p-6 flex justify-center min-w-0 border-r border-b border-[#f0f0f0]">
+                                <PieChartSkeleton />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+}
 
 export default GeoZone;

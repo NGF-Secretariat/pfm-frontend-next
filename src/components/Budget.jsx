@@ -30,8 +30,8 @@ const Budget = () => {
         },
     ];
     return (
-        <div className="py-16 w-full bg-[#f8faf8]">
-            <div className="px-6">
+        <section className="py-16 w-full bg-[#f8faf8]">
+            <div className="mx-auto w-full px-4 sm:px-6 lg:px-8">
                 <h2 className="text-[28px] font-bold text-[#012c14] mb-2">Budgets</h2>
                 <p className="text-sm text-[#666] mb-9">Access fiscal data across all budget categories</p>
 
@@ -66,7 +66,7 @@ const Budget = () => {
                     ))}
                 </div>
             </div>
-        </div>
+        </section>
     );
 };
 

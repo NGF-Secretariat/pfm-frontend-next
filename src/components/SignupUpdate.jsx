@@ -1,19 +1,29 @@
 'use client'
 
 import { useState } from "react"
+import budgetService from "../service/budgetService"
 
 const SignUpUpdate = () => {
     const [email, setEmail] = useState('')
     const [subscribed, setSubscribed] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     const handleSubscribe = async (e) => {
         e.preventDefault()
-        console.log(email)
-        setSubscribed(true)
+        setLoading(true)
+        try {
+            await budgetService.subscribe(email)
+            setSubscribed(true)
+        } catch (error) {
+            console.error("Failed to subscribe:", error)
+            alert("An error occurred while subscribing. Please try again.")
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (
-        <div>
+        <section className="px-4 sm:px-6 lg:px-8 pb-12">
             <div className="p-5 max-w-[520px] mx-auto text-center mt-10">
                 <div className="w-12 h-12 rounded-full bg-[#1D9E75]/20 flex items-center justify-center mx-auto mb-5 animate-bounce animate-delay-1000">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -26,7 +36,7 @@ const SignUpUpdate = () => {
                 </p>
                 {subscribed ? (
                     <div className="bg-[#5DCAA5]/15 border-[1.5px] border-[#5DCAA5] rounded-[10px] px-6 py-[18px]">
-                        <p className="text-[#5DCAA5] font-semibold text-[15px]">✓ You're subscribed! We'll notify you when new data is published.</p>
+                        <p className="text-[#5DCAA5] font-semibold text-[15px]">✓ You&apos;re subscribed! We&apos;ll notify you when new data is published.</p>
                     </div>
                 ) : (
                     <form onSubmit={handleSubscribe} className="flex rounded-lg overflow-hidden border-2 border-[#012c14] bg-white">
@@ -40,14 +50,15 @@ const SignUpUpdate = () => {
                         />
                         <button
                             type="submit"
-                            className="bg-[#012c14] hover:bg-[#0f6e56] text-white px-[22px] font-bold text-sm whitespace-nowrap transition-colors duration-150"
+                            disabled={loading}
+                            className="bg-[#012c14] hover:bg-[#0f6e56] disabled:opacity-70 text-white px-[22px] font-bold text-sm whitespace-nowrap transition-colors duration-150"
                         >
-                            Notify me
+                            {loading ? 'Subscribing...' : 'Notify me'}
                         </button>
                     </form>
                 )}
             </div>
-        </div>
+        </section>
     )
 }
 
