@@ -83,8 +83,8 @@ function BarChart({ mode, stateName, data, years }) {
     const w = 620, h = 360, pl = 70, pr = 20, pt = 24, pb = 60;
     const chartW = w - pl - pr, chartH = h - pt - pb;
     const maxVal = 1000;
-    const barW = (chartW / years.length) * 0.52;
-    const gap = chartW / years.length;
+    const barW = (chartW / years?.length) * 0.52;
+    const gap = chartW / years?.length;
     const gridLines = [0, 250, 500, 750, 1000];
 
     const bx = (i) => pl + i * gap + gap / 2 - barW / 2;
@@ -114,9 +114,7 @@ function BarChart({ mode, stateName, data, years }) {
                     {data.map((v, i) => (
                         <g key={i} onMouseEnter={() => setHovered(i)} onMouseLeave={() => setHovered(null)} className="cursor-pointer">
                             <rect x={bx(i)} y={by(v)} width={barW} height={bh(v)} fill={hovered === i ? "#0f6e56" : "#1D9E75"} rx="3" className="transition-colors duration-150" />
-                            {hovered === i && (
-                                <text x={bx(i) + barW / 2} y={by(v) - 6} textAnchor="middle" fontSize="10" fontWeight="600" fill="#0f6e56" fontFamily="sans-serif">{v}G</text>
-                            )}
+                            <text x={bx(i) + barW / 2} y={by(v) - 6} textAnchor="middle" fontSize="10" fontWeight="600" fill="#0f6e56" fontFamily="sans-serif">{v}G</text>
                             <text x={bx(i) + barW / 2} y={h - pb + 16} textAnchor="middle" fontSize="10" fill="#666" fontFamily="sans-serif">{years[i]}</text>
                         </g>
                     ))}
@@ -216,7 +214,7 @@ const StateExpenditurePage = ({ slug }) => {
     }
 
     const stateName = formatStateName(profile.state?.name);
-    const years = profile.timeSeries ? profile.timeSeries.years : [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+    const years = profile.timeSeries?.actual?.expenditure ? profile.timeSeries.actual.expenditure.map(v => v.year) : [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
 
     return (
         <div className="bg-white">
@@ -247,10 +245,10 @@ const StateExpenditurePage = ({ slug }) => {
 
             {/* Main two-column layout */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 px-8 py-6 mx-auto">
-                <BarChart 
-                    mode={mode} 
-                    stateName={stateName} 
-                    data={profile.timeSeries ? profile.timeSeries[mode].expenditure.map(v => Math.round(v / 1e9)) : Array(years.length).fill(0)} 
+                <BarChart
+                    mode={mode}
+                    stateName={stateName}
+                    data={profile.timeSeries?.actual?.expenditure ? profile.timeSeries[mode].expenditure.map(v => Math.round(v.value / 1e9)) : Array(years.length).fill(0)}
                     years={years}
                 />
                 <AboutPanel profile={profile} />

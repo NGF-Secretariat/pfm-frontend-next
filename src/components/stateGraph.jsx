@@ -276,7 +276,7 @@ export default function StateLineChartsPage({ slug }) {
   if (!profile) return null;
 
   const stateName = formatStateName(profile.state?.name);
-  const years = profile.timeSeries ? profile.timeSeries.years : [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+  const years = profile.timeSeries?.actual?.expenditure ? profile.timeSeries.actual.expenditure.map(v => v.year) : [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
 
   return (
     <div className="bg-[#f8faf8] px-10 py-20">
@@ -291,8 +291,8 @@ export default function StateLineChartsPage({ slug }) {
             mode={modeLeft}
             title={`${stateName} Total Revenue & Expenditure`}
             series={[
-              { key: "revenue",     label: "Total Revenue",     color: "#1D9E75", data: profile.timeSeries ? profile.timeSeries[modeLeft].revenue.map(v => Math.round(v / 1e9)) : Array(years.length).fill(0) },
-              { key: "expenditure", label: "Total Expenditure",  color: "#E8534A", data: profile.timeSeries ? profile.timeSeries[modeLeft].expenditure.map(v => Math.round(v / 1e9)) : Array(years.length).fill(0) },
+              { key: "revenue",     label: "Total Revenue",     color: "#1D9E75", data: profile.timeSeries?.actual?.expenditure ? profile.timeSeries[modeLeft].revenue.map(v => Math.round(v.value / 1e9)) : Array(years.length).fill(0) },
+              { key: "expenditure", label: "Total Expenditure",  color: "#E8534A", data: profile.timeSeries?.actual?.expenditure ? profile.timeSeries[modeLeft].expenditure.map(v => Math.round(v.value / 1e9)) : Array(years.length).fill(0) },
             ]}
             years={years}
           />
@@ -307,8 +307,8 @@ export default function StateLineChartsPage({ slug }) {
             mode={modeRight}
             title={`${stateName} Total Capital & Recurrent Expenditure`}
             series={[
-              { key: "capital",   label: "Capital Expenditure",   color: "#1D9E75", data: profile.timeSeries ? profile.timeSeries[modeRight].capital.map(v => Math.round(v / 1e9)) : Array(years.length).fill(0) },
-              { key: "recurrent", label: "Recurrent Expenditure",  color: "#E8534A", data: profile.timeSeries ? profile.timeSeries[modeRight].recurrent.map(v => Math.round(v / 1e9)) : Array(years.length).fill(0) },
+              { key: "recurrent", label: "Recurrent", color: "#1D9E75", data: profile.timeSeries?.actual?.expenditure ? profile.timeSeries[modeRight].recurrent.map(v => Math.round(v.value / 1e9)) : Array(years.length).fill(0) },
+              { key: "capital",   label: "Capital",   color: "#E8534A", data: profile.timeSeries?.actual?.expenditure ? profile.timeSeries[modeRight].capital.map(v => Math.round(v.value / 1e9)) : Array(years.length).fill(0) },
             ]}
             years={years}
           />

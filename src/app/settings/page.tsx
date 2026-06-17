@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Lock, User, Plus, Trash2, ShieldCheck, Mail, Key } from "lucide-react";
+import { Lock, User, Plus, Trash2, ShieldCheck, Mail, Key, Eye, EyeOff } from "lucide-react";
 import { toast } from "react-toastify";
 import { login } from "../../service/authService";
 import { fetchUsers, createUser, updateUser, deleteUser } from "../../service/userService";
@@ -12,6 +12,7 @@ export default function SettingsPage() {
   // Login Form State
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
 
   // User Management State
   const [users, setUsers] = useState<any[]>([]);
@@ -20,6 +21,7 @@ export default function SettingsPage() {
   const [formData, setFormData] = useState({ name: "", email: "", role: "Viewer", password: "" });
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [showUserPassword, setShowUserPassword] = useState(false);
 
   const loadUsers = async () => {
     try {
@@ -155,12 +157,19 @@ export default function SettingsPage() {
                   <Lock className="h-5 w-5 text-gray-400" />
                 </div>
                 <input
-                  type="password"
+                  type={showLoginPassword ? "text" : "password"}
                   value={loginPassword}
                   onChange={(e) => setLoginPassword(e.target.value)}
-                  className="pl-10 w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#016630] focus:ring-1 focus:ring-[#016630]"
+                  className="pl-10 pr-10 w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#016630] focus:ring-1 focus:ring-[#016630]"
                   placeholder="••••••••"
                 />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                  onClick={() => setShowLoginPassword(!showLoginPassword)}
+                >
+                  {showLoginPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </button>
               </div>
             </div>
 
@@ -259,12 +268,19 @@ export default function SettingsPage() {
                     <Key className="h-4 w-4 text-gray-400" />
                   </div>
                   <input
-                    type="password"
+                    type={showUserPassword ? "text" : "password"}
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    className="pl-9 w-full p-2.5 border border-gray-200 rounded-lg focus:outline-none focus:border-[#016630]"
+                    className="pl-9 pr-10 w-full p-2.5 border border-gray-200 rounded-lg focus:outline-none focus:border-[#016630]"
                     placeholder={editingId ? "Enter new password" : "Temporary password"}
                   />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                    onClick={() => setShowUserPassword(!showUserPassword)}
+                  >
+                    {showUserPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
                 </div>
               </div>
               <div className="sm:col-span-2 flex justify-end gap-3 mt-2">
