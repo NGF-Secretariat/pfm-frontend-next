@@ -82,10 +82,23 @@ function BarChart({ mode, stateName, data, years }) {
     const [hovered, setHovered] = useState(null);
     const w = 620, h = 360, pl = 70, pr = 20, pt = 24, pb = 60;
     const chartW = w - pl - pr, chartH = h - pt - pb;
-    const maxVal = 1000;
+    const maxDataVal = Math.max(0, ...data);
+    let maxG = maxDataVal / 1e9;
+    if (maxG === 0) maxG = 100;
+    
+    const order = Math.pow(10, Math.floor(Math.log10(maxG)));
+    const fraction = maxG / order;
+    let niceFraction;
+    if (fraction <= 1) niceFraction = 1;
+    else if (fraction <= 2) niceFraction = 2;
+    else if (fraction <= 5) niceFraction = 5;
+    else niceFraction = 10;
+
+    const maxVal = niceFraction * order * 1e9;
+    const gridLines = [0, maxVal * 0.25, maxVal * 0.5, maxVal * 0.75, maxVal];
+
     const barW = (chartW / years?.length) * 0.52;
     const gap = chartW / years?.length;
-    const gridLines = [0, 250, 500, 750, 1000];
 
     const bx = (i) => pl + i * gap + gap / 2 - barW / 2;
     const by = (v) => pt + chartH - (v / maxVal) * chartH;
@@ -105,7 +118,7 @@ function BarChart({ mode, stateName, data, years }) {
                         <g key={v}>
                             <line x1={pl} y1={by(v)} x2={w - pr} y2={by(v)} stroke="#eeeeee" strokeWidth="1" />
                             <text x={pl - 8} y={by(v) + 4} textAnchor="end" fontSize="10" fill="#999" fontFamily="sans-serif">
-                                {v === 0 ? "0" : `${v}G`}
+                                {v === 0 ? "0" : `${(v / 1e9).toFixed(1).replace(/\.0$/, '')}G`}
                             </text>
                         </g>
                     ))}
@@ -114,7 +127,14 @@ function BarChart({ mode, stateName, data, years }) {
                     {data.map((v, i) => (
                         <g key={i} onMouseEnter={() => setHovered(i)} onMouseLeave={() => setHovered(null)} className="cursor-pointer">
                             <rect x={bx(i)} y={by(v)} width={barW} height={bh(v)} fill={hovered === i ? "#0f6e56" : "#1D9E75"} rx="3" className="transition-colors duration-150" />
-                            <text x={bx(i) + barW / 2} y={by(v) - 6} textAnchor="middle" fontSize="10" fontWeight="600" fill="#0f6e56" fontFamily="sans-serif">{v}G</text>
+                            {hovered === i && (
+                                <g>
+                                    <rect x={bx(i) + barW / 2 - 60} y={by(v) - 30} width={120} height={24} rx="4" fill="white" stroke="#e0e0e0" strokeWidth="0.8" className="shadow-sm" />
+                                    <text x={bx(i) + barW / 2} y={by(v) - 13} textAnchor="middle" fontSize="12" fontWeight="600" fill="#0f6e56" fontFamily="sans-serif">
+                                        {v.toLocaleString()}
+                                    </text>
+                                </g>
+                            )}
                             <text x={bx(i) + barW / 2} y={h - pb + 16} textAnchor="middle" fontSize="10" fill="#666" fontFamily="sans-serif">{years[i]}</text>
                         </g>
                     ))}
@@ -248,7 +268,7 @@ const StateExpenditurePage = ({ slug }) => {
                 <BarChart
                     mode={mode}
                     stateName={stateName}
-                    data={profile.timeSeries?.actual?.expenditure ? profile.timeSeries[mode].expenditure.map(v => Math.round(v.value / 1e9)) : Array(years.length).fill(0)}
+                    data={profile.timeSeries?.actual?.expenditure ? profile.timeSeries[mode].expenditure.map(v => v.value) : Array(years.length).fill(0)}
                     years={years}
                 />
                 <AboutPanel profile={profile} />

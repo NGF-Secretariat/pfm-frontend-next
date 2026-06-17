@@ -121,10 +121,24 @@ function LineChart({ mode, title, series, years }) {
   const chartRef = useRef(null);
   const [hovered, setHovered] = useState(null);
 
-  const w = 620, h = 360, pl = 68, pr = 20, pt = 20, pb = 70;
+  const w = 700, h = 400, pl = 68, pr = 30, pt = 30, pb = 60;
   const chartW = w - pl - pr, chartH = h - pt - pb;
-  const maxVal = 800;
-  const gridLines = [0, 200, 400, 600, 800];
+  
+  const allData = series.flatMap(s => s.data);
+  const maxDataVal = Math.max(0, ...allData);
+  let maxG = maxDataVal / 1e9;
+  if (maxG === 0) maxG = 100;
+  
+  const order = Math.pow(10, Math.floor(Math.log10(maxG)));
+  const fraction = maxG / order;
+  let niceFraction;
+  if (fraction <= 1) niceFraction = 1;
+  else if (fraction <= 2) niceFraction = 2;
+  else if (fraction <= 5) niceFraction = 5;
+  else niceFraction = 10;
+
+  const maxVal = niceFraction * order * 1e9;
+  const gridLines = [0, maxVal * 0.25, maxVal * 0.5, maxVal * 0.75, maxVal];
   const n = years.length;
 
   const px = (i) => pl + (i / (n - 1)) * chartW;
@@ -155,7 +169,7 @@ function LineChart({ mode, title, series, years }) {
             <g key={v}>
               <line x1={pl} y1={py(v)} x2={w - pr} y2={py(v)} stroke="#e8e8e8" strokeWidth="1" />
               <text x={pl - 7} y={py(v) + 4} textAnchor="end" fontSize="10" fill="#999" fontFamily="sans-serif">
-                {v === 0 ? "0" : `${v}G`}
+                {v === 0 ? "0" : `${(v / 1e9).toFixed(1).replace(/\.0$/, '')}G`}
               </text>
             </g>
           ))}
@@ -200,12 +214,12 @@ function LineChart({ mode, title, series, years }) {
               <line x1={px(hovered)} y1={pt} x2={px(hovered)} y2={py(0)} stroke="#ddd" strokeWidth="1" strokeDasharray="4,3" />
               {series.map((s, si) => {
                 const v = s.data[hovered];
-                const tipX = px(hovered) + (si === 0 ? -88 : 8);
+                const tipX = px(hovered) + (si === 0 ? -118 : 8);
                 return (
                   <g key={s.key}>
-                    <rect x={tipX} y={py(v) - 14} width={78} height={20} rx="4" fill="white" stroke="#e0e0e0" strokeWidth="0.8" />
-                    <text x={tipX + 39} y={py(v) + 1} textAnchor="middle" fontSize="10" fontWeight="600" fill={s.color} fontFamily="sans-serif">
-                      {v}G
+                    <rect x={tipX} y={py(v) - 16} width={120} height={24} rx="4" fill="white" stroke="#e0e0e0" strokeWidth="0.8" className="shadow-sm" />
+                    <text x={tipX + 60} y={py(v) + 1} textAnchor="middle" fontSize="12" fontWeight="600" fill={s.color} fontFamily="sans-serif">
+                      {v.toLocaleString()}
                     </text>
                   </g>
                 );
@@ -291,8 +305,8 @@ export default function StateLineChartsPage({ slug }) {
             mode={modeLeft}
             title={`${stateName} Total Revenue & Expenditure`}
             series={[
-              { key: "revenue",     label: "Total Revenue",     color: "#1D9E75", data: profile.timeSeries?.actual?.expenditure ? profile.timeSeries[modeLeft].revenue.map(v => Math.round(v.value / 1e9)) : Array(years.length).fill(0) },
-              { key: "expenditure", label: "Total Expenditure",  color: "#E8534A", data: profile.timeSeries?.actual?.expenditure ? profile.timeSeries[modeLeft].expenditure.map(v => Math.round(v.value / 1e9)) : Array(years.length).fill(0) },
+              { key: "revenue",     label: "Total Revenue",     color: "#1D9E75", data: profile.timeSeries?.actual?.expenditure ? profile.timeSeries[modeLeft].revenue.map(v => v.value) : Array(years.length).fill(0) },
+              { key: "expenditure", label: "Total Expenditure",  color: "#E8534A", data: profile.timeSeries?.actual?.expenditure ? profile.timeSeries[modeLeft].expenditure.map(v => v.value) : Array(years.length).fill(0) },
             ]}
             years={years}
           />
@@ -307,8 +321,8 @@ export default function StateLineChartsPage({ slug }) {
             mode={modeRight}
             title={`${stateName} Total Capital & Recurrent Expenditure`}
             series={[
-              { key: "recurrent", label: "Recurrent", color: "#1D9E75", data: profile.timeSeries?.actual?.expenditure ? profile.timeSeries[modeRight].recurrent.map(v => Math.round(v.value / 1e9)) : Array(years.length).fill(0) },
-              { key: "capital",   label: "Capital",   color: "#E8534A", data: profile.timeSeries?.actual?.expenditure ? profile.timeSeries[modeRight].capital.map(v => Math.round(v.value / 1e9)) : Array(years.length).fill(0) },
+              { key: "recurrent", label: "Recurrent", color: "#1D9E75", data: profile.timeSeries?.actual?.expenditure ? profile.timeSeries[modeRight].recurrent.map(v => v.value) : Array(years.length).fill(0) },
+              { key: "capital",   label: "Capital",   color: "#E8534A", data: profile.timeSeries?.actual?.expenditure ? profile.timeSeries[modeRight].capital.map(v => v.value) : Array(years.length).fill(0) },
             ]}
             years={years}
           />
