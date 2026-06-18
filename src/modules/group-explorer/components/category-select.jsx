@@ -1,103 +1,150 @@
-import { ArrowDropDown } from "@mui/icons-material";
-import { Box, InputAdornment, Popover, TextField } from "@mui/material";
-import React from "react";
+import React, { useMemo, useState } from "react";
+import {
+  Checkbox,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import {
   BUDGET_CATEGORIES,
   BUDGET_CATEGORIES__PI,
 } from "../../../static/budget-categories";
-import CategoryItem from "./category-item";
 
-const CategorySelect = ({ value, onChange, type }) => {
-  const [isMenu, setIsMenu] = React.useState(null);
+const CategorySelect = ({ value = [], onChange, type }) => {
+  const CATEGORIES = type === "pi" ? BUDGET_CATEGORIES__PI : BUDGET_CATEGORIES;
+  const [collapsed, setCollapsed] = useState({});
 
-  const renderValues = () => {
-    const result = [];
-    value.forEach((item) => {
-      result.push(item?.split("_").join(" ").toUpperCase());
-    });
-    return result?.filter((item) => item !== "SELECT ALL CATEGORIES").join(", ");
+  const flatCategories = useMemo(() => {
+    const flatten = (arr, depth = 0) => {
+      let res = [];
+      arr.forEach((item) => {
+        const hasChildren = item.children && item.children.length > 0;
+        res.push({ ...item, depth, hasChildren });
+        if (hasChildren) {
+          res = [...res, ...flatten(item.children, depth + 1)];
+        }
+      });
+      return res;
+    };
+    return flatten(CATEGORIES);
+  }, [CATEGORIES]);
+
+  const visibleCategories = useMemo(() => {
+    const flattenVisible = (arr, depth = 0, isHidden = false) => {
+      let res = [];
+      arr.forEach((item) => {
+        const hasChildren = item.children && item.children.length > 0;
+        if (!isHidden) {
+          res.push({ ...item, depth, hasChildren });
+        }
+        if (hasChildren) {
+          const childrenHidden = isHidden || collapsed[item.value];
+          res = [...res, ...flattenVisible(item.children, depth + 1, childrenHidden)];
+        }
+      });
+      return res;
+    };
+    return flattenVisible(CATEGORIES);
+  }, [CATEGORIES, collapsed]);
+
+  const allValues = useMemo(() => flatCategories.map((c) => c.value), [flatCategories]);
+
+  const handleSelectAll = (e) => {
+    e.stopPropagation();
+    if (e.target.checked) {
+      onChange(allValues);
+    } else {
+      onChange([]);
+    }
   };
 
-  const CATEGORIES = type === "pi" ? BUDGET_CATEGORIES__PI : BUDGET_CATEGORIES;
+  const handleChange = (e) => {
+    const val = e.target.value?.filter((item) => !!item);
+    onChange(val);
+  };
+
+  const toggleCollapse = (e, val) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCollapsed((prev) => ({ ...prev, [val]: !prev[val] }));
+  };
 
   return (
-    <div>
-      <TextField
-        fullWidth
+    <FormControl fullWidth size="small">
+      <InputLabel id="category_select">Budget Categories</InputLabel>
+      <Select
         size="small"
-        value={renderValues()}
-        variant="outlined"
+        fullWidth
+        multiple
         label="Budget Categories"
-        className="custom-select"
-        onClick={(e) => setIsMenu(e.currentTarget)}
-        slotProps={{
-          input: {
-            readOnly: true,
-            endAdornment: (
-              <InputAdornment position="end">
-                <ArrowDropDown />
-              </InputAdornment>
-            ),
-          }
-        }}
-        onChange={(e) => console.log(e)}
-      />
-
-      <Popover
-        open={!!isMenu}
-        anchorEl={isMenu}
-        onClose={() => setIsMenu(null)}
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-        PaperProps={{
-          style: {
-            minWidth: isMenu ? Math.max(isMenu.clientWidth, 350) : undefined,
-            maxWidth: 550,
-            maxHeight: 450,
-            overflowY: "auto",
-          },
+        labelId="category_select"
+        variant="outlined"
+        value={value}
+        onChange={handleChange}
+        renderValue={(selected) => {
+          const labels = selected.map((val) => {
+            const found = flatCategories.find((c) => c.value === val);
+            return found ? found.label : val.split("_").join(" ");
+          });
+          return labels.join(", ");
         }}
       >
-        <Box>
-          <Box p={2} color="GrayText">
-            Select Budget Categories
-          </Box>
-          {CATEGORIES.map((item, index) => (
-            <CategoryItem
-              key={index}
-              item={item}
-              itemIndex={index}
-              values={value}
-              onSelect={handleSelect}
-            />
-          ))}
-        </Box>
-      </Popover>
-    </div>
+        <MenuItem value="" disabled>
+          Budget Categories
+        </MenuItem>
+        <MenuItem value="">
+          <Checkbox
+            size="small"
+            onChange={handleSelectAll}
+            checked={value.length === allValues.length && allValues.length > 0}
+            indeterminate={value.length > 0 && value.length !== allValues.length}
+          />
+          Select All
+        </MenuItem>
+        {visibleCategories.map((item, index) => (
+          <MenuItem
+            value={item.value}
+            key={`${item.value}-${index}`}
+            style={{ 
+              paddingLeft: `${item.depth * 20 + 16}px`,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center"
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", flex: 1 }}>
+              <Checkbox
+                size="small"
+                checked={value.indexOf(item.value) > -1}
+              />
+              <span className={item.depth === 0 ? "font-bold text-gray-800 whitespace-normal" : "text-gray-600 whitespace-normal"}>
+                {item.label}
+              </span>
+            </div>
+            {item.hasChildren && (
+              <span 
+                onClick={(e) => toggleCollapse(e, item.value)}
+                onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                style={{ 
+                  cursor: "pointer", 
+                  display: "flex", 
+                  alignItems: "center",
+                  padding: "4px",
+                  borderRadius: "50%",
+                  marginLeft: "8px"
+                }}
+                className="hover:bg-gray-100"
+              >
+                {collapsed[item.value] ? <ExpandMore fontSize="small" /> : <ExpandLess fontSize="small" />}
+              </span>
+            )}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
   );
-
-  function getAllValues(arr) {
-    let result = [];
-    arr.forEach((item) => {
-      result.push(item.value);
-      if (Array.isArray(item.children) && item.children.length > 0) {
-        result = [...result, ...getAllValues(item.children)];
-      }
-    });
-    return result;
-  }
-
-  function handleSelect(e, item) {
-    const checked = e.target.checked;
-    const children = getAllValues(item?.children);
-    if (checked) {
-      onChange((prev) => [...prev, item?.value, ...children]);
-    } else {
-      const result = value?.filter(
-        (f) => ![item?.value, ...children].includes(f)
-      );
-      onChange(result);
-    }
-  }
 };
 
 export default CategorySelect;
