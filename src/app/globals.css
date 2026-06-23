@@ -60,3 +60,185 @@
 .font-poppins {
   font-family: var(--font-poppins-sans), sans-serif;
 }
+
+/* Sticky columns configuration for Compare State Expenditure Table */
+.data-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+}
+
+.data-table th {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background-color: #f8f9fa !important;
+  border-bottom: 1px solid #e9ecef;
+}
+
+/* General table formatting */
+.data-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #f1f3f5;
+  font-size: 13.5px;
+  background-color: #ffffff;
+}
+.data-table th {
+  padding: 12px 14px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Category subheader backgrounds for ALL columns in the subheader row */
+.data-table tr.sticky-top__sub td {
+  background-color: #f1f3f5 !important;
+}
+
+/* Row hover effect for ALL columns */
+.data-table tr:hover td {
+  background-color: #fafbfc !important;
+}
+.data-table tr.sticky-top__sub:hover td {
+  background-color: #f1f3f5 !important;
+}
+
+/* --- Standard Table (Code | Topic/Actual | State 1 (Abia) | States 2+ ) --- */
+
+/* Column 1 (Code) - Sticky Left 0 */
+.standard-table th:nth-child(1),
+.standard-table td:nth-child(1) {
+  position: sticky;
+  left: 0;
+  z-index: 12;
+  min-width: 120px;
+  max-width: 120px;
+  width: 120px;
+  box-shadow: 2px 0 5px -2px rgba(0, 0, 0, 0.15);
+  border-right: 1px solid #f1f3f5;
+}
+
+/* Column 2 (Topic / Description) - Sticky Left 120px */
+.standard-table th:nth-child(2),
+.standard-table td:nth-child(2) {
+  position: sticky;
+  left: 120px;
+  z-index: 12;
+  min-width: 350px;
+  max-width: 350px;
+  width: 350px;
+  box-shadow: 2px 0 5px -2px rgba(0, 0, 0, 0.15);
+  border-right: 1px solid #f1f3f5;
+}
+
+/* Column 3 (First State, e.g. Abia) - Sticky Left 470px (120px + 350px) */
+.standard-table th:nth-child(3),
+.standard-table td:nth-child(3) {
+  position: sticky;
+  left: 470px;
+  z-index: 12;
+  min-width: 150px;
+  max-width: 150px;
+  width: 150px;
+  box-shadow: 4px 0 8px -3px rgba(0, 0, 0, 0.2);
+  border-right: 1px solid #e9ecef;
+}
+
+/* Higher z-index for standard table frozen headers */
+.standard-table th:nth-child(1),
+.standard-table th:nth-child(2),
+.standard-table th:nth-child(3) {
+  z-index: 30;
+}
+
+/* Category subheader stickiness offsets for standard table */
+.standard-table tr.sticky-top__sub td:nth-child(1) {
+  position: sticky;
+  left: 0;
+  z-index: 11;
+}
+.standard-table tr.sticky-top__sub td:nth-child(2) {
+  position: sticky;
+  left: 120px;
+  z-index: 11;
+}
+.standard-table tr.sticky-top__sub td:nth-child(3) {
+  position: sticky;
+  left: 470px;
+  z-index: 11;
+}
+
+/* --- PI Table (Indicators | State 1 (Abia) | States 2+ ) --- */
+
+/* Column 1 (Indicators Description) - Sticky Left 0 */
+.pi-table th:nth-child(1),
+.pi-table td:nth-child(1) {
+  position: sticky;
+  left: 0;
+  z-index: 12;
+  min-width: 350px;
+  max-width: 350px;
+  width: 350px;
+  box-shadow: 2px 0 5px -2px rgba(0, 0, 0, 0.15);
+  border-right: 1px solid #f1f3f5;
+}
+
+/* Column 2 (First State, e.g. Abia) - Sticky Left 350px */
+.pi-table th:nth-child(2),
+.pi-table td:nth-child(2) {
+  position: sticky;
+  left: 350px;
+  z-index: 12;
+  min-width: 150px;
+  max-width: 150px;
+  width: 150px;
+  box-shadow: 4px 0 8px -3px rgba(0, 0, 0, 0.2);
+  border-right: 1px solid #e9ecef;
+}
+
+/* Higher z-index for PI frozen headers */
+.pi-table th:nth-child(1),
+.pi-table th:nth-child(2) {
+  z-index: 30;
+}
+
+/* Category subheader stickiness offsets for PI table */
+.pi-table tr.sticky-top__sub td:nth-child(1) {
+  position: sticky;
+  left: 0;
+  z-index: 11;
+}
+.pi-table tr.sticky-top__sub td:nth-child(2) {
+  position: sticky;
+  left: 350px;
+  z-index: 11;
+}
+
+/* --- Styling for general scrollable columns (States 2, 3, etc.) --- */
+.data-table th:nth-child(n+4),
+.data-table td:nth-child(n+4) {
+  min-width: 150px;
+  border-right: 1px solid #f1f3f5;
+}
+.pi-table th:nth-child(n+3),
+.pi-table td:nth-child(n+3) {
+  min-width: 150px;
+  border-right: 1px solid #f1f3f5;
+}
+
+/* General table formatting */
+.data-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #f1f3f5;
+  font-size: 13.5px;
+}
+.data-table th {
+  padding: 12px 14px;
+  font-weight: 600;
+  font-size: 14px;
+}
+.data-table tr:hover td {
+  background-color: #fafbfc !important;
+}
+.data-table tr.sticky-top__sub:hover td {
+  background-color: #f1f3f5 !important;
+}

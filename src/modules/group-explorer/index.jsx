@@ -254,9 +254,9 @@ const GroupExplorer = () => {
       toast.error('"Budget Type" is not allowed to be empty');
       throw new Error('"Budget Type" is not allowed to be empty');
     }
-    if (states.split(",").filter(Boolean).length < 2) {
-      toast.error('"States" cannot be less than 2');
-      throw new Error('"States" cannot be less than 2');
+    if (states.split(",").filter(Boolean).length < 1) {
+      toast.error('Please select at least one State');
+      throw new Error('Please select at least one State');
     }
     if (!categories.length) {
       toast.error('"Budget Categories" is not allowed to be empty');

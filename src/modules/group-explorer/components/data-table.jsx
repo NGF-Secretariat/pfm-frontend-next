@@ -33,8 +33,8 @@ const DataTable = ({ data, type, componentRef, categories = [] }) => {
   if (!payload?.length) return null;
   if (type === "pi")
     return (
-      <Box overflow="auto" style={{ maxHeight: 500 }}>
-        <table ref={componentRef} id="data-table" className="data-table">
+      <div className="mt-10 max-h-[600px] overflow-auto w-full" >
+        <table ref={componentRef} id="data-table" className="data-table pi-table">
           <thead className="thead">
             <tr className="sticky-top">
               <th align="left" className="sticky-left">
@@ -97,23 +97,16 @@ const DataTable = ({ data, type, componentRef, categories = [] }) => {
             />
           </tbody>
         </table>
-        <span
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            padding: "16px 0",
-          }}
-        >
-          <span style={{ color: "#888", fontWeight: 300, fontSize: 12 }}>
-            <span style={{ fontStyle: "italic" }}>Source:</span> NGF Public
-            Finance Database
+        <div className="flex justify-end py-4">
+          <span className="text-[#888] font-light text-xs">
+            <span className="italic">Source:</span> NGF Public Finance Database
           </span>
-        </span>
-      </Box>
+        </div>
+      </div>
     );
   return (
-    <Box overflow="auto" style={{ maxHeight: 500 }}>
-      <table ref={componentRef} id="data-table" className="data-table">
+    <div className="mt-10 max-h-[600px] overflow-auto w-full" >
+      <table ref={componentRef} id="data-table" className="data-table standard-table">
         <thead className="thead">
           <tr className="sticky-top">
             <th align="left" className="sticky-left">
@@ -160,19 +153,12 @@ const DataTable = ({ data, type, componentRef, categories = [] }) => {
           />
         </tbody>
       </table>
-      <span
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          padding: "16px 0",
-        }}
-      >
-        <span style={{ color: "#888", fontWeight: 300, fontSize: 12 }}>
-          <span style={{ fontStyle: "italic" }}>Source:</span> NGF Public
-          Finance Database
+      <div className="flex justify-end py-4">
+        <span className="text-[#888] font-light text-xs">
+          <span className="italic">Source:</span> NGF Public Finance Database
         </span>
-      </span>
-    </Box>
+      </div>
+    </div>
   );
 };
 
