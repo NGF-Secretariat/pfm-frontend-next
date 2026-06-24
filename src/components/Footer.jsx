@@ -11,8 +11,8 @@ const Footer = () => {
     const NAV_LINKS = [
         { label: "Home", href: "/" },
         { label: "Group Explorer", href: "/group-explorer" },
-        { label: "State Explorer", href: "/nigeria-state-budget" },
-        { label: "Blog Post", href: "/blog" },
+        { label: "State Explorer", href: "/state-explorer" },
+        { label: "Blog Post", href: "/blog-post" },
         { label: "Resources", href: "https://ngfrepository.org.ng:8443/handle/123456789/5632" },
         { label: "Contact Us", href: "/contact-us" },
     ];
@@ -62,11 +62,11 @@ const Footer = () => {
                     <p className="text-xs font-bold text-[#5DCAA5] uppercase tracking-widest mb-4 ">Budget Data</p>
                     <div className="flex flex-col gap-2">
                         {[
-                            { label: "Original Budget", href: "#" },
-                            { label: "Actual Expenditure", href: "#" },
-                            { label: "Performance Indicators", href: "#" },
-                            { label: "Compare States", href: "#" },
-                            { label: "Rank States", href: "#" },
+                            { label: "Original Budget", href: "/group-explorer?type=original&year=2018&categories=all&states=all" },
+                            { label: "Actual Expenditure", href: "/group-explorer?type=actual&year=2018&categories=all&states=all" },
+                            { label: "Performance Indicators", href: "/group-explorer?type=pi&year=2019&categories=all&states=all" },
+                            { label: "Compare States", href: "/group-explorer" },
+                            { label: "Rank States", href: "/rank-data" },
                         ].map((l) => (
                             <a
                                 key={l.label}

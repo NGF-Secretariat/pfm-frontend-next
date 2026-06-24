@@ -46,7 +46,54 @@ function getFlatCategories(type) {
   return flatten(CATEGORIES);
 }
 
-const GroupExplorer = () => {
+const getAmountForRanking = (item, type) => {
+  if (type !== 'pi') {
+    if (item?.revenue_by_economic?.total_revenue_with_opening_balance !== undefined) {
+      const field = item.revenue_by_economic.total_revenue_with_opening_balance;
+      const val = parseFloat(typeof field === 'object' && field !== null ? field.value : field);
+      if (!isNaN(val)) return val;
+    }
+    if (item?.exp_by_economic?.total_expenditure !== undefined) {
+      const field = item.exp_by_economic.total_expenditure;
+      const val = parseFloat(typeof field === 'object' && field !== null ? field.value : field);
+      if (!isNaN(val)) return val;
+    }
+  }
+  
+  let sum = 0;
+  const traverse = (val, key) => {
+    if (["year", "code", "id", "state", "status", "createdAt", "updatedAt"].includes(key)) {
+      return;
+    }
+    if (val === null || val === undefined) return;
+    
+    if (typeof val === "object") {
+      if (val.value !== undefined) {
+        const parsed = parseFloat(val.value);
+        if (!isNaN(parsed)) {
+          sum += parsed;
+        }
+      } else {
+        for (let k in val) {
+          if (Object.prototype.hasOwnProperty.call(val, k)) {
+            traverse(val[k], k);
+          }
+        }
+      }
+    } else if (typeof val === "number") {
+      sum += val;
+    } else if (typeof val === "string") {
+      const parsed = parseFloat(val);
+      if (!isNaN(parsed) && /^\d+(\.\d+)?$/.test(val.trim())) {
+        sum += parsed;
+      }
+    }
+  };
+  traverse(item);
+  return sum;
+};
+
+const GroupExplorer = ({ isRank = false }) => {
   const router = useRouter();
   const pathname = usePathname();
   const nextSearchParams = useSearchParams();
@@ -79,6 +126,7 @@ const GroupExplorer = () => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [categories, setCategories] = React.useState([]);
   const [isMenu, setIsMenu] = React.useState(null);
+  const [sortBy, setSortBy] = React.useState(""); // "asc" | "desc" | ""
 
   const queries = { year, type, states };
 
@@ -102,6 +150,31 @@ const GroupExplorer = () => {
     }
   }, [type, states, year, categories.length]);
 
+  const sortedBudgets = React.useMemo(() => {
+    if (!sortBy || !budgets.data || !budgets.states || budgets.data.length === 0) {
+      return budgets;
+    }
+    // Zip states and data
+    const zipped = budgets.states.map((state, idx) => ({
+      state,
+      item: budgets.data[idx],
+      amount: getAmountForRanking(budgets.data[idx], type)
+    }));
+    // Sort
+    zipped.sort((a, b) => {
+      if (sortBy === "asc") {
+        return a.amount - b.amount;
+      } else {
+        return b.amount - a.amount;
+      }
+    });
+    // Unzip
+    return {
+      states: zipped.map(z => z.state),
+      data: zipped.map(z => z.item)
+    };
+  }, [budgets, sortBy, type]);
+
   return (
     <div>
       <div className="px-8">
@@ -109,7 +182,7 @@ const GroupExplorer = () => {
           {/* Title */}
           <div className="pt-4">
             <h4 className="text-[32px] font-poppins py-12">
-              Compare State Expenditure
+              {isRank ? "Rank States" : "Compare State Expenditure"}
             </h4>
           </div>
 
@@ -170,7 +243,7 @@ const GroupExplorer = () => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+          <Grid size={{ xs: 12, sm: 6, md: 4, lg: isRank ? 2 : 3 }}>
             <FormControl fullWidth size="small">
               <InputLabel id="state_select">States</InputLabel>
               <Select
@@ -212,7 +285,7 @@ const GroupExplorer = () => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+          <Grid size={{ xs: 12, sm: 6, md: 4, lg: isRank ? 2 : 3 }}>
             <CategorySelect
               type={type}
               value={categories}
@@ -246,6 +319,28 @@ const GroupExplorer = () => {
               </Select>
             </FormControl>
           </Grid>
+          {isRank && (
+            <Grid size={{ xs: 12, sm: 6, md: 4, lg: 2 }}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="sort_by_select">Sort By</InputLabel>
+                <Select
+                  fullWidth
+                  size="small"
+                  value={sortBy}
+                  label="Sort By"
+                  labelId="sort_by_select"
+                  variant="outlined"
+                  onChange={(e) => setSortBy(e.target.value)}
+                >
+                  <MenuItem value="">
+                    None
+                  </MenuItem>
+                  <MenuItem value="asc">Ascending</MenuItem>
+                  <MenuItem value="desc">Descending</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+          )}
           <Grid size={{ xs: 12, sm: 6, md: 4, lg: 2 }}>
             <Button
               variant="contained"
@@ -266,11 +361,11 @@ const GroupExplorer = () => {
         </Grid>
         <DataTable
           type={type}
-          data={budgets}
+          data={sortedBudgets}
           componentRef={printRef}
           categories={categories}
         />
-        <Preloader data={budgets} isLoading={isLoading} />
+        <Preloader data={sortedBudgets} isLoading={isLoading} />
       </div>
     </div>
   );
