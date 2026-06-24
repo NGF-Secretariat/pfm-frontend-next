@@ -16,6 +16,7 @@ import {
 import { BUDGET_TYPES } from "../../static/budget-types";
 import { YEARS } from "../../static/years";
 import { STATES } from "../../static/states";
+import { BUDGET_CATEGORIES, BUDGET_CATEGORIES__PI } from "../../static/budget-categories";
 import CategorySelect from "./components/category-select";
 import DataTable from "./components/data-table";
 import { Print, Save } from "@mui/icons-material";
@@ -29,6 +30,21 @@ const initialValues = {
   data: [],
   states: [],
 };
+
+function getFlatCategories(type) {
+  const CATEGORIES = type === "pi" ? BUDGET_CATEGORIES__PI : BUDGET_CATEGORIES;
+  const flatten = (arr) => {
+    let res = [];
+    arr.forEach((item) => {
+      res.push(item.value);
+      if (item.children && item.children.length > 0) {
+        res = [...res, ...flatten(item.children)];
+      }
+    });
+    return res;
+  };
+  return flatten(CATEGORIES);
+}
 
 const GroupExplorer = () => {
   const router = useRouter();
@@ -54,7 +70,10 @@ const GroupExplorer = () => {
 
   const year = nextSearchParams.get("year") || "";
   const type = nextSearchParams.get("type") || "";
-  const states = nextSearchParams.get("states") || "";
+  const statesParam = nextSearchParams.get("states") || "";
+  const states = statesParam === "all"
+    ? STATES.map((item) => item.value).join(",")
+    : statesParam;
 
   const [budgets, setBudgets] = React.useState(initialValues);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -62,6 +81,26 @@ const GroupExplorer = () => {
   const [isMenu, setIsMenu] = React.useState(null);
 
   const queries = { year, type, states };
+
+  const hasAutoFetched = React.useRef(false);
+
+  React.useEffect(() => {
+    const categoriesParam = nextSearchParams.get("categories");
+    if (categoriesParam === "all" && type) {
+      setCategories(getFlatCategories(type));
+    } else if (categoriesParam) {
+      setCategories(categoriesParam.split(","));
+    } else {
+      setCategories([]);
+    }
+  }, [nextSearchParams, type]);
+
+  React.useEffect(() => {
+    if (type && states && year && categories.length > 0 && !hasAutoFetched.current) {
+      hasAutoFetched.current = true;
+      getBudgets();
+    }
+  }, [type, states, year, categories.length]);
 
   return (
     <div>
@@ -276,11 +315,17 @@ const GroupExplorer = () => {
 
   function handleChange(e, name) {
     const value = e.target.value;
-    updateQueryParam(name, value);
 
     if (name === "type") {
+      const params = new URLSearchParams(nextSearchParams.toString());
+      params.set("type", value);
+      params.delete("categories");
+      router.replace(`${pathname}?${params.toString()}`);
+
       setCategories([]);
       setBudgets({ data: [], states: [] });
+    } else {
+      updateQueryParam(name, value);
     }
   }
 

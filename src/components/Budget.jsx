@@ -6,7 +6,7 @@ const Budget = () => {
         {
             title: "Original Budget",
             description: "Government's estimated revenue and proposed expenditure over a period of one year.",
-            href: "/budgets/original",
+            href: "/group-explorer?type=original&year=2018&categories=all&states=all",
             icon: "M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l5.414 5.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z",
             accent: "#1D9E75",
             bg: "#f0faf6",
@@ -14,7 +14,7 @@ const Budget = () => {
         {
             title: "Actual",
             description: "Government's actual revenue and expenditure over the budget period.",
-            href: "/budgets/actual",
+            href: "/group-explorer?type=actual&year=2018&categories=all&states=all",
             icon: "M9 19v-6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm0 0V9a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v10m-6 0a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2m0 0V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v14a2 2 0 0 0-2 2h-2a2 2 0 0 0-2-2z",
             accent: "#BA7517",
             bg: "#fdf6ec",
@@ -22,7 +22,7 @@ const Budget = () => {
         {
             title: "Budget Performance Indicators",
             description: "Measurable values of the performance of the government's budget.",
-            href: "/budgets/performance-indicators",
+            href: "/group-explorer?type=pi&year=2019&categories=all&states=all",
             icon: "M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z",
 
             accent: "#378ADD",
