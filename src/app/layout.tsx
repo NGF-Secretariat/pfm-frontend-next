@@ -27,8 +27,8 @@ const josefinSans = Josefin_Sans({
 });
 
 export const metadata = {
-  title: "PFM Frontend Next.js",
-  description: "A beautifully crafted Next.js frontend application.",
+  title: "NGF PFM Data Portal",
+  description: "NGF PFM Created by Opemipo Alomaja",
 };
 
 export default function RootLayout({

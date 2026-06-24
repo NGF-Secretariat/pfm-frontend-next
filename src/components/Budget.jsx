@@ -28,6 +28,14 @@ const Budget = () => {
             accent: "#378ADD",
             bg: "#eef6fd",
         },
+        {
+            title: "Revised Budget",
+            description: "Government's revised revenue and proposed expenditure over a period of one year.",
+            href: "/group-explorer?type=revised&year=2020&categories=all&states=all",
+            icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l5.414 5.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z",
+            accent: "#7A37DD",
+            bg: "#f5eefd",
+        },
     ];
     return (
         <section className="py-16 w-full bg-[#f8faf8]">

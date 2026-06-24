@@ -192,12 +192,17 @@ const formatStateName = (name) => {
     return titleCase.endsWith("state") ? titleCase : `${titleCase} State`;
 };
 
-const StateExpenditurePage = ({ slug }) => {
+const StateExpenditurePage = ({ slug, profile: initialProfile }) => {
     const [mode, setMode] = useState("original");
-    const [profile, setProfile] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [profile, setProfile] = useState(initialProfile || null);
+    const [loading, setLoading] = useState(!initialProfile);
 
     useEffect(() => {
+        if (initialProfile) {
+            setProfile(initialProfile);
+            setLoading(false);
+            return;
+        }
         let isMounted = true;
         async function fetchProfile() {
             try {
@@ -214,7 +219,7 @@ const StateExpenditurePage = ({ slug }) => {
         }
         fetchProfile();
         return () => { isMounted = false; };
-    }, [slug]);
+    }, [slug, initialProfile]);
 
     if (loading) {
         return (

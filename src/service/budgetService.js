@@ -48,7 +48,7 @@ class BudgetService {
   formatData(data, type) {
     let states = [];
     try {
-      if (type === "pi" && !data?.data?.result[0]?.indicators[0]?.year) {
+      if (type === "pi" && !data?.data?.result[0]?.indicators?.year) {
         toast.error("No results found");
         throw new Error("No results found");
       } else if (
