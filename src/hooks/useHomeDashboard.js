@@ -125,7 +125,7 @@ export function useHomeDashboard(options = {}) {
   }, [year, budgetType]);
 
   const mapValueForState = useCallback(
-    (slug) => stateExpenditureBySlug[slug] ?? 0,
+    (slug) => stateExpenditureBySlug[slug],
     [stateExpenditureBySlug],
   );
 

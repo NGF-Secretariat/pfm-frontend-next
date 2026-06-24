@@ -233,15 +233,15 @@ export function NigeriaStatesChoropleth({
 
       {tip ? (
         <div
-          className="pointer-events-none absolute z-20 min-w-50 -translate-x-1/2 -translate-y-full rounded-xl border border-border/60 bg-popover/95 p-3 shadow-xl backdrop-blur"
+          className="pointer-events-none absolute z-20 min-w-[200px] -translate-x-1/2 -translate-y-full rounded-xl border border-gray-100 bg-white p-3 shadow-xl backdrop-blur-sm"
           style={{ left: tip.x, top: tip.y - 8 }}
         >
           <div className="mb-1 flex items-baseline justify-between gap-2">
-            <div className="font-medium leading-tight">{tip.name}</div>
+            <div className="font-semibold text-sm text-gray-800 leading-tight">{tip.name}</div>
           </div>
-          <div className="flex items-end justify-between">
-            <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{valueLabel}</div>
-            <div className="font-display text-base font-semibold leading-none num">
+          <div className="flex items-end justify-between gap-4 mt-2">
+            <div className="text-[10px] uppercase tracking-wider font-semibold text-gray-500">{valueLabel}</div>
+            <div className="font-sans text-base font-bold leading-none text-[#1D9E75]">
               {formatValue ? formatValue(tip.value) : Math.round(tip.value)}
             </div>
           </div>

@@ -33,7 +33,8 @@ const HomePage = () => {
           if (item.year) year = item.year;
           const slug = stateApiNameToSlug(item.stateName);
           if (slug && item.amount !== null && item.amount !== undefined) {
-            map[slug] = Number(item.amount);
+            const amt = Number(item.amount);
+            map[slug] = amt > 1000000 ? amt / 1e9 : amt;
           }
         }
         
@@ -55,7 +56,7 @@ const HomePage = () => {
   }, []);
 
   const mapValueForState = useCallback(
-    (slug) => stateExpenditureBySlug[slug] ?? 0,
+    (slug) => stateExpenditureBySlug[slug],
     [stateExpenditureBySlug]
   );
 
