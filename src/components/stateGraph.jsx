@@ -12,7 +12,7 @@ const formatStateName = (name) => {
   return titleCase.endsWith("state") ? titleCase : `${titleCase} State`;
 };
 
-function DownloadMenu({ chartRef, title, mode, seriesKeys, years }) {
+function DownloadMenu({ chartRef, title, chartTitle, seriesKeys, years }) {
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
 
@@ -25,21 +25,90 @@ function DownloadMenu({ chartRef, title, mode, seriesKeys, years }) {
   const getSvg = () => chartRef.current?.querySelector("svg") || chartRef.current;
   const trigger = (url, name) => { const a = document.createElement("a"); a.href = url; a.download = name; a.click(); };
 
+  const prepareSvgClone = (el) => {
+    const clone = el.cloneNode(true);
+    
+    // Remove existing source text to avoid duplication
+    const originalSource = [...clone.querySelectorAll("text")].find(t => t.textContent.includes("Source:"));
+    if (originalSource) originalSource.remove();
+
+    // Add a white background rect
+    const bgRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    bgRect.setAttribute("width", "100%");
+    bgRect.setAttribute("height", "100%");
+    bgRect.setAttribute("fill", "#ffffff");
+    clone.insertBefore(bgRect, clone.firstChild);
+
+    // Wrap existing content in a g element and scale it down to 75%
+    // Shifting it horizontally by 87.5px and vertically by 80px to center it
+    const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    g.setAttribute("transform", "translate(87.5, 80) scale(0.75)");
+    
+    // Move children that are NOT the bgRect into the g element
+    const childrenArray = Array.from(clone.childNodes);
+    childrenArray.forEach(child => {
+      if (child !== bgRect) {
+        g.appendChild(child);
+      }
+    });
+    clone.appendChild(g);
+
+    // Resize the viewBox to make room for title and source
+    clone.setAttribute("viewBox", "0 0 700 450");
+
+    // Add title text
+    const titleText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    titleText.setAttribute("x", "24");
+    titleText.setAttribute("y", "32");
+    titleText.setAttribute("font-family", "sans-serif");
+    titleText.setAttribute("font-size", "12px");
+    titleText.setAttribute("font-weight", "bold");
+    titleText.setAttribute("fill", "#111111");
+    titleText.textContent = chartTitle;
+    clone.appendChild(titleText);
+
+    // Add source text
+    const sourceText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    sourceText.setAttribute("x", "676");
+    sourceText.setAttribute("y", "432");
+    sourceText.setAttribute("font-family", "sans-serif");
+    sourceText.setAttribute("font-size", "10px");
+    sourceText.setAttribute("fill", "#999999");
+    sourceText.setAttribute("text-anchor", "end");
+    sourceText.textContent = "Source: NGF Public Finance Database";
+    clone.appendChild(sourceText);
+
+    return clone;
+  };
+
   const downloadSVG = () => {
     const el = getSvg(); if (!el) return;
-    trigger(URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(el)], { type: "image/svg+xml" })), `${title}.svg`);
+    const clone = prepareSvgClone(el);
+    clone.setAttribute("width", "560");
+    clone.setAttribute("height", "360");
+    trigger(URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(clone)], { type: "image/svg+xml" })), `${title}.svg`);
     setOpen(false);
   };
 
   const rasterize = (type, quality = 1) => {
     const el = getSvg(); if (!el) return;
-    const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(el)], { type: "image/svg+xml;charset=utf-8" }));
+    const clone = prepareSvgClone(el);
+    
+    const targetW = 560, targetH = 360;
+    clone.setAttribute("width", targetW.toString());
+    clone.setAttribute("height", targetH.toString());
+
+    const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(clone)], { type: "image/svg+xml;charset=utf-8" }));
     const img = new Image();
     img.onload = () => {
-      const vb = el.viewBox?.baseVal;
-      const w = (vb?.width || 700) * 2, h = (vb?.height || 400) * 2;
-      const canvas = document.createElement("canvas"); canvas.width = w; canvas.height = h;
-      const ctx = canvas.getContext("2d"); ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, w, h); ctx.scale(2, 2); ctx.drawImage(img, 0, 0);
+      const canvas = document.createElement("canvas");
+      canvas.width = targetW * 2;
+      canvas.height = targetH * 2;
+      const ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.scale(2, 2);
+      ctx.drawImage(img, 0, 0);
       URL.revokeObjectURL(url);
       trigger(canvas.toDataURL(`image/${type}`, quality), `${title}.${type === "jpeg" ? "jpg" : type}`);
     };
@@ -156,7 +225,7 @@ function LineChart({ mode, title, series, years }) {
         <DownloadMenu
           chartRef={chartRef}
           title={`${title.toLowerCase().replace(/\s+/g, "_")}_${mode}`}
-          mode={mode}
+          chartTitle={`${title} – ${mode === "original" ? "Original" : "Actual"}`}
           seriesKeys={seriesKeys}
           years={years}
         />

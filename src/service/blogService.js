@@ -16,6 +16,16 @@ class BlogService {
   updateBlog(slug, data) {
     return httpService.patch(`/blogs/${slug}`, data);
   }
+
+  uploadImage(file) {
+    const formData = new FormData();
+    formData.append("file", file);
+    return httpService.post("/blogs/upload", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  }
 }
 
 export default new BlogService();

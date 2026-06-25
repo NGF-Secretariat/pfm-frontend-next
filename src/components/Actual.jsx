@@ -213,8 +213,8 @@ function BarChart({ mode, data }) {
   const bh = (v) => (v / maxVal) * chartH;
 
   return (
-    <div className="bg-white rounded-xl border border-[#e8e8e8] p-5">
-      <div className="flex items-center justify-between mb-4">
+    <div className="bg-white rounded-xl border border-[#e8e8e8] p-4 sm:p-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <h3 className="text-[15px] font-bold text-[#111]">
           Total Expenditure for the 36 States – <span className="capitalize">{mode === "original" ? "Original" : "Actual"}</span>
         </h3>
@@ -293,8 +293,8 @@ function LineChart({ mode, data }) {
   ];
 
   return (
-    <div className="bg-white rounded-xl border border-[#e8e8e8] p-5">
-      <div className="flex items-center justify-between mb-4">
+    <div className="bg-white rounded-xl border border-[#e8e8e8] p-4 sm:p-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <h3 className="text-[15px] font-bold text-[#111]">
           Total Revenue and Expenditure for the 36 States – <span className="capitalize">{mode === "original" ? "Original" : "Actual"}</span>
         </h3>
@@ -379,7 +379,7 @@ export default function ExpenditureCharts({ mode: defaultMode = "original", onMo
   const data = useMemo(() => seriesFromApi(timeSeries, mode), [timeSeries, mode]);
 
   return (
-    <div className="bg-[#f8faf8] px-8 py-8">
+    <div className="bg-[#f8faf8] px-4 sm:px-8 py-6 sm:py-8">
       <div className="flex justify-center mb-8">
         <div className="inline-flex items-center gap-3 bg-white border border-[#e0e0e0] rounded-full px-6 py-2.5 shadow-sm">
           <span className={`text-[13px] font-medium w-28 text-right transition-colors duration-150 ${mode === "original" ? "text-[#1D9E75]" : "text-[#bbb]"}`}>

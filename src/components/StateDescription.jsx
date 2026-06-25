@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 
-function DownloadMenu({ chartRef, title, dataSeries, years }) {
+function DownloadMenu({ chartRef, title, chartTitle, dataSeries, years }) {
     const [open, setOpen] = useState(false);
     const menuRef = useRef(null);
 
@@ -15,31 +15,90 @@ function DownloadMenu({ chartRef, title, dataSeries, years }) {
     const getSvg = () => chartRef.current?.querySelector("svg") || chartRef.current;
     const trigger = (url, name) => { const a = document.createElement("a"); a.href = url; a.download = name; a.click(); };
 
+    const prepareSvgClone = (el) => {
+        const clone = el.cloneNode(true);
+        
+        // Remove existing source text to avoid duplication
+        const originalSource = [...clone.querySelectorAll("text")].find(t => t.textContent.includes("Source:"));
+        if (originalSource) originalSource.remove();
+
+        // Add a white background rect
+        const bgRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        bgRect.setAttribute("width", "100%");
+        bgRect.setAttribute("height", "100%");
+        bgRect.setAttribute("fill", "#ffffff");
+        clone.insertBefore(bgRect, clone.firstChild);
+
+        // Wrap existing content in a g element and scale it down to 75%
+        // Shifting it horizontally by 77.5px and vertically by 80px to center it
+        const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        g.setAttribute("transform", "translate(77.5, 80) scale(0.75)");
+        
+        // Move children that are NOT the bgRect into the g element
+        const childrenArray = Array.from(clone.childNodes);
+        childrenArray.forEach(child => {
+            if (child !== bgRect) {
+                g.appendChild(child);
+            }
+        });
+        clone.appendChild(g);
+
+        // Resize the viewBox and dimensions to make room for title and source
+        clone.setAttribute("viewBox", "0 0 620 430");
+
+        // Add title text
+        const titleText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        titleText.setAttribute("x", "24");
+        titleText.setAttribute("y", "32");
+        titleText.setAttribute("font-family", "sans-serif");
+        titleText.setAttribute("font-size", "12px");
+        titleText.setAttribute("font-weight", "bold");
+        titleText.setAttribute("fill", "#111111");
+        titleText.textContent = chartTitle;
+        clone.appendChild(titleText);
+
+        // Add source text
+        const sourceText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        sourceText.setAttribute("x", "596");
+        sourceText.setAttribute("y", "412");
+        sourceText.setAttribute("font-family", "sans-serif");
+        sourceText.setAttribute("font-size", "10px");
+        sourceText.setAttribute("fill", "#999999");
+        sourceText.setAttribute("text-anchor", "end");
+        sourceText.textContent = "Source: NGF Public Finance Database";
+        clone.appendChild(sourceText);
+
+        return clone;
+    };
+
     const downloadSVG = () => {
         const el = getSvg(); if (!el) return;
-        const clone = el.cloneNode(true);
-        const wVal = el.viewBox?.baseVal?.width || 620;
-        const hVal = el.viewBox?.baseVal?.height || 360;
-        clone.setAttribute("width", wVal);
-        clone.setAttribute("height", hVal);
+        const clone = prepareSvgClone(el);
+        clone.setAttribute("width", "520");
+        clone.setAttribute("height", "360");
         trigger(URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(clone)], { type: "image/svg+xml" })), `${title}.svg`);
         setOpen(false);
     };
 
     const rasterize = (type, quality = 1) => {
         const el = getSvg(); if (!el) return;
-        const clone = el.cloneNode(true);
-        const wVal = el.viewBox?.baseVal?.width || 620;
-        const hVal = el.viewBox?.baseVal?.height || 360;
-        clone.setAttribute("width", wVal);
-        clone.setAttribute("height", hVal);
+        const clone = prepareSvgClone(el);
+        
+        const targetW = 520, targetH = 360;
+        clone.setAttribute("width", targetW.toString());
+        clone.setAttribute("height", targetH.toString());
         
         const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(clone)], { type: "image/svg+xml;charset=utf-8" }));
         const img = new Image();
         img.onload = () => {
-            const w = wVal * 2, h = hVal * 2;
-            const canvas = document.createElement("canvas"); canvas.width = w; canvas.height = h;
-            const ctx = canvas.getContext("2d"); ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, w, h); ctx.scale(2, 2); ctx.drawImage(img, 0, 0);
+            const canvas = document.createElement("canvas");
+            canvas.width = targetW * 2;
+            canvas.height = targetH * 2;
+            const ctx = canvas.getContext("2d");
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.scale(2, 2);
+            ctx.drawImage(img, 0, 0);
             URL.revokeObjectURL(url);
             trigger(canvas.toDataURL(`image/${type}`, quality), `${title}.${type === "jpeg" ? "jpg" : type}`);
         };
@@ -120,7 +179,7 @@ function BarChart({ mode, stateName, data, years }) {
                 <h3 className="text-[15px] font-bold text-[#111]">
                     {stateName} Total Expenditure – <span className="capitalize">{mode === "original" ? "Original" : "Actual"}</span>
                 </h3>
-                <DownloadMenu chartRef={chartRef} title={`${stateName.replace(/\s+/g, '_').toLowerCase()}_expenditure_${mode}`} dataSeries={data} years={years} />
+                <DownloadMenu chartRef={chartRef} title={`${stateName.replace(/\s+/g, '_').toLowerCase()}_expenditure_${mode}`} chartTitle={`${stateName} Total Expenditure – ${mode === "original" ? "Original" : "Actual"}`} dataSeries={data} years={years} />
             </div>
             <div ref={chartRef}>
                 <svg width="100%" viewBox={`0 0 ${w} ${h}`}>

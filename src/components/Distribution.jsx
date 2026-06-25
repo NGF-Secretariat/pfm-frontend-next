@@ -405,8 +405,15 @@ function DonutChart({ data, total, svgRef }) {
   return (
     <div className="w-full flex flex-col">
       <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12 py-4">
-        <div className="flex-shrink-0">
-          <svg ref={svgRef} width={size} height={size} viewBox={`0 0 ${size} ${size}`} preserveAspectRatio="xMidYMid meet" className="block w-full max-w-[400px]">
+        <div className="w-full max-w-[400px] flex-shrink shrink mx-auto">
+          <svg
+            ref={svgRef}
+            width="100%"
+            height="auto"
+            viewBox={`0 0 ${size} ${size}`}
+            preserveAspectRatio="xMidYMid meet"
+            className="block"
+          >
             {slices.map((s, i) => (
               <g key={s.name}>
                 <path

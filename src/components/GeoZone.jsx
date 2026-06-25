@@ -284,7 +284,14 @@ function PieChart({ zone }) {
                 <h3 className="text-lg font-bold text-[#111]">{zone.name}</h3>
                 <DownloadMenu zone={zone} svgRef={svgRef} />
             </div>
-            <svg ref={svgRef} width={size + 240} height={size + 80} viewBox={`-130 -40 ${size + 240} ${size + 80}`}>
+            <svg
+                ref={svgRef}
+                width="100%"
+                height="auto"
+                viewBox={`-130 -40 ${size + 240} ${size + 80}`}
+                style={{ maxWidth: size + 240 }}
+                className="block"
+            >
                 {slices.map((s, i) => (
                     <g key={s.name}>
                         <path
