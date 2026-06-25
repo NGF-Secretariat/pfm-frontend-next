@@ -330,12 +330,28 @@ class BudgetService {
     return httpService.post('/landing-page/subscribe', { email });
   }
 
+  getSubscribers() {
+    return httpService.get('/landing-page/subscribers');
+  }
+
   getAllStateProfiles() {
     return httpService.get('/state-profile');
   }
 
   getStateProfileBySlug(slug) {
     return httpService.get(`/state-profile/${slug}`);
+  }
+
+  updateStateProfile(slug, data) {
+    return httpService.patch(`/state-profile/${slug}`, data);
+  }
+
+  logTraffic(data) {
+    return httpService.post('/traffic/log', data);
+  }
+
+  getTrafficStats() {
+    return httpService.get('/traffic/stats');
   }
 }
 

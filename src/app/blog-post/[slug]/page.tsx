@@ -17,6 +17,11 @@ export default function BlogDetailsPage({
     const { slug } = use(params);
     const [blog, setBlog] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        setIsLoggedIn(localStorage.getItem("isLoggedIn") === "true");
+    }, []);
 
     useEffect(() => {
         let isMounted = true;
@@ -74,17 +79,19 @@ export default function BlogDetailsPage({
                     </Link>
 
                     {/* Edit */}
-                    {/* <Link
-                        href={`/blog-post/${blog.slug}/edit`}
-                        className="
-                            inline-flex items-center gap-2
-                            text-[#016630] font-semibold bg-green-50
-                            px-4 py-2 rounded-full hover:bg-green-100 transition-colors
-                        "
-                    >
-                        <Edit size={16} />
-                        Edit Post
-                    </Link> */}
+                    {isLoggedIn && (
+                        <Link
+                            href={`/blog-post/${blog.slug}/edit`}
+                            className="
+                                inline-flex items-center gap-2
+                                text-[#016630] font-semibold bg-green-50
+                                px-4 py-2 rounded-full hover:bg-green-100 transition-colors
+                            "
+                        >
+                            <Edit size={16} />
+                            Edit Post
+                        </Link>
+                    )}
                 </div>
 
                 {/* Hero Image */}

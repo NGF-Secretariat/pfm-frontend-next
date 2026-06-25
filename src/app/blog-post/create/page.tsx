@@ -3,7 +3,7 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { ArrowLeft, Loader2, Save } from "lucide-react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import blogService from "../../../service/blogService";
 import { toast } from "react-toastify";
@@ -22,7 +22,19 @@ const EditorWrapper = dynamic(() => import("../../../components/EditorWrapper"),
 export default function CreateBlogPage() {
     const router = useRouter();
     const [saving, setSaving] = useState(false);
+    const [checkingAuth, setCheckingAuth] = useState(true);
     const editorRef = useRef<MDXEditorMethods>(null);
+
+    useEffect(() => {
+        const loggedIn = localStorage.getItem("isLoggedIn") === "true";
+        if (!loggedIn) {
+            toast.error("You must be logged in to access this page.");
+            router.replace("/blog-post");
+        } else {
+            setCheckingAuth(false);
+        }
+    }, [router]);
+
 
     // Generate a unique 5-character string once when the component mounts
     const [uniqueSuffix] = useState(() => Math.random().toString(36).substring(2, 7));
@@ -46,7 +58,7 @@ export default function CreateBlogPage() {
             .split('-')
             .slice(0, 5) // Take first 5 words for short slug
             .join('-');
-            
+
         const slug = baseSlug ? `${baseSlug}-${uniqueSuffix}` : "";
         setFormData({ ...formData, title, slug });
     };
@@ -54,7 +66,7 @@ export default function CreateBlogPage() {
     const handleSave = async () => {
         if (!editorRef.current) return;
         const content = editorRef.current.getMarkdown();
-        
+
         if (!formData.title || !formData.slug) {
             toast.error("Title and Slug are required.");
             return;
@@ -74,6 +86,15 @@ export default function CreateBlogPage() {
             setSaving(false);
         }
     };
+
+    if (checkingAuth) {
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center bg-[#f8faf9]">
+                <Loader2 className="w-10 h-10 text-[#1D9E75] animate-spin mb-4" />
+                <p className="text-gray-500 font-medium">Checking permissions...</p>
+            </div>
+        );
+    }
 
     return (
         <section className="bg-[#f8faf9] min-h-screen py-12 px-4 sm:px-6 lg:px-10">
@@ -114,8 +135,8 @@ export default function CreateBlogPage() {
                 <div className="bg-white p-6 rounded-3xl shadow-md mb-8 grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             value={formData.title}
                             onChange={handleTitleChange}
                             className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#016630]"
@@ -124,37 +145,37 @@ export default function CreateBlogPage() {
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Slug (URL friendly)</label>
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             value={formData.slug}
-                            onChange={(e) => setFormData({...formData, slug: e.target.value})}
+                            onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                             className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#016630]"
                             placeholder="e.g. my-new-post"
                         />
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             value={formData.date}
-                            onChange={(e) => setFormData({...formData, date: e.target.value})}
+                            onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                             className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#016630]"
                         />
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             value={formData.image}
-                            onChange={(e) => setFormData({...formData, image: e.target.value})}
+                            onChange={(e) => setFormData({ ...formData, image: e.target.value })}
                             className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#016630]"
                         />
                     </div>
                     <div className="md:col-span-2">
                         <label className="block text-sm font-medium text-gray-700 mb-1">Excerpt (Short Summary)</label>
-                        <textarea 
+                        <textarea
                             value={formData.excerpt}
-                            onChange={(e) => setFormData({...formData, excerpt: e.target.value})}
+                            onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
                             className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#016630] min-h-[80px]"
                             placeholder="A brief summary of the post..."
                         />
@@ -165,8 +186,8 @@ export default function CreateBlogPage() {
 
                 {/* Editor Container */}
                 <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-200 min-h-[400px]">
-                    <EditorWrapper 
-                        markdown={""} 
+                    <EditorWrapper
+                        markdown={""}
                         editorRef={editorRef}
                     />
                 </div>

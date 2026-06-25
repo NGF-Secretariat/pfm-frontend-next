@@ -17,17 +17,27 @@ function DownloadMenu({ chartRef, title, dataSeries, years }) {
 
     const downloadSVG = () => {
         const el = getSvg(); if (!el) return;
-        trigger(URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(el)], { type: "image/svg+xml" })), `${title}.svg`);
+        const clone = el.cloneNode(true);
+        const wVal = el.viewBox?.baseVal?.width || 620;
+        const hVal = el.viewBox?.baseVal?.height || 360;
+        clone.setAttribute("width", wVal);
+        clone.setAttribute("height", hVal);
+        trigger(URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(clone)], { type: "image/svg+xml" })), `${title}.svg`);
         setOpen(false);
     };
 
     const rasterize = (type, quality = 1) => {
         const el = getSvg(); if (!el) return;
-        const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(el)], { type: "image/svg+xml;charset=utf-8" }));
+        const clone = el.cloneNode(true);
+        const wVal = el.viewBox?.baseVal?.width || 620;
+        const hVal = el.viewBox?.baseVal?.height || 360;
+        clone.setAttribute("width", wVal);
+        clone.setAttribute("height", hVal);
+        
+        const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(clone)], { type: "image/svg+xml;charset=utf-8" }));
         const img = new Image();
         img.onload = () => {
-            const vb = el.viewBox?.baseVal;
-            const w = (vb?.width || 700) * 2, h = (vb?.height || 400) * 2;
+            const w = wVal * 2, h = hVal * 2;
             const canvas = document.createElement("canvas"); canvas.width = w; canvas.height = h;
             const ctx = canvas.getContext("2d"); ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, w, h); ctx.scale(2, 2); ctx.drawImage(img, 0, 0);
             URL.revokeObjectURL(url);

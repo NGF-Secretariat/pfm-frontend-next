@@ -9,6 +9,11 @@ import blogService from "../../service/blogService";
 export default function BlogPage() {
     const [blogs, setBlogs] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        setIsLoggedIn(localStorage.getItem("isLoggedIn") === "true");
+    }, []);
 
     useEffect(() => {
         let isMounted = true;
@@ -43,17 +48,19 @@ export default function BlogPage() {
                             taxation, fiscal systems, and digital transformation.
                         </p>
                     </div>
-                    {/* <Link
-                        href="/blog-post/create"
-                        className="
-                            inline-flex items-center justify-center
-                            bg-[#016630] text-white font-semibold
-                            px-6 py-3 rounded-full hover:bg-[#014c24]
-                            transition-colors shadow-md
-                        "
-                    >
-                        Create Post
-                    </Link> */}
+                    {isLoggedIn && (
+                        <Link
+                            href="/blog-post/create"
+                            className="
+                                inline-flex items-center justify-center
+                                bg-[#016630] text-white font-semibold
+                                px-6 py-3 rounded-full hover:bg-[#014c24]
+                                transition-colors shadow-md
+                            "
+                        >
+                            Create Post
+                        </Link>
+                    )}
                 </div>
 
                 {loading ? (

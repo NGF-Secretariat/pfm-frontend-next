@@ -3,6 +3,7 @@ import "./globals.css";
 import Topbar from "../components/Topbar";
 import Footer from "../components/Footer";
 import ToastProvider from "../components/ToastProvider";
+import TrafficTracker from "../components/TrafficTracker";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,6 +46,7 @@ export default function RootLayout({
   `}>
       <body>
         <Topbar />
+        <TrafficTracker />
         <main className="font-geistSans min-h-screen">
           {children}
         </main>

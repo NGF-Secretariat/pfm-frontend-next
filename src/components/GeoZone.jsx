@@ -20,8 +20,36 @@ function DownloadMenu({ zone, svgRef }) {
     const downloadSVG = () => {
         const svgEl = svgRef.current;
         if (!svgEl) return;
+        const clone = svgEl.cloneNode(true);
+
+        clone.setAttribute("viewBox", "-130 -85 540 450");
+        clone.setAttribute("width", "540");
+        clone.setAttribute("height", "450");
+
+        // Add title text
+        const titleText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        titleText.setAttribute("x", "-120");
+        titleText.setAttribute("y", "-60");
+        titleText.setAttribute("font-family", "sans-serif");
+        titleText.setAttribute("font-size", "11px");
+        titleText.setAttribute("font-weight", "bold");
+        titleText.setAttribute("fill", "#111111");
+        titleText.textContent = `Share of Total Expenditure – ${zone.name} Geopolitical Zone`;
+        clone.appendChild(titleText);
+
+        // Add source text
+        const sourceText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        sourceText.setAttribute("x", "390");
+        sourceText.setAttribute("y", "350");
+        sourceText.setAttribute("font-family", "sans-serif");
+        sourceText.setAttribute("font-size", "10px");
+        sourceText.setAttribute("fill", "#999999");
+        sourceText.setAttribute("text-anchor", "end");
+        sourceText.textContent = "Source: NGF Public Finance Database";
+        clone.appendChild(sourceText);
+
         const serializer = new XMLSerializer();
-        const svgStr = serializer.serializeToString(svgEl);
+        const svgStr = serializer.serializeToString(clone);
         const blob = new Blob([svgStr], { type: "image/svg+xml" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
@@ -35,15 +63,43 @@ function DownloadMenu({ zone, svgRef }) {
     const downloadPNG = () => {
         const svgEl = svgRef.current;
         if (!svgEl) return;
+        const clone = svgEl.cloneNode(true);
+
+        clone.setAttribute("viewBox", "-130 -85 540 450");
+        clone.setAttribute("width", "540");
+        clone.setAttribute("height", "450");
+
+        // Add title text
+        const titleText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        titleText.setAttribute("x", "-120");
+        titleText.setAttribute("y", "-60");
+        titleText.setAttribute("font-family", "sans-serif");
+        titleText.setAttribute("font-size", "11px");
+        titleText.setAttribute("font-weight", "bold");
+        titleText.setAttribute("fill", "#111111");
+        titleText.textContent = `Share of Total Expenditure – ${zone.name} Geopolitical Zone`;
+        clone.appendChild(titleText);
+
+        // Add source text
+        const sourceText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        sourceText.setAttribute("x", "390");
+        sourceText.setAttribute("y", "350");
+        sourceText.setAttribute("font-family", "sans-serif");
+        sourceText.setAttribute("font-size", "10px");
+        sourceText.setAttribute("fill", "#999999");
+        sourceText.setAttribute("text-anchor", "end");
+        sourceText.textContent = "Source: NGF Public Finance Database";
+        clone.appendChild(sourceText);
+
         const serializer = new XMLSerializer();
-        const svgStr = serializer.serializeToString(svgEl);
+        const svgStr = serializer.serializeToString(clone);
         const img = new Image();
         const svgBlob = new Blob([svgStr], { type: "image/svg+xml;charset=utf-8" });
         const url = URL.createObjectURL(svgBlob);
         img.onload = () => {
             const canvas = document.createElement("canvas");
-            canvas.width = svgEl.viewBox.baseVal.width * 2;
-            canvas.height = svgEl.viewBox.baseVal.height * 2;
+            canvas.width = 540 * 2;
+            canvas.height = 450 * 2;
             const ctx = canvas.getContext("2d");
             ctx.fillStyle = "#ffffff";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -63,15 +119,43 @@ function DownloadMenu({ zone, svgRef }) {
     const downloadJPEG = () => {
         const svgEl = svgRef.current;
         if (!svgEl) return;
+        const clone = svgEl.cloneNode(true);
+
+        clone.setAttribute("viewBox", "-130 -85 540 450");
+        clone.setAttribute("width", "540");
+        clone.setAttribute("height", "450");
+
+        // Add title text
+        const titleText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        titleText.setAttribute("x", "-120");
+        titleText.setAttribute("y", "-60");
+        titleText.setAttribute("font-family", "sans-serif");
+        titleText.setAttribute("font-size", "11px");
+        titleText.setAttribute("font-weight", "bold");
+        titleText.setAttribute("fill", "#111111");
+        titleText.textContent = `Share of Total Expenditure – ${zone.name} Geopolitical Zone`;
+        clone.appendChild(titleText);
+
+        // Add source text
+        const sourceText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        sourceText.setAttribute("x", "390");
+        sourceText.setAttribute("y", "350");
+        sourceText.setAttribute("font-family", "sans-serif");
+        sourceText.setAttribute("font-size", "10px");
+        sourceText.setAttribute("fill", "#999999");
+        sourceText.setAttribute("text-anchor", "end");
+        sourceText.textContent = "Source: NGF Public Finance Database";
+        clone.appendChild(sourceText);
+
         const serializer = new XMLSerializer();
-        const svgStr = serializer.serializeToString(svgEl);
+        const svgStr = serializer.serializeToString(clone);
         const img = new Image();
         const svgBlob = new Blob([svgStr], { type: "image/svg+xml;charset=utf-8" });
         const url = URL.createObjectURL(svgBlob);
         img.onload = () => {
             const canvas = document.createElement("canvas");
-            canvas.width = svgEl.viewBox.baseVal.width * 2;
-            canvas.height = svgEl.viewBox.baseVal.height * 2;
+            canvas.width = 540 * 2;
+            canvas.height = 450 * 2;
             const ctx = canvas.getContext("2d");
             ctx.fillStyle = "#ffffff";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -200,7 +284,7 @@ function PieChart({ zone }) {
                 <h3 className="text-lg font-bold text-[#111]">{zone.name}</h3>
                 <DownloadMenu zone={zone} svgRef={svgRef} />
             </div>
-            <svg ref={svgRef} width={size + 180} height={size + 80} viewBox={`-90 -40 ${size + 180} ${size + 80}`}>
+            <svg ref={svgRef} width={size + 240} height={size + 80} viewBox={`-130 -40 ${size + 240} ${size + 80}`}>
                 {slices.map((s, i) => (
                     <g key={s.name}>
                         <path
@@ -324,7 +408,7 @@ const GeoZone = () => {
                         Share of Total Expenditure by Geopolitical Zone,{" "}
                         {year}
                     </h2>
-                    <a href="/nigeria-state-budget" className="text-[13px] text-[#1D9E75] hover:underline font-medium whitespace-nowrap">
+                    <a href="/state-explorer" className="text-[13px] text-[#1D9E75] hover:underline font-medium whitespace-nowrap">
                         See all States
                     </a>
                 </div>

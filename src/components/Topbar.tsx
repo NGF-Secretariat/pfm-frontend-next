@@ -57,23 +57,23 @@ export default function Topbar() {
 
   return (
     <header className="bg-[#012c14] w-full relative z-50">
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8 py-4">
 
         {/* DESKTOP */}
-        <div className="hidden lg:flex items-center justify-between gap-8">
+        <div className="hidden lg:flex items-center justify-between gap-4">
 
           {/* LEFT */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             <Image
               src="/ngf-logo.png"
               alt="Logo"
-              width={120}
-              height={120}
+              width={160}
+              height={160}
               priority
-              className="w-28 h-28 object-contain"
+              className="w-36 h-36 object-contain"
             />
 
-            <h1 className="text-white text-3xl font-bold font-bubblegum">
+            <h1 className="text-white text-2xl font-bold">
               Public Finance Database
             </h1>
           </div>
