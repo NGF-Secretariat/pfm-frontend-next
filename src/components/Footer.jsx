@@ -32,13 +32,12 @@ const Footer = () => {
                     <div className="flex items-center gap-3 mb-4">
                         <Image src="/ngf-logo.png" alt="NGF Logo" width={100} height={100} loading="lazy" />
                         <div>
-                            <p className="text-xs font-bold text-white leading-tight">Nigeria Governors' Forum</p>
+                            {/* <p className="text-xs font-bold text-white leading-tight">Nigeria Governors' Forum</p> */}
                             <p className="text-sm text-[#5DCAA5]">Public Finance Database</p>
                         </div>
                     </div>
-                    <p className="text-sm text-[#7aad96] leading-relaxed">
-                        Open-source fiscal data for Nigeria's 36 state governments. Promoting transparency and accountability.
-                    </p>
+                    <p className="text-sm text-[#7aad96]">
+                        Open-access fiscal data for Nigeria's 36 state governments to promote fiscal transparency, accountability and sustainability.                    </p>
                 </div>
 
                 {/* Navigation */}
