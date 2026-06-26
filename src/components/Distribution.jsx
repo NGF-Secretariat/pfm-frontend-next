@@ -30,17 +30,105 @@ function DownloadMenu({ data, total, svgRef, title }) {
   const getSvg = () => svgRef.current;
   const trigger = (url, name) => { const a = document.createElement("a"); a.href = url; a.download = name; a.click(); };
 
-  const downloadSVG = () => {
-    const el = getSvg(); if (!el) return;
+  const prepareSvgClone = (el) => {
     const clone = el.cloneNode(true);
+    
+    // Add white background
+    const bgRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    bgRect.setAttribute("width", "100%");
+    bgRect.setAttribute("height", "100%");
+    bgRect.setAttribute("fill", "#ffffff");
+    clone.insertBefore(bgRect, clone.firstChild);
 
-    clone.setAttribute("viewBox", "0 -60 400 495");
-    clone.setAttribute("width", "400");
-    clone.setAttribute("height", "495");
+    // Compute slices and labels
+    let cum = 0;
+    const slices = data.map((d) => {
+      const start = cum;
+      cum += d.value / Math.max(total, 1);
+      return { ...d, start, end: cum };
+    });
+
+    const polar = (pct, radius) => {
+      const angle = pct * 2 * Math.PI - Math.PI / 2;
+      return [200 + radius * Math.cos(angle), 200 + radius * Math.sin(angle)];
+    };
+
+    const getLinePoints = (s) => {
+      const mid = (s.start + s.end) / 2;
+      const [ox, oy] = polar(mid, 150 * 1.02);
+      const [lx, ly] = polar(mid, 150 * 1.20);
+      const isRight = lx > 200;
+      const endX = isRight ? lx + 12 : lx - 12;
+      return { ox, oy, lx, ly, endX, isRight };
+    };
+
+    const initialLabels = slices.map((s) => {
+      const percent = (s.value / Math.max(total, 1) * 100).toFixed(1);
+      const { ox, oy, lx, ly, endX, isRight } = getLinePoints(s);
+      return {
+        name: s.name,
+        value: s.value,
+        percent,
+        color: s.color,
+        ox, oy, lx, ly, endX, isRight
+      };
+    });
+
+    const rightLabels = initialLabels.filter(l => l.isRight);
+    const leftLabels = initialLabels.filter(l => !l.isRight);
+
+    rightLabels.sort((a, b) => a.ly - b.ly);
+    leftLabels.sort((a, b) => a.ly - b.ly);
+
+    const minVerticalGap = 18;
+    for (let i = 1; i < rightLabels.length; i++) {
+      if (rightLabels[i].ly < rightLabels[i - 1].ly + minVerticalGap) {
+        rightLabels[i].ly = rightLabels[i - 1].ly + minVerticalGap;
+      }
+    }
+    for (let i = 1; i < leftLabels.length; i++) {
+      if (leftLabels[i].ly < leftLabels[i - 1].ly + minVerticalGap) {
+        leftLabels[i].ly = leftLabels[i - 1].ly + minVerticalGap;
+      }
+    }
+
+    rightLabels.forEach(l => { l.endX = l.lx + 12; });
+    leftLabels.forEach(l => { l.endX = l.lx - 12; });
+
+    const allLabels = [...rightLabels, ...leftLabels];
+
+    // Create a container group for the legends
+    const legendG = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    
+    allLabels.forEach(l => {
+      // Draw polyline
+      const poly = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+      poly.setAttribute("points", `${l.ox},${l.oy} ${l.lx},${l.ly} ${l.endX},${l.ly}`);
+      poly.setAttribute("fill", "none");
+      poly.setAttribute("stroke", "#999");
+      poly.setAttribute("stroke-width", "0.7");
+      legendG.appendChild(poly);
+
+      // Draw text
+      const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      txt.setAttribute("x", l.isRight ? (l.endX + 3).toString() : (l.endX - 3).toString());
+      txt.setAttribute("y", (l.ly + 3).toString());
+      txt.setAttribute("text-anchor", l.isRight ? "start" : "end");
+      txt.setAttribute("font-family", "sans-serif");
+      txt.setAttribute("font-size", "7px");
+      txt.setAttribute("fill", "#333");
+      txt.textContent = `${l.name}: ${formatAbbreviated(l.value)} (${l.percent}%)`;
+      legendG.appendChild(txt);
+    });
+
+    clone.appendChild(legendG);
+
+    // Set new viewBox, width, height
+    clone.setAttribute("viewBox", "-280 -60 950 500");
 
     // Add title text
     const titleText = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    titleText.setAttribute("x", "20");
+    titleText.setAttribute("x", "-260");
     titleText.setAttribute("y", "-35");
     titleText.setAttribute("font-family", "sans-serif");
     titleText.setAttribute("font-size", "11px");
@@ -51,7 +139,7 @@ function DownloadMenu({ data, total, svgRef, title }) {
 
     // Add source text
     const sourceText = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    sourceText.setAttribute("x", "380");
+    sourceText.setAttribute("x", "650");
     sourceText.setAttribute("y", "425");
     sourceText.setAttribute("font-family", "sans-serif");
     sourceText.setAttribute("font-size", "10px");
@@ -59,6 +147,15 @@ function DownloadMenu({ data, total, svgRef, title }) {
     sourceText.setAttribute("text-anchor", "end");
     sourceText.textContent = "Source: NGF Public Finance Database";
     clone.appendChild(sourceText);
+
+    return clone;
+  };
+
+  const downloadSVG = () => {
+    const el = getSvg(); if (!el) return;
+    const clone = prepareSvgClone(el);
+    clone.setAttribute("width", "950");
+    clone.setAttribute("height", "500");
 
     const serializer = new XMLSerializer();
     const svgStr = serializer.serializeToString(clone);
@@ -71,33 +168,11 @@ function DownloadMenu({ data, total, svgRef, title }) {
 
   const downloadPNG = () => {
     const el = getSvg(); if (!el) return;
-    const clone = el.cloneNode(true);
-
-    clone.setAttribute("viewBox", "0 -60 400 495");
-    clone.setAttribute("width", "400");
-    clone.setAttribute("height", "495");
-
-    // Add title text
-    const titleText = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    titleText.setAttribute("x", "20");
-    titleText.setAttribute("y", "-35");
-    titleText.setAttribute("font-family", "sans-serif");
-    titleText.setAttribute("font-size", "11px");
-    titleText.setAttribute("font-weight", "bold");
-    titleText.setAttribute("fill", "#111111");
-    titleText.textContent = "Distribution of Total Expenditure by Sector (Original Budget 2026)";
-    clone.appendChild(titleText);
-
-    // Add source text
-    const sourceText = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    sourceText.setAttribute("x", "380");
-    sourceText.setAttribute("y", "425");
-    sourceText.setAttribute("font-family", "sans-serif");
-    sourceText.setAttribute("font-size", "10px");
-    sourceText.setAttribute("fill", "#999999");
-    sourceText.setAttribute("text-anchor", "end");
-    sourceText.textContent = "Source: NGF Public Finance Database";
-    clone.appendChild(sourceText);
+    const clone = prepareSvgClone(el);
+    
+    const targetW = 950, targetH = 500;
+    clone.setAttribute("width", targetW.toString());
+    clone.setAttribute("height", targetH.toString());
 
     const serializer = new XMLSerializer();
     const svgStr = serializer.serializeToString(clone);
@@ -106,8 +181,8 @@ function DownloadMenu({ data, total, svgRef, title }) {
     const url = URL.createObjectURL(svgBlob);
     img.onload = () => {
       const canvas = document.createElement("canvas");
-      canvas.width = 400 * 2;
-      canvas.height = 495 * 2;
+      canvas.width = targetW * 2;
+      canvas.height = targetH * 2;
       const ctx = canvas.getContext("2d");
       ctx.fillStyle = "#ffffff";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -123,33 +198,11 @@ function DownloadMenu({ data, total, svgRef, title }) {
 
   const downloadJPEG = () => {
     const el = getSvg(); if (!el) return;
-    const clone = el.cloneNode(true);
+    const clone = prepareSvgClone(el);
 
-    clone.setAttribute("viewBox", "0 -60 400 495");
-    clone.setAttribute("width", "400");
-    clone.setAttribute("height", "495");
-
-    // Add title text
-    const titleText = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    titleText.setAttribute("x", "20");
-    titleText.setAttribute("y", "-35");
-    titleText.setAttribute("font-family", "sans-serif");
-    titleText.setAttribute("font-size", "11px");
-    titleText.setAttribute("font-weight", "bold");
-    titleText.setAttribute("fill", "#111111");
-    titleText.textContent = "Distribution of Total Expenditure by Sector (Original Budget 2026)";
-    clone.appendChild(titleText);
-
-    // Add source text
-    const sourceText = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    sourceText.setAttribute("x", "380");
-    sourceText.setAttribute("y", "425");
-    sourceText.setAttribute("font-family", "sans-serif");
-    sourceText.setAttribute("font-size", "10px");
-    sourceText.setAttribute("fill", "#999999");
-    sourceText.setAttribute("text-anchor", "end");
-    sourceText.textContent = "Source: NGF Public Finance Database";
-    clone.appendChild(sourceText);
+    const targetW = 950, targetH = 500;
+    clone.setAttribute("width", targetW.toString());
+    clone.setAttribute("height", targetH.toString());
 
     const serializer = new XMLSerializer();
     const svgStr = serializer.serializeToString(clone);
@@ -158,8 +211,8 @@ function DownloadMenu({ data, total, svgRef, title }) {
     const url = URL.createObjectURL(svgBlob);
     img.onload = () => {
       const canvas = document.createElement("canvas");
-      canvas.width = 400 * 2;
-      canvas.height = 495 * 2;
+      canvas.width = targetW * 2;
+      canvas.height = targetH * 2;
       const ctx = canvas.getContext("2d");
       ctx.fillStyle = "#ffffff";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
