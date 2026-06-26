@@ -45,6 +45,8 @@ export default function EditBlogPage({
         excerpt: ""
     });
 
+    const [tempUploadedImage, setTempUploadedImage] = useState<string | null>(null);
+
     useEffect(() => {
         const loggedIn = localStorage.getItem("isLoggedIn") === "true";
         if (!loggedIn) {
@@ -87,9 +89,10 @@ export default function EditBlogPage({
 
         setUploadingCover(true);
         try {
-            const res = await blogService.uploadImage(file);
+            const res = await blogService.uploadImage(file, tempUploadedImage);
             if (res?.data?.success) {
                 setFormData(prev => ({ ...prev, image: res.data.url }));
+                setTempUploadedImage(res.data.url);
                 toast.success("Cover image uploaded successfully!");
             }
         } catch (err) {

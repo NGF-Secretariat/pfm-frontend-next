@@ -17,9 +17,12 @@ class BlogService {
     return httpService.patch(`/blogs/${slug}`, data);
   }
 
-  uploadImage(file) {
+  uploadImage(file, previousImage = null) {
     const formData = new FormData();
     formData.append("file", file);
+    if (previousImage) {
+      formData.append("previousImage", previousImage);
+    }
     return httpService.post("/blogs/upload", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
