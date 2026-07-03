@@ -164,7 +164,7 @@ export default function UploadPage() {
               ? "bg-emerald-50 border-emerald-200 text-emerald-800"
               : t.type === "error"
                 ? "bg-rose-50 border-rose-200 text-rose-800"
-                : "bg-emerald-50/50 border-emerald-200/60 text-[#012c14]"
+                : "bg-emerald-50/50 border-emerald-200/60 text-[#08542b]"
               }`}
           >
             {t.type === "success" && (
@@ -178,7 +178,7 @@ export default function UploadPage() {
               </svg>
             )}
             {t.type === "info" && (
-              <svg className="w-5 h-5 text-[#012c14] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-5 h-5 text-[#08542b] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             )}
@@ -190,7 +190,7 @@ export default function UploadPage() {
       <div className="w-full max-w-2xl bg-white border border-slate-200/80 rounded-2xl shadow-xl overflow-hidden mt-6 transition-all duration-200">
 
         {/* Modern Header Banner featuring Deep Pine Green Gradient */}
-        <div className="relative bg-gradient-to-r from-[#012c14] via-[#043d1d] to-[#0c5c2d] px-8 py-10 text-white">
+        <div className="relative bg-gradient-to-r from-[#08542b] via-[#053d1f] to-[#0a522c] px-8 py-10 text-white">
           <div className="absolute top-0 right-0 p-8 opacity-10">
             <svg className="w-24 h-24" fill="currentColor" viewBox="0 0 24 24">
               <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm4 18H6V4h7v5h5v11z" />
@@ -216,11 +216,11 @@ export default function UploadPage() {
                 type="button"
                 onClick={() => setUploadType("actual")}
                 className={`flex flex-col text-left p-4 rounded-xl border-2 transition-all ${uploadType === "actual"
-                  ? "border-[#012c14] bg-[#012c14]/5 shadow-sm"
+                  ? "border-[#08542b] bg-[#08542b]/5 shadow-sm"
                   : "border-slate-100 hover:border-slate-300 hover:bg-slate-50"
                   }`}
               >
-                <span className={`p-2 rounded-lg inline-block mb-3 ${uploadType === "actual" ? "bg-[#012c14] text-white" : "bg-slate-100 text-slate-500"}`}>
+                <span className={`p-2 rounded-lg inline-block mb-3 ${uploadType === "actual" ? "bg-[#08542b] text-white" : "bg-slate-100 text-slate-500"}`}>
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2" />
                   </svg>
@@ -234,11 +234,11 @@ export default function UploadPage() {
                 type="button"
                 onClick={() => setUploadType("budget")}
                 className={`flex flex-col text-left p-4 rounded-xl border-2 transition-all ${uploadType === "budget"
-                  ? "border-[#012c14] bg-[#012c14]/5 shadow-sm"
+                  ? "border-[#08542b] bg-[#08542b]/5 shadow-sm"
                   : "border-slate-100 hover:border-slate-300 hover:bg-slate-50"
                   }`}
               >
-                <span className={`p-2 rounded-lg inline-block mb-3 ${uploadType === "budget" ? "bg-[#012c14] text-white" : "bg-slate-100 text-slate-500"}`}>
+                <span className={`p-2 rounded-lg inline-block mb-3 ${uploadType === "budget" ? "bg-[#08542b] text-white" : "bg-slate-100 text-slate-500"}`}>
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
@@ -252,11 +252,11 @@ export default function UploadPage() {
                 type="button"
                 onClick={() => setUploadType("pi")}
                 className={`flex flex-col text-left p-4 rounded-xl border-2 transition-all ${uploadType === "pi"
-                  ? "border-[#012c14] bg-[#012c14]/5 shadow-sm"
+                  ? "border-[#08542b] bg-[#08542b]/5 shadow-sm"
                   : "border-slate-100 hover:border-slate-300 hover:bg-slate-50"
                   }`}
               >
-                <span className={`p-2 rounded-lg inline-block mb-3 ${uploadType === "pi" ? "bg-[#012c14] text-white" : "bg-slate-100 text-slate-500"}`}>
+                <span className={`p-2 rounded-lg inline-block mb-3 ${uploadType === "pi" ? "bg-[#08542b] text-white" : "bg-slate-100 text-slate-500"}`}>
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l5.414 5.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z" />
                   </svg>
@@ -270,11 +270,11 @@ export default function UploadPage() {
                 type="button"
                 onClick={() => setUploadType("revised")}
                 className={`flex flex-col text-left p-4 rounded-xl border-2 transition-all ${uploadType === "revised"
-                  ? "border-[#012c14] bg-[#012c14]/5 shadow-sm"
+                  ? "border-[#08542b] bg-[#08542b]/5 shadow-sm"
                   : "border-slate-100 hover:border-slate-300 hover:bg-slate-50"
                   }`}
               >
-                <span className={`p-2 rounded-lg inline-block mb-3 ${uploadType === "revised" ? "bg-[#012c14] text-white" : "bg-slate-100 text-slate-500"}`}>
+                <span className={`p-2 rounded-lg inline-block mb-3 ${uploadType === "revised" ? "bg-[#08542b] text-white" : "bg-slate-100 text-slate-500"}`}>
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-5m-1.414-9.414a2 2 0 1 1 2.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
@@ -288,11 +288,11 @@ export default function UploadPage() {
                 type="button"
                 onClick={() => setUploadType("landing-page")}
                 className={`flex flex-col text-left p-4 rounded-xl border-2 transition-all ${uploadType === "landing-page"
-                  ? "border-[#012c14] bg-[#012c14]/5 shadow-sm"
+                  ? "border-[#08542b] bg-[#08542b]/5 shadow-sm"
                   : "border-slate-100 hover:border-slate-300 hover:bg-slate-50"
                   }`}
               >
-                <span className={`p-2 rounded-lg inline-block mb-3 ${uploadType === "landing-page" ? "bg-[#012c14] text-white" : "bg-slate-100 text-slate-500"}`}>
+                <span className={`p-2 rounded-lg inline-block mb-3 ${uploadType === "landing-page" ? "bg-[#08542b] text-white" : "bg-slate-100 text-slate-500"}`}>
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z" />
                   </svg>
@@ -308,8 +308,8 @@ export default function UploadPage() {
           <form onDragEnter={handleDrag} className="space-y-6">
             <div
               className={`relative rounded-xl border-2 border-dashed p-8 transition-all flex flex-col items-center justify-center cursor-pointer ${dragActive
-                ? "border-[#012c14] bg-[#012c14]/5 scale-[0.99]"
-                : "border-slate-200 hover:border-[#012c14]/50 hover:bg-slate-50/40"
+                ? "border-[#08542b] bg-[#08542b]/5 scale-[0.99]"
+                : "border-slate-200 hover:border-[#08542b]/50 hover:bg-slate-50/40"
                 }`}
               onDragEnter={handleDrag}
               onDragLeave={handleDrag}
@@ -334,7 +334,7 @@ export default function UploadPage() {
                     </svg>
                   </div>
                   <div>
-                    <span className="text-[#012c14] font-semibold text-sm hover:underline">Choose a file</span>
+                    <span className="text-[#08542b] font-semibold text-sm hover:underline">Choose a file</span>
                     <span className="text-slate-500 text-sm"> or drag & drop here</span>
                   </div>
                   <p className="text-xs text-slate-400">
@@ -344,7 +344,7 @@ export default function UploadPage() {
               ) : (
                 <div className="w-full flex items-center justify-between p-4 rounded-xl bg-slate-50/80 border border-slate-200">
                   <div className="flex items-center space-x-3.5">
-                    <div className="p-3 bg-emerald-100 text-[#012c14] rounded-lg">
+                    <div className="p-3 bg-emerald-100 text-[#08542b] rounded-lg">
                       <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
@@ -376,18 +376,18 @@ export default function UploadPage() {
             {isUploading && (
               <div className="bg-slate-50/60 p-4 rounded-xl border border-slate-200/50 space-y-2.5 animate-pulse">
                 <div className="flex items-center justify-between text-xs font-semibold text-slate-600">
-                  <span className="flex items-center gap-1.5 text-[#012c14]">
+                  <span className="flex items-center gap-1.5 text-[#08542b]">
                     <svg className="animate-spin h-3.5 w-3.5" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                     </svg>
                     {uploadStep}
                   </span>
-                  <span className="text-[#012c14]">{uploadProgress}%</span>
+                  <span className="text-[#08542b]">{uploadProgress}%</span>
                 </div>
                 <div className="w-full bg-slate-200/80 rounded-full h-2">
                   <div
-                    className="bg-[#012c14] h-2 rounded-full transition-all duration-300"
+                    className="bg-[#08542b] h-2 rounded-full transition-all duration-300"
                     style={{ width: `${uploadProgress}%` }}
                   />
                 </div>
@@ -407,7 +407,7 @@ export default function UploadPage() {
                 <button
                   type="button"
                   onClick={handleUpload}
-                  className="px-5 py-2 text-sm font-semibold text-white bg-[#012c14] hover:bg-[#043d1d] active:bg-[#00170a] rounded-lg shadow-md hover:shadow-lg active:scale-[0.98] transition-all flex items-center gap-2"
+                  className="px-5 py-2 text-sm font-semibold text-white bg-[#08542b] hover:bg-[#064e29] active:bg-[#00170a] rounded-lg shadow-md hover:shadow-lg active:scale-[0.98] transition-all flex items-center gap-2"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />

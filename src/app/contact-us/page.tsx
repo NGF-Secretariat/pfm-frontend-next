@@ -74,7 +74,7 @@ export default function ContactPage() {
             <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
 
                 <div className="mb-12 sm:mb-16 text-center">
-                    <h1 className="text-4xl sm:text-5xl font-bubblegum text-[#012c14]">
+                    <h1 className="text-4xl sm:text-5xl font-bubblegum text-[#08542b]">
                         Contact Us
                     </h1>
                     <p className="text-gray-600 mt-4 max-w-2xl mx-auto text-base sm:text-lg leading-relaxed">
@@ -88,7 +88,7 @@ export default function ContactPage() {
                     {/* Left Form Card (3/5 width) */}
                     <div className="lg:col-span-3 bg-white rounded-[32px] shadow-xl p-8 sm:p-10 border border-gray-100/50 flex flex-col justify-between min-w-0">
                         <div>
-                            <h2 className="text-2xl font-bold text-[#012c14] mb-2">
+                            <h2 className="text-2xl font-bold text-[#08542b] mb-2">
                                 Send us a Message
                             </h2>
                             <p className="text-gray-500 text-sm mb-8">
@@ -97,7 +97,7 @@ export default function ContactPage() {
 
                             {submitted ? (
                                 <div className="mb-8 rounded-2xl border border-[#5DCAA5] bg-[#5DCAA5]/10 px-5 py-4 animate-fade-in">
-                                    <p className="text-[#012c14] font-semibold">
+                                    <p className="text-[#08542b] font-semibold">
                                         Message sent successfully!
                                     </p>
                                     <p className="text-gray-600 mt-1 text-sm leading-relaxed">
@@ -106,7 +106,7 @@ export default function ContactPage() {
                                     <button
                                         type="button"
                                         onClick={() => setSubmitted(false)}
-                                        className="mt-4 text-sm font-semibold text-[#1D9E75] hover:text-[#012c14] transition-colors"
+                                        className="mt-4 text-sm font-semibold text-[#1D9E75] hover:text-[#08542b] transition-colors"
                                     >
                                         Send another message
                                     </button>
@@ -190,7 +190,7 @@ export default function ContactPage() {
                                     <button
                                         type="submit"
                                         disabled={submitting}
-                                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#012c14] text-white px-8 py-3.5 rounded-full hover:bg-[#014d24] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-md hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed font-semibold text-sm"
+                                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#08542b] text-white px-8 py-3.5 rounded-full hover:bg-[#064e29] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-md hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed font-semibold text-sm"
                                     >
                                         {submitting ? (
                                             <>
@@ -210,7 +210,7 @@ export default function ContactPage() {
                     </div>
 
                     {/* Right Info Card (2/5 width) */}
-                    <div className="lg:col-span-2 bg-gradient-to-br from-[#012c14] to-[#014c24] text-white rounded-[32px] p-8 sm:p-10 shadow-2xl relative overflow-hidden flex flex-col justify-between min-h-[500px]">
+                    <div className="lg:col-span-2 bg-gradient-to-br from-[#08542b] to-[#053d1f] text-white rounded-[32px] p-8 sm:p-10 shadow-2xl relative overflow-hidden flex flex-col justify-between min-h-[500px]">
                         {/* Glassmorphism ambient glows */}
                         <div className="bg-white/5 w-64 h-64 rounded-full -top-16 -right-16 absolute pointer-events-none filter blur-xl"></div>
                         <div className="bg-white/5 w-36 h-36 rounded-full -bottom-10 -left-10 absolute pointer-events-none filter blur-lg"></div>

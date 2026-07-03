@@ -40,7 +40,7 @@ const Budget = () => {
     return (
         <section className="py-16 w-full bg-[#f8faf8]">
             <div className="mx-auto w-full px-4 sm:px-6 lg:px-8">
-                <h2 className="text-[28px] font-bold text-[#012c14] mb-2">Budgets</h2>
+                <h2 className="text-[28px] font-bold text-[#08542b] mb-2">Budgets</h2>
                 <p className="text-sm text-[#666] mb-9">Access fiscal data across all budget categories</p>
 
                 <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-6">

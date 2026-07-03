@@ -331,7 +331,7 @@ export default function SettingsPage() {
     <div className="animate-fade-in max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <div className="flex justify-between items-center mb-8 border-b border-gray-100 pb-5">
         <div>
-          <h1 className="text-3xl font-bold text-[#012c14] mb-2">Settings</h1>
+          <h1 className="text-3xl font-bold text-[#08542b] mb-2">Settings</h1>
           <p className="text-gray-500">Manage platform access, users, subscriber lists, and state profile details.</p>
         </div>
         <button
@@ -452,7 +452,7 @@ export default function SettingsPage() {
                     <User size={24} />
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold text-[#012c14]">User Management</h2>
+                    <h2 className="text-xl font-bold text-[#08542b]">User Management</h2>
                     <p className="text-gray-500 text-sm">Add or remove administrators and editors.</p>
                   </div>
                 </div>
@@ -468,7 +468,7 @@ export default function SettingsPage() {
               {/* Add/Edit User Form Inline */}
               {isFormOpen && (
                 <div className="p-6 sm:p-8 bg-gray-50 border-b border-gray-100">
-                  <h3 className="text-lg font-semibold text-[#012c14] mb-4">
+                  <h3 className="text-lg font-semibold text-[#08542b] mb-4">
                     {editingId ? "Edit Account" : "Create New Account"}
                   </h3>
                   <form onSubmit={handleSaveUser} className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -610,7 +610,7 @@ export default function SettingsPage() {
                     <Mail size={24} />
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold text-[#012c14]">Newsletter Subscribers</h2>
+                    <h2 className="text-xl font-bold text-[#08542b]">Newsletter Subscribers</h2>
                     <p className="text-gray-500 text-sm">View and manage newsletter subscription list.</p>
                   </div>
                 </div>
@@ -659,7 +659,7 @@ export default function SettingsPage() {
                     <Map size={24} />
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold text-[#012c14]">Edit State Data</h2>
+                    <h2 className="text-xl font-bold text-[#08542b]">Edit State Data</h2>
                     <p className="text-gray-500 text-sm">Update state metadata and description details.</p>
                   </div>
                 </div>
@@ -777,7 +777,7 @@ export default function SettingsPage() {
                       <Activity size={24} />
                     </div>
                     <div>
-                      <h2 className="text-xl font-bold text-[#012c14]">Traffic Analytics</h2>
+                      <h2 className="text-xl font-bold text-[#08542b]">Traffic Analytics</h2>
                       <p className="text-gray-500 text-sm">Monitor platform views and unique visitors in real-time.</p>
                     </div>
                   </div>
@@ -868,7 +868,7 @@ function DailyTrafficChart({ trafficPerDay }: DailyTrafficChartProps) {
 
   return (
     <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm">
-      <h3 className="text-sm font-bold text-[#012c14] mb-4">Traffic over the Last 15 Days</h3>
+      <h3 className="text-sm font-bold text-[#08542b] mb-4">Traffic over the Last 15 Days</h3>
       <div className="w-full">
         <svg width="100%" height="100%" viewBox={`0 0 ${width} ${height}`} className="overflow-visible">
           {[0, 0.25, 0.5, 0.75, 1].map((ratio, index) => {
@@ -961,7 +961,7 @@ function SectionsVisitedList({ sections }: { sections: Array<{ section: string; 
   return (
     <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm h-full flex flex-col justify-between">
       <div>
-        <h3 className="text-sm font-bold text-[#012c14] mb-6 font-sans">Traffic by Portal Section</h3>
+        <h3 className="text-sm font-bold text-[#08542b] mb-6 font-sans">Traffic by Portal Section</h3>
         <div className="space-y-4">
           {sections.slice(0, 6).map((sec, idx) => {
             const percentage = Math.round((sec.count / total) * 100);
@@ -1003,7 +1003,7 @@ function PagesVisitedTable({ pages }: PagesVisitedTableProps) {
   return (
     <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
       <div className="p-6 border-b border-gray-100">
-        <h3 className="text-sm font-bold text-[#012c14]">Most Visited Pages</h3>
+        <h3 className="text-sm font-bold text-[#08542b]">Most Visited Pages</h3>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">

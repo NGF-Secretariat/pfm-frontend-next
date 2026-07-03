@@ -40,7 +40,7 @@ export default function ContactSubmissionsPage() {
     <div className="min-h-screen bg-[#f8faf8] py-12 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[#012c14]">Contact Us Submissions</h1>
+          <h1 className="text-3xl font-bold text-[#08542b]">Contact Us Submissions</h1>
           <p className="mt-2 text-gray-600">
             View all inquiries and messages submitted through the contact form.
           </p>
@@ -106,8 +106,8 @@ export default function ContactSubmissionsPage() {
                       </td>
                       <td className="px-6 py-5 align-top">
                         <a 
-                          href={`mailto:${sub.email}`} 
-                          className="text-[#1D9E75] hover:text-[#012c14] font-medium transition-colors"
+                           href={`mailto:${sub.email}`} 
+                          className="text-[#1D9E75] hover:text-[#08542b] font-medium transition-colors"
                         >
                           {sub.email}
                         </a>

@@ -56,7 +56,7 @@ export default function Topbar() {
   ];
 
   return (
-    <header className="bg-[#012c14] w-full relative z-50">
+    <header className="bg-[#08542b] w-full relative z-50">
       <div className="mx-auto px-4 sm:px-6 lg:px-8 py-4">
 
         {/* DESKTOP */}
@@ -67,10 +67,10 @@ export default function Topbar() {
             <Image
               src="/ngf-logo.png"
               alt="Logo"
-              width={160}
-              height={160}
+              width={220}
+              height={220}
               priority
-              className="w-36 h-36 object-contain"
+              className="w-48 h-auto object-contain"
             />
 
             <h1 className="text-white text-2xl font-bold">
@@ -109,7 +109,7 @@ export default function Topbar() {
                         const stateQueryVal = state.split(" ").join("_").toUpperCase();
                         return (
                           <div key={state} className="p-4 hover:bg-slate-50 transition-colors">
-                            <div className="font-bold text-base text-[#012c14] mb-2">{state} State</div>
+                            <div className="font-bold text-base text-[#08542b] mb-2">{state} State</div>
                             <div className="flex gap-2">
                               <Link
                                 href={`/state-explorer/${slug}`}
@@ -117,7 +117,7 @@ export default function Topbar() {
                                   setSearchQuery("");
                                   setIsFocused(false);
                                 }}
-                                className="flex-1 text-center py-1.5 px-3 bg-emerald-50 text-[#012c14] hover:bg-emerald-100 rounded-lg text-xs font-semibold border border-emerald-100 transition-colors"
+                                className="flex-1 text-center py-1.5 px-3 bg-emerald-50 text-[#08542b] hover:bg-emerald-100 rounded-lg text-xs font-semibold border border-emerald-100 transition-colors"
                               >
                                 State Explorer
                               </Link>
@@ -208,7 +208,7 @@ export default function Topbar() {
                         >
                           <div
                             className="
-                            bg-white text-[#012c14]
+                            bg-white text-[#08542b]
                             rounded-xl shadow-2xl border
                             py-3 w-56 flex flex-col
                           "
@@ -247,10 +247,10 @@ export default function Topbar() {
             <Image
               src="/ngf-logo.png"
               alt="Logo"
-              width={60}
-              height={60}
+              width={100}
+              height={100}
               priority
-              className="w-14 h-14 object-contain"
+              className="w-22 h-auto object-contain"
             />
 
             {/* Title */}
@@ -304,7 +304,7 @@ export default function Topbar() {
               <X size={22} />
             </button>
 
-            <h2 className="text-xl font-bold text-[#012c14] mb-4">
+            <h2 className="text-xl font-bold text-[#08542b] mb-4">
               Search State
             </h2>
 
@@ -317,7 +317,7 @@ export default function Topbar() {
                 w-full border border-gray-300
                 rounded-xl px-4 py-3 mb-4
                 outline-none focus:ring-2
-                focus:ring-[#012c14]
+                focus:ring-[#08542b]
               "
             />
 
@@ -337,7 +337,7 @@ export default function Topbar() {
                               setSearchOpen(false);
                               setSearchQuery("");
                             }}
-                            className="flex-1 text-center py-2 px-3 bg-emerald-50 text-[#012c14] hover:bg-emerald-100 rounded-lg text-xs font-semibold border border-emerald-100 transition-colors"
+                            className="flex-1 text-center py-2 px-3 bg-emerald-50 text-[#08542b] hover:bg-emerald-100 rounded-lg text-xs font-semibold border border-emerald-100 transition-colors"
                           >
                             State Explorer
                           </Link>
@@ -378,7 +378,7 @@ export default function Topbar() {
           >
             {/* Top */}
             <div className="flex items-center justify-between mb-8">
-              <h2 className="text-xl font-bold text-[#012c14]">
+              <h2 className="text-xl font-bold text-[#08542b]">
                 Menu
               </h2>
 
@@ -396,13 +396,13 @@ export default function Topbar() {
                 .map((item) => (
                   <div key={item.path}>
                     <Link
-                      href={item.path}
+                       href={item.path}
                       onClick={() => setMobileMenuOpen(false)}
                       className={`
                         flex items-center justify-between px-4 py-3 rounded-xl
                         transition-all font-medium
                         ${pathname === item.path
-                          ? "bg-[#012c14] text-white"
+                          ? "bg-[#08542b] text-white"
                           : "hover:bg-gray-100 text-gray-700"
                         }
                       `}
@@ -426,7 +426,7 @@ export default function Topbar() {
                             className="
                               px-4 py-2 text-sm
                               text-gray-600
-                              hover:text-[#012c14]
+                              hover:text-[#08542b]
                             "
                           >
                             {child.name}

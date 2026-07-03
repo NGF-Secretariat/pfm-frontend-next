@@ -106,7 +106,7 @@ export default function BlogDetailsPage({
                         href="/blog-post"
                         className="
                             inline-flex items-center gap-2
-                            text-[#012c14]
+                            text-[#08542b]
                             hover:gap-4 transition-all
                         "
                     >
@@ -149,7 +149,7 @@ export default function BlogDetailsPage({
                         <span>{blog.date}</span>
                     </div>
 
-                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#012c14] leading-tight mb-4">
+                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#08542b] leading-tight mb-4">
                         {blog.title}
                     </h1>
 
@@ -167,7 +167,7 @@ export default function BlogDetailsPage({
                     {/* Left Sidebar (Share & Tags) */}
                     <div className="md:col-span-3 flex flex-col gap-8 border-b md:border-b-0 pb-6 md:pb-0 border-gray-200 md:sticky md:top-6">
                         <div>
-                            <span className="block text-xs font-extrabold uppercase tracking-widest text-[#012c14] mb-3">
+                            <span className="block text-xs font-extrabold uppercase tracking-widest text-[#08542b] mb-3">
                                 Share
                             </span>
                             <div className="flex flex-wrap gap-2.5">
@@ -176,7 +176,7 @@ export default function BlogDetailsPage({
                                     href={shareLinks.linkedin}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="w-9 h-9 rounded-full border border-[#012c14] flex items-center justify-center text-[#012c14] hover:bg-[#012c14] hover:text-white transition-all duration-200 cursor-pointer font-sans font-bold text-sm leading-none"
+                                    className="w-9 h-9 rounded-full border border-[#08542b] flex items-center justify-center text-[#08542b] hover:bg-[#08542b] hover:text-white transition-all duration-200 cursor-pointer font-sans font-bold text-sm leading-none"
                                     title="Share on LinkedIn"
                                 >
                                     in
@@ -186,7 +186,7 @@ export default function BlogDetailsPage({
                                     href={shareLinks.facebook}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="w-9 h-9 rounded-full border border-[#012c14] flex items-center justify-center text-[#012c14] hover:bg-[#012c14] hover:text-white transition-all duration-200 cursor-pointer font-serif font-bold text-base leading-none"
+                                    className="w-9 h-9 rounded-full border border-[#08542b] flex items-center justify-center text-[#08542b] hover:bg-[#08542b] hover:text-white transition-all duration-200 cursor-pointer font-serif font-bold text-base leading-none"
                                     title="Share on Facebook"
                                 >
                                     f
@@ -196,7 +196,7 @@ export default function BlogDetailsPage({
                                     href={shareLinks.x}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="w-9 h-9 rounded-full border border-[#012c14] flex items-center justify-center text-[#012c14] hover:bg-[#012c14] hover:text-white transition-all duration-200 cursor-pointer"
+                                    className="w-9 h-9 rounded-full border border-[#08542b] flex items-center justify-center text-[#08542b] hover:bg-[#08542b] hover:text-white transition-all duration-200 cursor-pointer"
                                     title="Share on X"
                                 >
                                     <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-current">
@@ -208,7 +208,7 @@ export default function BlogDetailsPage({
                                     href={shareLinks.threads}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="w-9 h-9 rounded-full border border-[#012c14] flex items-center justify-center text-[#012c14] hover:bg-[#012c14] hover:text-white transition-all duration-200 cursor-pointer font-sans font-semibold text-sm leading-none"
+                                    className="w-9 h-9 rounded-full border border-[#08542b] flex items-center justify-center text-[#08542b] hover:bg-[#08542b] hover:text-white transition-all duration-200 cursor-pointer font-sans font-semibold text-sm leading-none"
                                     title="Share on Threads"
                                 >
                                     @
@@ -216,7 +216,7 @@ export default function BlogDetailsPage({
                                 {/* Email */}
                                 <a
                                     href={shareLinks.email}
-                                    className="w-9 h-9 rounded-full border border-[#012c14] flex items-center justify-center text-[#012c14] hover:bg-[#012c14] hover:text-white transition-all duration-200 cursor-pointer"
+                                    className="w-9 h-9 rounded-full border border-[#08542b] flex items-center justify-center text-[#08542b] hover:bg-[#08542b] hover:text-white transition-all duration-200 cursor-pointer"
                                     title="Share via Email"
                                 >
                                     <svg viewBox="0 0 24 24" className="w-4 h-4 stroke-current fill-none" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -229,7 +229,7 @@ export default function BlogDetailsPage({
 
                         {tags.length > 0 && (
                             <div>
-                                <span className="block text-xs font-extrabold uppercase tracking-widest text-[#012c14] mb-3">
+                                <span className="block text-xs font-extrabold uppercase tracking-widest text-[#08542b] mb-3">
                                     Tags
                                 </span>
                                 <div className="flex flex-wrap gap-2">
@@ -251,7 +251,7 @@ export default function BlogDetailsPage({
                         <article
                             className="
                                 prose prose-md sm:prose-lg max-w-none
-                                prose-headings:text-[#012c14] prose-headings:font-bold
+                                prose-headings:text-[#08542b] prose-headings:font-bold
                                 prose-p:text-gray-700
                                 prose-p:leading-8
                                 prose-a:text-[#016630] prose-a:no-underline hover:prose-a:underline

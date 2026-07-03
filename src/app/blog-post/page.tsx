@@ -40,7 +40,7 @@ export default function BlogPage() {
                 {/* Header */}
                 <div className="mb-14 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                     <div>
-                        <h1 className="text-4xl sm:text-5xl font-bubblegum text-[#012c14]">
+                        <h1 className="text-4xl sm:text-5xl font-bubblegum text-[#08542b]">
                             Public Finance: The Blog
                         </h1>
                         <p className="mt-4 text-gray-600 text-lg max-w-2xl">
@@ -104,7 +104,7 @@ export default function BlogPage() {
                                     {/* Title */}
                                     <h2
                                         className="
-                                            text-2xl font-bold text-[#012c14]
+                                            text-2xl font-bold text-[#08542b]
                                             leading-tight mb-4
                                             group-hover:text-[#016630]
                                             transition-colors

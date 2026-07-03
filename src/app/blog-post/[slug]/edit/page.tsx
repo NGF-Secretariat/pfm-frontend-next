@@ -203,7 +203,7 @@ export default function EditBlogPage({
                         href={`/blog-post/${blog.slug}`}
                         className="
                             inline-flex items-center gap-2
-                            text-[#012c14]
+                            text-[#08542b]
                             hover:gap-4 transition-all
                         "
                     >
@@ -227,7 +227,7 @@ export default function EditBlogPage({
                     </button>
                 </div>
 
-                <h1 className="text-3xl font-bold text-[#012c14] mb-2">Editing: {formData.title || blog.title}</h1>
+                <h1 className="text-3xl font-bold text-[#08542b] mb-2">Editing: {formData.title || blog.title}</h1>
                 <p className="text-gray-500 mb-8">Update the metadata and body content below. MDX features are fully supported.</p>
 
                 {/* Metadata Fields */}

@@ -169,7 +169,7 @@ export default function CreateBlogPage() {
                         href={`/blog-post`}
                         className="
                             inline-flex items-center gap-2
-                            text-[#012c14]
+                            text-[#08542b]
                             hover:gap-4 transition-all
                         "
                     >
@@ -193,7 +193,7 @@ export default function CreateBlogPage() {
                     </button>
                 </div>
 
-                <h1 className="text-3xl font-bold text-[#012c14] mb-8">Create New Blog Post</h1>
+                <h1 className="text-3xl font-bold text-[#08542b] mb-8">Create New Blog Post</h1>
 
                 {/* Metadata Fields */}
                 <div className="bg-white p-6 rounded-3xl shadow-md mb-8 grid grid-cols-1 md:grid-cols-2 gap-6">

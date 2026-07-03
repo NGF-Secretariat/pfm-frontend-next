@@ -30,8 +30,8 @@ const SignUpUpdate = () => {
                         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" />
                     </svg>
                 </div>
-                <h2 className="text-[26px] font-bold text-[#012c13] mb-2.5">Sign up for updates</h2>
-                <p className="text-lg text-[#012c13] mb-7 leading-relaxed">
+                <h2 className="text-[26px] font-bold text-[#08542b] mb-2.5">Sign up for updates</h2>
+                <p className="text-lg text-[#08542b] mb-7 leading-relaxed">
                     Receive updates on the go, whenever the portal is updated with new fiscal data.
                 </p>
                 {subscribed ? (
@@ -39,19 +39,19 @@ const SignUpUpdate = () => {
                         <p className="text-[#5DCAA5] font-semibold text-[15px]">✓ You&apos;re subscribed! We&apos;ll notify you when new data is published.</p>
                     </div>
                 ) : (
-                    <form onSubmit={handleSubscribe} className="flex rounded-lg overflow-hidden border-2 border-[#012c14] bg-white">
+                    <form onSubmit={handleSubscribe} className="flex rounded-lg overflow-hidden border-2 border-[#08542b] bg-white">
                         <input
-                            type="email"
+                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="Enter your email address"
                             required
-                            className="flex-1 px-4 py-3 border-none outline-none text-sm text-[#012c14] cursor-pointer font-[inherit]"
+                            className="flex-1 px-4 py-3 border-none outline-none text-sm text-[#08542b] cursor-pointer font-[inherit]"
                         />
                         <button
                             type="submit"
                             disabled={loading}
-                            className="bg-[#012c14] hover:bg-[#0f6e56] disabled:opacity-70 text-white px-[22px] font-bold text-sm whitespace-nowrap transition-colors duration-150"
+                            className="bg-[#08542b] hover:bg-[#064e29] disabled:opacity-70 text-white px-[22px] font-bold text-sm whitespace-nowrap transition-colors duration-150"
                         >
                             {loading ? 'Subscribing...' : 'Notify me'}
                         </button>

@@ -26,7 +26,7 @@ const Footer = () => {
     ];
 
     return (
-        <div className="bg-[#012c14] pt-12 mt-auto w-full">
+        <div className="bg-[#08542b] pt-12 mt-auto w-full">
             <div className="mx-auto px-8 pb-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
                 <div>
                     <div className="flex items-center gap-3 mb-4">
@@ -102,7 +102,7 @@ const Footer = () => {
             </div>
 
             {/* Bottom Bar */}
-            <div className="bg-[#012c14] px-6 py-6">
+            <div className="bg-[#08542b] px-6 py-6">
                 <div className="max-w-[1140px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
                     <p className="text-[#7aad96] text-sm text-center sm:text-left">
                         © {new Date().getFullYear()} Nigeria Governors' Forum. All rights reserved.
