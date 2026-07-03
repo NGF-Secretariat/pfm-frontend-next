@@ -46,16 +46,25 @@ function getFlatCategories(type) {
   return flatten(CATEGORIES);
 }
 
+const cleanValue = (val) => {
+  if (val === null || val === undefined) return NaN;
+  if (typeof val === "number") return val;
+  const cleaned = String(val).replace(/,/g, "");
+  return parseFloat(cleaned);
+};
+
 const getAmountForRanking = (item, type) => {
   if (type !== 'pi') {
     if (item?.revenue_by_economic?.total_revenue_with_opening_balance !== undefined) {
       const field = item.revenue_by_economic.total_revenue_with_opening_balance;
-      const val = parseFloat(typeof field === 'object' && field !== null ? field.value : field);
+      const rawVal = typeof field === 'object' && field !== null ? field.value : field;
+      const val = cleanValue(rawVal);
       if (!isNaN(val)) return val;
     }
     if (item?.exp_by_economic?.total_expenditure !== undefined) {
       const field = item.exp_by_economic.total_expenditure;
-      const val = parseFloat(typeof field === 'object' && field !== null ? field.value : field);
+      const rawVal = typeof field === 'object' && field !== null ? field.value : field;
+      const val = cleanValue(rawVal);
       if (!isNaN(val)) return val;
     }
   }
@@ -69,9 +78,9 @@ const getAmountForRanking = (item, type) => {
     
     if (typeof val === "object") {
       if (val.value !== undefined) {
-        const parsed = parseFloat(val.value);
-        if (!isNaN(parsed)) {
-          sum += parsed;
+        const valNum = cleanValue(val.value);
+        if (!isNaN(valNum)) {
+          sum += valNum;
         }
       } else {
         for (let k in val) {
@@ -83,9 +92,9 @@ const getAmountForRanking = (item, type) => {
     } else if (typeof val === "number") {
       sum += val;
     } else if (typeof val === "string") {
-      const parsed = parseFloat(val);
-      if (!isNaN(parsed) && /^\d+(\.\d+)?$/.test(val.trim())) {
-        sum += parsed;
+      const valNum = cleanValue(val);
+      if (!isNaN(valNum)) {
+        sum += valNum;
       }
     }
   };

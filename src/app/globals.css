@@ -126,27 +126,13 @@
   min-width: 350px;
   max-width: 350px;
   width: 350px;
-  box-shadow: 2px 0 5px -2px rgba(0, 0, 0, 0.15);
-  border-right: 1px solid #f1f3f5;
-}
-
-/* Column 3 (First State, e.g. Abia) - Sticky Left 470px (120px + 350px) */
-.standard-table th:nth-child(3),
-.standard-table td:nth-child(3) {
-  position: sticky;
-  left: 470px;
-  z-index: 12;
-  min-width: 150px;
-  max-width: 150px;
-  width: 150px;
   box-shadow: 4px 0 8px -3px rgba(0, 0, 0, 0.2);
   border-right: 1px solid #e9ecef;
 }
 
 /* Higher z-index for standard table frozen headers */
 .standard-table th:nth-child(1),
-.standard-table th:nth-child(2),
-.standard-table th:nth-child(3) {
+.standard-table th:nth-child(2) {
   z-index: 30;
 }
 
@@ -161,11 +147,6 @@
   left: 120px;
   z-index: 11;
 }
-.standard-table tr.sticky-top__sub td:nth-child(3) {
-  position: sticky;
-  left: 470px;
-  z-index: 11;
-}
 
 /* --- PI Table (Indicators | State 1 (Abia) | States 2+ ) --- */
 
@@ -178,26 +159,12 @@
   min-width: 350px;
   max-width: 350px;
   width: 350px;
-  box-shadow: 2px 0 5px -2px rgba(0, 0, 0, 0.15);
-  border-right: 1px solid #f1f3f5;
-}
-
-/* Column 2 (First State, e.g. Abia) - Sticky Left 350px */
-.pi-table th:nth-child(2),
-.pi-table td:nth-child(2) {
-  position: sticky;
-  left: 350px;
-  z-index: 12;
-  min-width: 150px;
-  max-width: 150px;
-  width: 150px;
   box-shadow: 4px 0 8px -3px rgba(0, 0, 0, 0.2);
   border-right: 1px solid #e9ecef;
 }
 
 /* Higher z-index for PI frozen headers */
-.pi-table th:nth-child(1),
-.pi-table th:nth-child(2) {
+.pi-table th:nth-child(1) {
   z-index: 30;
 }
 
@@ -207,20 +174,15 @@
   left: 0;
   z-index: 11;
 }
-.pi-table tr.sticky-top__sub td:nth-child(2) {
-  position: sticky;
-  left: 350px;
-  z-index: 11;
-}
 
-/* --- Styling for general scrollable columns (States 2, 3, etc.) --- */
-.data-table th:nth-child(n+4),
-.data-table td:nth-child(n+4) {
+/* --- Styling for general scrollable columns (States 1, 2, etc.) --- */
+.data-table th:nth-child(n+3),
+.data-table td:nth-child(n+3) {
   min-width: 150px;
   border-right: 1px solid #f1f3f5;
 }
-.pi-table th:nth-child(n+3),
-.pi-table td:nth-child(n+3) {
+.pi-table th:nth-child(n+2),
+.pi-table td:nth-child(n+2) {
   min-width: 150px;
   border-right: 1px solid #f1f3f5;
 }
