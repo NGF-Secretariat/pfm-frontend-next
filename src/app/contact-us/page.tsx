@@ -231,7 +231,7 @@ export default function ContactPage() {
                                             Address
                                         </h3>
                                         <p className="text-white/95 leading-relaxed font-medium text-sm">
-                                            49/51, Lake Chad Crescent <br />
+                                            51, Lake Chad Crescent <br />
                                             Maitama, Abuja <br />
                                             Federal Capital Territory, Nigeria
                                         </p>
