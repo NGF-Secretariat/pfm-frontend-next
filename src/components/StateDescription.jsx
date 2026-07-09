@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import Link from "next/link";
 
 function DownloadMenu({ chartRef, title, chartTitle, dataSeries, years }) {
     const [open, setOpen] = useState(false);
@@ -309,13 +310,15 @@ const StateExpenditurePage = ({ slug, profile: initialProfile }) => {
 
     const stateName = formatStateName(profile.state?.name);
     const years = profile.timeSeries?.actual?.expenditure ? profile.timeSeries.actual.expenditure.map(v => v.year) : [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+    const stateValue = profile.state?.name?.split(" ").join("_")?.toUpperCase() || "";
+    const dataTableUrl = `/group-explorer?states=${stateValue}&type=actual&categories=all`;
 
     return (
         <div className="bg-white">
             {/* Top bar */}
             <div className="flex items-center justify-between px-8 py-4 border-b border-[#f0f0f0]">
                 <h1 className="text-2xl font-bold text-[#1a1a1a]">{stateName}</h1>
-                <a href="#data-table" className="text-[13px] text-[#1D9E75] hover:underline font-medium">View Data Table</a>
+                <Link href={dataTableUrl} className="text-[13px] text-[#1D9E75] hover:underline font-medium">View Data Table</Link>
             </div>
 
             {/* Toggle */}
