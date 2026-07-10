@@ -309,7 +309,26 @@ const StateExpenditurePage = ({ slug, profile: initialProfile }) => {
     }
 
     const stateName = formatStateName(profile.state?.name);
-    const years = profile.timeSeries?.actual?.expenditure ? profile.timeSeries.actual.expenditure.map(v => v.year) : [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+    const allYears = profile.timeSeries?.actual?.expenditure ? profile.timeSeries.actual.expenditure.map(v => v.year) : [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+    
+    const filteredYears = allYears.filter(year => {
+        if (!profile.timeSeries) return true;
+        if (mode === "actual") {
+            const hasActualExp = profile.timeSeries.actual?.expenditure?.some(v => v.year === year && v.value > 0);
+            const hasActualRev = profile.timeSeries.actual?.revenue?.some(v => v.year === year && v.value > 0);
+            const hasActualCap = profile.timeSeries.actual?.capital?.some(v => v.year === year && v.value > 0);
+            const hasActualRec = profile.timeSeries.actual?.recurrent?.some(v => v.year === year && v.value > 0);
+            return hasActualExp || hasActualRev || hasActualCap || hasActualRec;
+        } else {
+            const hasOriginalExp = profile.timeSeries.original?.expenditure?.some(v => v.year === year && v.value > 0);
+            const hasOriginalRev = profile.timeSeries.original?.revenue?.some(v => v.year === year && v.value > 0);
+            const hasOriginalCap = profile.timeSeries.original?.capital?.some(v => v.year === year && v.value > 0);
+            const hasOriginalRec = profile.timeSeries.original?.recurrent?.some(v => v.year === year && v.value > 0);
+            return hasOriginalExp || hasOriginalRev || hasOriginalCap || hasOriginalRec;
+        }
+    });
+    const years = filteredYears.length > 0 ? filteredYears : allYears;
+
     const stateValue = profile.state?.name?.split(" ").join("_")?.toUpperCase() || "";
     const dataTableUrl = `/group-explorer?states=${stateValue}&type=actual&categories=all`;
 
@@ -345,7 +364,9 @@ const StateExpenditurePage = ({ slug, profile: initialProfile }) => {
                 <BarChart
                     mode={mode}
                     stateName={stateName}
-                    data={profile.timeSeries?.actual?.expenditure ? profile.timeSeries[mode].expenditure.map(v => v.value) : Array(years.length).fill(0)}
+                    data={profile.timeSeries?.[mode]?.expenditure 
+                        ? years.map(year => profile.timeSeries[mode].expenditure.find(v => v.year === year)?.value || 0) 
+                        : Array(years.length).fill(0)}
                     years={years}
                 />
                 <AboutPanel profile={profile} />

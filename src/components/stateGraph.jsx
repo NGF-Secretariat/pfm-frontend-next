@@ -364,7 +364,35 @@ export default function StateLineChartsPage({ slug, profile: initialProfile }) {
   if (!profile) return null;
 
   const stateName = formatStateName(profile.state?.name);
-  const years = profile.timeSeries?.actual?.expenditure ? profile.timeSeries.actual.expenditure.map(v => v.year) : [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+  const allYears = profile.timeSeries?.actual?.expenditure ? profile.timeSeries.actual.expenditure.map(v => v.year) : [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+  
+  const getYearsForMode = (mode) => {
+    return allYears.filter(year => {
+      if (!profile.timeSeries) return true;
+      if (mode === "actual") {
+        const hasActualExp = profile.timeSeries.actual?.expenditure?.some(v => v.year === year && v.value > 0);
+        const hasActualRev = profile.timeSeries.actual?.revenue?.some(v => v.year === year && v.value > 0);
+        const hasActualCap = profile.timeSeries.actual?.capital?.some(v => v.year === year && v.value > 0);
+        const hasActualRec = profile.timeSeries.actual?.recurrent?.some(v => v.year === year && v.value > 0);
+        return hasActualExp || hasActualRev || hasActualCap || hasActualRec;
+      } else {
+        const hasOriginalExp = profile.timeSeries.original?.expenditure?.some(v => v.year === year && v.value > 0);
+        const hasOriginalRev = profile.timeSeries.original?.revenue?.some(v => v.year === year && v.value > 0);
+        const hasOriginalCap = profile.timeSeries.original?.capital?.some(v => v.year === year && v.value > 0);
+        const hasOriginalRec = profile.timeSeries.original?.recurrent?.some(v => v.year === year && v.value > 0);
+        return hasOriginalExp || hasOriginalRev || hasOriginalCap || hasOriginalRec;
+      }
+    });
+  };
+
+  const yearsLeft = getYearsForMode(modeLeft).length > 0 ? getYearsForMode(modeLeft) : allYears;
+  const yearsRight = getYearsForMode(modeRight).length > 0 ? getYearsForMode(modeRight) : allYears;
+
+  const getSeriesData = (yearsList, mode, key) => {
+    return profile.timeSeries?.[mode]?.[key]
+      ? yearsList.map(year => profile.timeSeries[mode][key].find(v => v.year === year)?.value || 0)
+      : Array(yearsList.length).fill(0);
+  };
 
   return (
     <div className="bg-[#f8faf8] px-10 py-20">
@@ -379,10 +407,10 @@ export default function StateLineChartsPage({ slug, profile: initialProfile }) {
             mode={modeLeft}
             title={`${stateName} Total Revenue & Expenditure`}
             series={[
-              { key: "revenue",     label: "Total Revenue",     color: "#1D9E75", data: profile.timeSeries?.actual?.expenditure ? profile.timeSeries[modeLeft].revenue.map(v => v.value) : Array(years.length).fill(0) },
-              { key: "expenditure", label: "Total Expenditure",  color: "#E8534A", data: profile.timeSeries?.actual?.expenditure ? profile.timeSeries[modeLeft].expenditure.map(v => v.value) : Array(years.length).fill(0) },
+              { key: "revenue",     label: "Total Revenue",     color: "#1D9E75", data: getSeriesData(yearsLeft, modeLeft, "revenue") },
+              { key: "expenditure", label: "Total Expenditure",  color: "#E8534A", data: getSeriesData(yearsLeft, modeLeft, "expenditure") },
             ]}
-            years={years}
+            years={yearsLeft}
           />
         </div>
 
@@ -395,10 +423,10 @@ export default function StateLineChartsPage({ slug, profile: initialProfile }) {
             mode={modeRight}
             title={`${stateName} Total Capital & Recurrent Expenditure`}
             series={[
-              { key: "recurrent", label: "Recurrent", color: "#1D9E75", data: profile.timeSeries?.actual?.expenditure ? profile.timeSeries[modeRight].recurrent.map(v => v.value) : Array(years.length).fill(0) },
-              { key: "capital",   label: "Capital",   color: "#E8534A", data: profile.timeSeries?.actual?.expenditure ? profile.timeSeries[modeRight].capital.map(v => v.value) : Array(years.length).fill(0) },
+              { key: "recurrent", label: "Recurrent", color: "#1D9E75", data: getSeriesData(yearsRight, modeRight, "recurrent") },
+              { key: "capital",   label: "Capital",   color: "#E8534A", data: getSeriesData(yearsRight, modeRight, "capital") },
             ]}
-            years={years}
+            years={yearsRight}
           />
         </div>
 
