@@ -36,9 +36,9 @@ function DownloadMenu({ chartRef, title, chartTitle, years, series }) {
     const el = getSvg(); if (!el) return;
     const clone = el.cloneNode(true);
 
-    // Shift content down by 45px to make room for the title, and add 25px at bottom for source
+    // Shift content down by 36px to make room for the title, and add 25px at bottom for source
     const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
-    g.setAttribute("transform", "translate(0, 45)");
+    g.setAttribute("transform", "translate(0, 36)");
     while (clone.firstChild) {
       g.appendChild(clone.firstChild);
     }
@@ -51,7 +51,7 @@ function DownloadMenu({ chartRef, title, chartTitle, years, series }) {
     // Add title text
     const titleText = document.createElementNS("http://www.w3.org/2000/svg", "text");
     titleText.setAttribute("x", "20");
-    titleText.setAttribute("y", "28");
+    titleText.setAttribute("y", "24");
     titleText.setAttribute("font-family", "sans-serif");
     titleText.setAttribute("font-size", "14px");
     titleText.setAttribute("font-weight", "bold");
@@ -78,9 +78,9 @@ function DownloadMenu({ chartRef, title, chartTitle, years, series }) {
     const el = getSvg(); if (!el) return;
     const clone = el.cloneNode(true);
 
-    // Shift content down by 45px to make room for the title, and add 25px at bottom for source
+    // Shift content down by 36px to make room for the title, and add 25px at bottom for source
     const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
-    g.setAttribute("transform", "translate(0, 45)");
+    g.setAttribute("transform", "translate(0, 36)");
     while (clone.firstChild) {
       g.appendChild(clone.firstChild);
     }
@@ -93,7 +93,7 @@ function DownloadMenu({ chartRef, title, chartTitle, years, series }) {
     // Add title text
     const titleText = document.createElementNS("http://www.w3.org/2000/svg", "text");
     titleText.setAttribute("x", "20");
-    titleText.setAttribute("y", "28");
+    titleText.setAttribute("y", "24");
     titleText.setAttribute("font-family", "sans-serif");
     titleText.setAttribute("font-size", "14px");
     titleText.setAttribute("font-weight", "bold");

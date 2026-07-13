@@ -22,14 +22,14 @@ function DownloadMenu({ zone, svgRef }) {
         if (!svgEl) return;
         const clone = svgEl.cloneNode(true);
 
-        clone.setAttribute("viewBox", "-130 -85 540 450");
+        clone.setAttribute("viewBox", "-130 -60 540 425");
         clone.setAttribute("width", "540");
-        clone.setAttribute("height", "450");
+        clone.setAttribute("height", "425");
 
         // Add title text
         const titleText = document.createElementNS("http://www.w3.org/2000/svg", "text");
         titleText.setAttribute("x", "-120");
-        titleText.setAttribute("y", "-60");
+        titleText.setAttribute("y", "-45");
         titleText.setAttribute("font-family", "sans-serif");
         titleText.setAttribute("font-size", "11px");
         titleText.setAttribute("font-weight", "bold");
@@ -65,14 +65,14 @@ function DownloadMenu({ zone, svgRef }) {
         if (!svgEl) return;
         const clone = svgEl.cloneNode(true);
 
-        clone.setAttribute("viewBox", "-130 -85 540 450");
+        clone.setAttribute("viewBox", "-130 -60 540 425");
         clone.setAttribute("width", "540");
-        clone.setAttribute("height", "450");
+        clone.setAttribute("height", "425");
 
         // Add title text
         const titleText = document.createElementNS("http://www.w3.org/2000/svg", "text");
         titleText.setAttribute("x", "-120");
-        titleText.setAttribute("y", "-60");
+        titleText.setAttribute("y", "-45");
         titleText.setAttribute("font-family", "sans-serif");
         titleText.setAttribute("font-size", "11px");
         titleText.setAttribute("font-weight", "bold");
@@ -99,7 +99,7 @@ function DownloadMenu({ zone, svgRef }) {
         img.onload = () => {
             const canvas = document.createElement("canvas");
             canvas.width = 540 * 2;
-            canvas.height = 450 * 2;
+            canvas.height = 425 * 2;
             const ctx = canvas.getContext("2d");
             ctx.fillStyle = "#ffffff";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -121,14 +121,14 @@ function DownloadMenu({ zone, svgRef }) {
         if (!svgEl) return;
         const clone = svgEl.cloneNode(true);
 
-        clone.setAttribute("viewBox", "-130 -85 540 450");
+        clone.setAttribute("viewBox", "-130 -60 540 425");
         clone.setAttribute("width", "540");
-        clone.setAttribute("height", "450");
+        clone.setAttribute("height", "425");
 
         // Add title text
         const titleText = document.createElementNS("http://www.w3.org/2000/svg", "text");
         titleText.setAttribute("x", "-120");
-        titleText.setAttribute("y", "-60");
+        titleText.setAttribute("y", "-45");
         titleText.setAttribute("font-family", "sans-serif");
         titleText.setAttribute("font-size", "11px");
         titleText.setAttribute("font-weight", "bold");
@@ -155,7 +155,7 @@ function DownloadMenu({ zone, svgRef }) {
         img.onload = () => {
             const canvas = document.createElement("canvas");
             canvas.width = 540 * 2;
-            canvas.height = 450 * 2;
+            canvas.height = 425 * 2;
             const ctx = canvas.getContext("2d");
             ctx.fillStyle = "#ffffff";
             ctx.fillRect(0, 0, canvas.width, canvas.height);

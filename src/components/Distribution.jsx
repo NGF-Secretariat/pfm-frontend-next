@@ -129,7 +129,7 @@ function DownloadMenu({ data, total, svgRef, title }) {
     // Add title text
     const titleText = document.createElementNS("http://www.w3.org/2000/svg", "text");
     titleText.setAttribute("x", "-260");
-    titleText.setAttribute("y", "-35");
+    titleText.setAttribute("y", "-20");
     titleText.setAttribute("font-family", "sans-serif");
     titleText.setAttribute("font-size", "11px");
     titleText.setAttribute("font-weight", "bold");

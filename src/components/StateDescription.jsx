@@ -31,9 +31,9 @@ function DownloadMenu({ chartRef, title, chartTitle, dataSeries, years }) {
         clone.insertBefore(bgRect, clone.firstChild);
 
         // Wrap existing content in a g element and scale it down to 75%
-        // Shifting it horizontally by 77.5px and vertically by 80px to center it
+        // Shifting it horizontally by 77.5px and vertically by 52px to center it closer to the title
         const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
-        g.setAttribute("transform", "translate(77.5, 80) scale(0.75)");
+        g.setAttribute("transform", "translate(77.5, 52) scale(0.75)");
         
         // Move children that are NOT the bgRect into the g element
         const childrenArray = Array.from(clone.childNodes);
@@ -50,7 +50,7 @@ function DownloadMenu({ chartRef, title, chartTitle, dataSeries, years }) {
         // Add title text
         const titleText = document.createElementNS("http://www.w3.org/2000/svg", "text");
         titleText.setAttribute("x", "24");
-        titleText.setAttribute("y", "32");
+        titleText.setAttribute("y", "36");
         titleText.setAttribute("font-family", "sans-serif");
         titleText.setAttribute("font-size", "12px");
         titleText.setAttribute("font-weight", "bold");
