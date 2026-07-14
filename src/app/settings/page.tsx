@@ -40,7 +40,9 @@ export default function SettingsPage() {
     coordinates: "",
     dateCreated: "",
     gdp: "",
+    gdpYear: "2023",
     hdi: "",
+    hdiYear: "2019",
     website: "",
   });
 
@@ -157,7 +159,7 @@ export default function SettingsPage() {
     setStatesList([]);
     setTrafficStats(null);
     setSelectedStateSlug("");
-    setProfileForm({ about: "", population: "", area: "", coordinates: "", dateCreated: "", gdp: "", hdi: "", website: "" });
+    setProfileForm({ about: "", population: "", area: "", coordinates: "", dateCreated: "", gdp: "", gdpYear: "2023", hdi: "", hdiYear: "2019", website: "" });
     setLoginEmail("");
     setLoginPassword("");
     window.dispatchEvent(new Event("authStateChanged"));
@@ -219,7 +221,7 @@ export default function SettingsPage() {
   const handleStateChange = async (slug: string, currentStatesList = statesList) => {
     setSelectedStateSlug(slug);
     if (!slug) {
-      setProfileForm({ about: "", population: "", area: "", coordinates: "", dateCreated: "", gdp: "", hdi: "", website: "" });
+      setProfileForm({ about: "", population: "", area: "", coordinates: "", dateCreated: "", gdp: "", gdpYear: "2023", hdi: "", hdiYear: "2019", website: "" });
       return;
     }
 
@@ -235,7 +237,9 @@ export default function SettingsPage() {
         coordinates: profile?.coordinates || "",
         dateCreated: profile?.dateCreated || "",
         gdp: profile?.gdp || "",
+        gdpYear: profile?.gdpYear || "2023",
         hdi: profile?.hdi || "",
+        hdiYear: profile?.hdiYear || "2019",
         website: profile?.website || "",
       });
     }
@@ -252,7 +256,9 @@ export default function SettingsPage() {
           coordinates: profile?.coordinates || "",
           dateCreated: profile?.dateCreated || "",
           gdp: profile?.gdp || "",
+          gdpYear: profile?.gdpYear || "2023",
           hdi: profile?.hdi || "",
+          hdiYear: profile?.hdiYear || "2019",
           website: profile?.website || "",
         });
       }
@@ -280,7 +286,9 @@ export default function SettingsPage() {
         coordinates: profileForm.coordinates || null,
         dateCreated: profileForm.dateCreated || null,
         gdp: profileForm.gdp || null,
+        gdpYear: profileForm.gdpYear || null,
         hdi: profileForm.hdi || null,
+        hdiYear: profileForm.hdiYear || null,
         website: profileForm.website || null,
       });
 
@@ -788,6 +796,7 @@ export default function SettingsPage() {
                           placeholder="e.g. https://abiastate.gov.ng/"
                         />
                       </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">GDP</label>
                         <input
@@ -799,6 +808,19 @@ export default function SettingsPage() {
                         />
                       </div>
                       <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">GDP Year</label>
+                        <input
+                          type="text"
+                          value={profileForm.gdpYear}
+                          onChange={(e) => setProfileForm({ ...profileForm, gdpYear: e.target.value })}
+                          className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#016630] text-gray-800 font-medium"
+                          placeholder="e.g. 2025"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">HDI</label>
                         <input
                           type="text"
@@ -808,6 +830,17 @@ export default function SettingsPage() {
                           placeholder="e.g. 0.650 (8 out of 36)"
                         />
                       </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">HDI Year</label>
+                        <input
+                          type="text"
+                          value={profileForm.hdiYear}
+                          onChange={(e) => setProfileForm({ ...profileForm, hdiYear: e.target.value })}
+                          className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#016630] text-gray-800 font-medium"
+                          placeholder="e.g. 2025"
+                        />
+                      </div>
+                    </div>
                     </div>
 
                     <div>

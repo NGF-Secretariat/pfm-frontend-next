@@ -231,8 +231,8 @@ function AboutPanel({ profile }) {
         { label: "Coordinates", value: profile.coordinates || "Not available" },
         { label: "Population", value: profile.population ? Number(profile.population).toLocaleString() : "Not available" },
         { label: "Area", value: profile.area || "Not available" },
-        { label: "GDP (2023)", value: profile.gdp || "Not available" },
-        { label: "HDI (2019)", value: profile.hdi || "Not available" },
+        { label: `GDP (${profile.gdpYear || "2023"})`, value: profile.gdp || "Not available" },
+        { label: `HDI (${profile.hdiYear || "2019"})`, value: profile.hdi || "Not available" },
         { label: "Website", value: profile.website || "Not available", isLink: !!profile.website && profile.website.startsWith('http') },
     ];
 
