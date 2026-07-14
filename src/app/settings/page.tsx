@@ -38,6 +38,10 @@ export default function SettingsPage() {
     population: "",
     area: "",
     coordinates: "",
+    dateCreated: "",
+    gdp: "",
+    hdi: "",
+    website: "",
   });
 
   // Traffic Analytics State
@@ -147,7 +151,7 @@ export default function SettingsPage() {
     setStatesList([]);
     setTrafficStats(null);
     setSelectedStateSlug("");
-    setProfileForm({ about: "", population: "", area: "", coordinates: "" });
+    setProfileForm({ about: "", population: "", area: "", coordinates: "", dateCreated: "", gdp: "", hdi: "", website: "" });
     setLoginEmail("");
     setLoginPassword("");
     window.dispatchEvent(new Event("authStateChanged"));
@@ -209,7 +213,7 @@ export default function SettingsPage() {
   const handleStateChange = async (slug: string) => {
     setSelectedStateSlug(slug);
     if (!slug) {
-      setProfileForm({ about: "", population: "", area: "", coordinates: "" });
+      setProfileForm({ about: "", population: "", area: "", coordinates: "", dateCreated: "", gdp: "", hdi: "", website: "" });
       return;
     }
 
@@ -223,6 +227,10 @@ export default function SettingsPage() {
           population: profile?.population !== null ? String(profile.population) : "",
           area: profile?.area || "",
           coordinates: profile?.coordinates || "",
+          dateCreated: profile?.dateCreated || "",
+          gdp: profile?.gdp || "",
+          hdi: profile?.hdi || "",
+          website: profile?.website || "",
         });
       }
     } catch (e) {
@@ -247,6 +255,10 @@ export default function SettingsPage() {
         population: profileForm.population ? parseFloat(profileForm.population) : null,
         area: profileForm.area || null,
         coordinates: profileForm.coordinates || null,
+        dateCreated: profileForm.dateCreated || null,
+        gdp: profileForm.gdp || null,
+        hdi: profileForm.hdi || null,
+        website: profileForm.website || null,
       });
 
       if (res?.data?.success) {
@@ -728,6 +740,49 @@ export default function SettingsPage() {
                           onChange={(e) => setProfileForm({ ...profileForm, coordinates: e.target.value })}
                           className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#016630] text-gray-800 font-medium"
                           placeholder="e.g. 5.4542° N, 7.5244° E"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Date Created</label>
+                        <input
+                          type="text"
+                          value={profileForm.dateCreated}
+                          onChange={(e) => setProfileForm({ ...profileForm, dateCreated: e.target.value })}
+                          className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#016630] text-gray-800 font-medium"
+                          placeholder="e.g. 27 August 1991"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Website</label>
+                        <input
+                          type="text"
+                          value={profileForm.website}
+                          onChange={(e) => setProfileForm({ ...profileForm, website: e.target.value })}
+                          className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#016630] text-gray-800 font-medium"
+                          placeholder="e.g. https://abiastate.gov.ng/"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">GDP</label>
+                        <input
+                          type="text"
+                          value={profileForm.gdp}
+                          onChange={(e) => setProfileForm({ ...profileForm, gdp: e.target.value })}
+                          className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#016630] text-gray-800 font-medium"
+                          placeholder="e.g. ₦3,541,714 million"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">HDI</label>
+                        <input
+                          type="text"
+                          value={profileForm.hdi}
+                          onChange={(e) => setProfileForm({ ...profileForm, hdi: e.target.value })}
+                          className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#016630] text-gray-800 font-medium"
+                          placeholder="e.g. 0.650 (8 out of 36)"
                         />
                       </div>
                     </div>

@@ -18,7 +18,7 @@ function DownloadMenu({ chartRef, title, chartTitle, dataSeries, years }) {
 
     const prepareSvgClone = (el) => {
         const clone = el.cloneNode(true);
-        
+
         // Remove existing source text to avoid duplication
         const originalSource = [...clone.querySelectorAll("text")].find(t => t.textContent.includes("Source:"));
         if (originalSource) originalSource.remove();
@@ -34,7 +34,7 @@ function DownloadMenu({ chartRef, title, chartTitle, dataSeries, years }) {
         // Shifting it horizontally by 77.5px and vertically by 52px to center it closer to the title
         const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
         g.setAttribute("transform", "translate(77.5, 52) scale(0.75)");
-        
+
         // Move children that are NOT the bgRect into the g element
         const childrenArray = Array.from(clone.childNodes);
         childrenArray.forEach(child => {
@@ -84,11 +84,11 @@ function DownloadMenu({ chartRef, title, chartTitle, dataSeries, years }) {
     const rasterize = (type, quality = 1) => {
         const el = getSvg(); if (!el) return;
         const clone = prepareSvgClone(el);
-        
+
         const targetW = 520, targetH = 360;
         clone.setAttribute("width", targetW.toString());
         clone.setAttribute("height", targetH.toString());
-        
+
         const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(clone)], { type: "image/svg+xml;charset=utf-8" }));
         const img = new Image();
         img.onload = () => {
@@ -155,7 +155,7 @@ function BarChart({ mode, stateName, data, years }) {
     const maxDataVal = Math.max(0, ...data);
     let maxG = maxDataVal / 1e9;
     if (maxG === 0) maxG = 100;
-    
+
     const order = Math.pow(10, Math.floor(Math.log10(maxG)));
     const fraction = maxG / order;
     let niceFraction;
@@ -225,9 +225,13 @@ function AboutPanel({ profile }) {
     if (!profile) return null;
 
     const meta = [
+        { label: "Date Created", value: profile.dateCreated || "Not available" },
+        { label: "Coordinates", value: profile.coordinates || "Not available" },
         { label: "Population", value: profile.population ? Number(profile.population).toLocaleString() : "Not available" },
         { label: "Area", value: profile.area || "Not available" },
-        { label: "Coordinates", value: profile.coordinates || "Not available" },
+        { label: "GDP (2023)", value: profile.gdp || "Not available" },
+        { label: "HDI (2019)", value: profile.hdi || "Not available" },
+        { label: "Website", value: profile.website || "Not available", isLink: !!profile.website && profile.website.startsWith('http') },
     ];
 
     return (
@@ -310,7 +314,7 @@ const StateExpenditurePage = ({ slug, profile: initialProfile }) => {
 
     const stateName = formatStateName(profile.state?.name);
     const allYears = profile.timeSeries?.actual?.expenditure ? profile.timeSeries.actual.expenditure.map(v => v.year) : [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
-    
+
     const filteredYears = allYears.filter(year => {
         if (!profile.timeSeries) return true;
         if (mode === "actual") {
@@ -364,8 +368,8 @@ const StateExpenditurePage = ({ slug, profile: initialProfile }) => {
                 <BarChart
                     mode={mode}
                     stateName={stateName}
-                    data={profile.timeSeries?.[mode]?.expenditure 
-                        ? years.map(year => profile.timeSeries[mode].expenditure.find(v => v.year === year)?.value || 0) 
+                    data={profile.timeSeries?.[mode]?.expenditure
+                        ? years.map(year => profile.timeSeries[mode].expenditure.find(v => v.year === year)?.value || 0)
                         : Array(years.length).fill(0)}
                     years={years}
                 />
