@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import budgetService from "../service/budgetService";
+import { Loader2 } from "lucide-react";
 
 function DownloadMenu({ chartRef, title, chartTitle, dataSeries, years }) {
     const [open, setOpen] = useState(false);
@@ -254,9 +256,6 @@ function AboutPanel({ profile }) {
         </div>
     );
 }
-
-import budgetService from "../service/budgetService";
-import { Loader2 } from "lucide-react";
 
 const formatStateName = (name) => {
     if (!name) return "";
