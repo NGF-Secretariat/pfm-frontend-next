@@ -76,7 +76,13 @@ export default function SettingsPage() {
     try {
       const res = await budgetService.getAllStateProfiles();
       if (res?.data?.success) {
-        setStatesList(res.data.data);
+        const data = res.data.data;
+        setStatesList(data);
+        if (data.length > 0 && !selectedStateSlug) {
+          const firstState = data[0];
+          const slug = firstState.name.toLowerCase().replace(/\s+/g, "-");
+          handleStateChange(slug, data);
+        }
       }
     } catch (e) {
       console.error("Failed to load states list:", e);
@@ -210,11 +216,28 @@ export default function SettingsPage() {
     }
   };
 
-  const handleStateChange = async (slug: string) => {
+  const handleStateChange = async (slug: string, currentStatesList = statesList) => {
     setSelectedStateSlug(slug);
     if (!slug) {
       setProfileForm({ about: "", population: "", area: "", coordinates: "", dateCreated: "", gdp: "", hdi: "", website: "" });
       return;
+    }
+
+    const matchedState = currentStatesList.find(
+      (s: any) => s.name.toLowerCase().replace(/\s+/g, "-") === slug
+    );
+    if (matchedState?.profile) {
+      const profile = matchedState.profile;
+      setProfileForm({
+        about: profile?.about || "",
+        population: profile?.population !== null ? String(profile.population) : "",
+        area: profile?.area || "",
+        coordinates: profile?.coordinates || "",
+        dateCreated: profile?.dateCreated || "",
+        gdp: profile?.gdp || "",
+        hdi: profile?.hdi || "",
+        website: profile?.website || "",
+      });
     }
 
     setFetchingProfile(true);
