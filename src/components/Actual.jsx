@@ -109,7 +109,7 @@ function DownloadMenu({ chartRef, title, chartTitle, years, series }) {
     sourceText.setAttribute("font-size", "10px");
     sourceText.setAttribute("fill", "#999999");
     sourceText.setAttribute("text-anchor", "end");
-    sourceText.textContent = "Source: NGF PFM";
+    sourceText.textContent = "Source: NGF Public Finance Database";
     clone.appendChild(sourceText);
 
     const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(clone)], { type: "image/svg+xml;charset=utf-8" }));
