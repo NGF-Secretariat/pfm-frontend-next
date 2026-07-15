@@ -36,6 +36,7 @@ export default function SettingsPage() {
   const [profileForm, setProfileForm] = useState({
     about: "",
     population: "",
+    populationYear: "2025",
     area: "",
     coordinates: "",
     dateCreated: "",
@@ -159,7 +160,7 @@ export default function SettingsPage() {
     setStatesList([]);
     setTrafficStats(null);
     setSelectedStateSlug("");
-    setProfileForm({ about: "", population: "", area: "", coordinates: "", dateCreated: "", gdp: "", gdpYear: "2023", hdi: "", hdiYear: "2019", website: "" });
+    setProfileForm({ about: "", population: "", populationYear: "2025", area: "", coordinates: "", dateCreated: "", gdp: "", gdpYear: "2023", hdi: "", hdiYear: "2019", website: "" });
     setLoginEmail("");
     setLoginPassword("");
     window.dispatchEvent(new Event("authStateChanged"));
@@ -199,7 +200,7 @@ export default function SettingsPage() {
         await createUser(formData);
         toast.success("User added successfully!");
       }
-      
+
       setIsFormOpen(false);
       setEditingId(null);
       loadUsers();
@@ -221,7 +222,7 @@ export default function SettingsPage() {
   const handleStateChange = async (slug: string, currentStatesList = statesList) => {
     setSelectedStateSlug(slug);
     if (!slug) {
-      setProfileForm({ about: "", population: "", area: "", coordinates: "", dateCreated: "", gdp: "", gdpYear: "2023", hdi: "", hdiYear: "2019", website: "" });
+      setProfileForm({ about: "", population: "", populationYear: "2025", area: "", coordinates: "", dateCreated: "", gdp: "", gdpYear: "2023", hdi: "", hdiYear: "2019", website: "" });
       return;
     }
 
@@ -233,6 +234,7 @@ export default function SettingsPage() {
       setProfileForm({
         about: profile?.about || "",
         population: profile?.population !== null ? String(profile.population) : "",
+        populationYear: profile?.populationYear || "2025",
         area: profile?.area || "",
         coordinates: profile?.coordinates || "",
         dateCreated: profile?.dateCreated || "",
@@ -252,6 +254,7 @@ export default function SettingsPage() {
         setProfileForm({
           about: profile?.about || "",
           population: profile?.population !== null ? String(profile.population) : "",
+          populationYear: profile?.populationYear || "2025",
           area: profile?.area || "",
           coordinates: profile?.coordinates || "",
           dateCreated: profile?.dateCreated || "",
@@ -281,15 +284,16 @@ export default function SettingsPage() {
     try {
       const res = await budgetService.updateStateProfile(selectedStateSlug, {
         about: profileForm.about,
-        population: profileForm.population ? parseFloat(profileForm.population) : null,
+        population: profileForm.population || null,
+        populationYear: profileForm.populationYear || null,
         area: profileForm.area || null,
-        coordinates: profileForm.coordinates || null,
         dateCreated: profileForm.dateCreated || null,
         gdp: profileForm.gdp || null,
         gdpYear: profileForm.gdpYear || null,
         hdi: profileForm.hdi || null,
         hdiYear: profileForm.hdiYear || null,
         website: profileForm.website || null,
+        coordinates: null,
       });
 
       if (res?.data?.success) {
@@ -392,44 +396,40 @@ export default function SettingsPage() {
           <div className="hidden lg:flex flex-col bg-white rounded-3xl p-4 shadow-sm border border-gray-100 space-y-1">
             <button
               onClick={() => setActiveTab("users")}
-              className={`flex items-center gap-3 w-full px-4 py-3 rounded-2xl text-left font-medium transition-all ${
-                activeTab === "users"
+              className={`flex items-center gap-3 w-full px-4 py-3 rounded-2xl text-left font-medium transition-all ${activeTab === "users"
                   ? "bg-green-50 text-[#016630] shadow-sm border-l-4 border-[#016630]"
                   : "text-gray-600 hover:bg-gray-50 hover:text-[#016630]"
-              }`}
+                }`}
             >
               <User size={18} />
               <span>User Management</span>
             </button>
             <button
               onClick={() => setActiveTab("subscribers")}
-              className={`flex items-center gap-3 w-full px-4 py-3 rounded-2xl text-left font-medium transition-all ${
-                activeTab === "subscribers"
+              className={`flex items-center gap-3 w-full px-4 py-3 rounded-2xl text-left font-medium transition-all ${activeTab === "subscribers"
                   ? "bg-green-50 text-[#016630] shadow-sm border-l-4 border-[#016630]"
                   : "text-gray-600 hover:bg-gray-50 hover:text-[#016630]"
-              }`}
+                }`}
             >
               <Mail size={18} />
               <span>Newsletter Subscribers</span>
             </button>
             <button
               onClick={() => setActiveTab("state-data")}
-              className={`flex items-center gap-3 w-full px-4 py-3 rounded-2xl text-left font-medium transition-all ${
-                activeTab === "state-data"
+              className={`flex items-center gap-3 w-full px-4 py-3 rounded-2xl text-left font-medium transition-all ${activeTab === "state-data"
                   ? "bg-green-50 text-[#016630] shadow-sm border-l-4 border-[#016630]"
                   : "text-gray-600 hover:bg-gray-50 hover:text-[#016630]"
-              }`}
+                }`}
             >
               <Map size={18} />
               <span>Edit State Data</span>
             </button>
             <button
               onClick={() => setActiveTab("traffic")}
-              className={`flex items-center gap-3 w-full px-4 py-3 rounded-2xl text-left font-medium transition-all ${
-                activeTab === "traffic"
+              className={`flex items-center gap-3 w-full px-4 py-3 rounded-2xl text-left font-medium transition-all ${activeTab === "traffic"
                   ? "bg-green-50 text-[#016630] shadow-sm border-l-4 border-[#016630]"
                   : "text-gray-600 hover:bg-gray-50 hover:text-[#016630]"
-              }`}
+                }`}
             >
               <BarChart2 size={18} />
               <span>Traffic Analytics</span>
@@ -440,44 +440,40 @@ export default function SettingsPage() {
           <div className="flex lg:hidden bg-white p-2 rounded-2xl shadow-sm border border-gray-100 overflow-x-auto gap-2">
             <button
               onClick={() => setActiveTab("users")}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm whitespace-nowrap transition-colors ${
-                activeTab === "users"
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm whitespace-nowrap transition-colors ${activeTab === "users"
                   ? "bg-green-50 text-[#016630]"
                   : "text-gray-600 hover:bg-gray-50"
-              }`}
+                }`}
             >
               <User size={16} />
               Users
             </button>
             <button
               onClick={() => setActiveTab("subscribers")}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm whitespace-nowrap transition-colors ${
-                activeTab === "subscribers"
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm whitespace-nowrap transition-colors ${activeTab === "subscribers"
                   ? "bg-green-50 text-[#016630]"
                   : "text-gray-600 hover:bg-gray-50"
-              }`}
+                }`}
             >
               <Mail size={16} />
               Subscribers
             </button>
             <button
               onClick={() => setActiveTab("state-data")}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm whitespace-nowrap transition-colors ${
-                activeTab === "state-data"
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm whitespace-nowrap transition-colors ${activeTab === "state-data"
                   ? "bg-green-50 text-[#016630]"
                   : "text-gray-600 hover:bg-gray-50"
-              }`}
+                }`}
             >
               <Map size={16} />
               State Data
             </button>
             <button
               onClick={() => setActiveTab("traffic")}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm whitespace-nowrap transition-colors ${
-                activeTab === "traffic"
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm whitespace-nowrap transition-colors ${activeTab === "traffic"
                   ? "bg-green-50 text-[#016630]"
                   : "text-gray-600 hover:bg-gray-50"
-              }`}
+                }`}
             >
               <BarChart2 size={16} />
               Traffic
@@ -607,11 +603,10 @@ export default function SettingsPage() {
                         <td className="py-4 px-6 font-medium text-gray-900">{user.name}</td>
                         <td className="py-4 px-6 text-gray-500">{user.email}</td>
                         <td className="py-4 px-6">
-                          <span className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold ${
-                            user.role === 'Super Admin' ? 'bg-purple-100 text-purple-700' : 
-                            user.role === 'Editor' ? 'bg-blue-100 text-blue-700' : 
-                            'bg-gray-100 text-gray-700'
-                          }`}>
+                          <span className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold ${user.role === 'Super Admin' ? 'bg-purple-100 text-purple-700' :
+                              user.role === 'Editor' ? 'bg-blue-100 text-blue-700' :
+                                'bg-gray-100 text-gray-700'
+                            }`}>
                             {user.role}
                           </span>
                         </td>
@@ -743,17 +738,6 @@ export default function SettingsPage() {
                   <form onSubmit={handleSaveProfile} className="mt-8 space-y-6 animate-fade-in">
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Population</label>
-                        <input
-                          type="number"
-                          step="any"
-                          value={profileForm.population}
-                          onChange={(e) => setProfileForm({ ...profileForm, population: e.target.value })}
-                          className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#016630] text-gray-800 font-medium"
-                          placeholder="e.g. 3000000"
-                        />
-                      </div>
-                      <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Area (sq km)</label>
                         <input
                           type="text"
@@ -763,19 +747,6 @@ export default function SettingsPage() {
                           placeholder="e.g. 6,320 sq km"
                         />
                       </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Coordinates</label>
-                        <input
-                          type="text"
-                          value={profileForm.coordinates}
-                          onChange={(e) => setProfileForm({ ...profileForm, coordinates: e.target.value })}
-                          className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#016630] text-gray-800 font-medium"
-                          placeholder="e.g. 5.4542° N, 7.5244° E"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Date Created</label>
                         <input
@@ -796,6 +767,31 @@ export default function SettingsPage() {
                           placeholder="e.g. https://abiastate.gov.ng/"
                         />
                       </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Population</label>
+                        <input
+                          type="text"
+                          value={profileForm.population}
+                          onChange={(e) => setProfileForm({ ...profileForm, population: e.target.value })}
+                          className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#016630] text-gray-800 font-medium"
+                          placeholder="e.g. 4,488,922 (29 out of 36)"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Population Year</label>
+                        <input
+                          type="text"
+                          value={profileForm.populationYear}
+                          onChange={(e) => setProfileForm({ ...profileForm, populationYear: e.target.value })}
+                          className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#016630] text-gray-800 font-medium"
+                          placeholder="e.g. 2025"
+                        />
+                      </div>
+                    </div>
+
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">GDP</label>
@@ -840,7 +836,6 @@ export default function SettingsPage() {
                           placeholder="e.g. 2025"
                         />
                       </div>
-                    </div>
                     </div>
 
                     <div>

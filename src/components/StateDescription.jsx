@@ -190,7 +190,7 @@ function BarChart({ mode, stateName, data, years }) {
                         <g key={v}>
                             <line x1={pl} y1={by(v)} x2={w - pr} y2={by(v)} stroke="#eeeeee" strokeWidth="1" />
                             <text x={pl - 8} y={by(v) + 4} textAnchor="end" fontSize="10" fill="#999" fontFamily="sans-serif">
-                                {v === 0 ? "0" : `${(v / 1e9).toFixed(1).replace(/\.0$/, '')}G`}
+                                {v === 0 ? "0" : `${(v / 1e9).toFixed(1).replace(/\.0$/, '')}B`}
                             </text>
                         </g>
                     ))}
@@ -228,8 +228,7 @@ function AboutPanel({ profile }) {
 
     const meta = [
         { label: "Date Created", value: profile.dateCreated || "Not available" },
-        { label: "Coordinates", value: profile.coordinates || "Not available" },
-        { label: "Population", value: profile.population ? Number(profile.population).toLocaleString() : "Not available" },
+        { label: `Population (${profile.populationYear || "2025"})`, value: profile.population || "Not available" },
         { label: "Area", value: profile.area || "Not available" },
         { label: `GDP (${profile.gdpYear || "2023"})`, value: profile.gdp || "Not available" },
         { label: `HDI (${profile.hdiYear || "2019"})`, value: profile.hdi || "Not available" },

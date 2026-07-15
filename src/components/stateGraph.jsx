@@ -238,7 +238,7 @@ function LineChart({ mode, title, series, years }) {
             <g key={v}>
               <line x1={pl} y1={py(v)} x2={w - pr} y2={py(v)} stroke="#e8e8e8" strokeWidth="1" />
               <text x={pl - 7} y={py(v) + 4} textAnchor="end" fontSize="10" fill="#999" fontFamily="sans-serif">
-                {v === 0 ? "0" : `${(v / 1e9).toFixed(1).replace(/\.0$/, '')}G`}
+                {v === 0 ? "0" : `${(v / 1e9).toFixed(1).replace(/\.0$/, '')}B`}
               </text>
             </g>
           ))}

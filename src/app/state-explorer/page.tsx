@@ -55,7 +55,7 @@ export default async function TotalExpenditureByState() {
                         <span>Last Updated</span>
                         <span className="mx-2 text-[#999]">-</span>
                         <span className="truncate">
-                            June 28, 2023
+                            June 28, 2025
                         </span>
                     </p>
                 </div>
