@@ -27,7 +27,7 @@ function DownloadMenu({ chartRef, title, chartTitle, seriesKeys, years }) {
 
   const prepareSvgClone = (el) => {
     const clone = el.cloneNode(true);
-    
+
     // Remove existing source text to avoid duplication
     const originalSource = [...clone.querySelectorAll("text")].find(t => t.textContent.includes("Source:"));
     if (originalSource) originalSource.remove();
@@ -43,7 +43,7 @@ function DownloadMenu({ chartRef, title, chartTitle, seriesKeys, years }) {
     // Shifting it horizontally by 87.5px and vertically by 52px to center it closer to the title
     const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
     g.setAttribute("transform", "translate(87.5, 52) scale(0.75)");
-    
+
     // Move children that are NOT the bgRect into the g element
     const childrenArray = Array.from(clone.childNodes);
     childrenArray.forEach(child => {
@@ -93,7 +93,7 @@ function DownloadMenu({ chartRef, title, chartTitle, seriesKeys, years }) {
   const rasterize = (type, quality = 1) => {
     const el = getSvg(); if (!el) return;
     const clone = prepareSvgClone(el);
-    
+
     const targetW = 560, targetH = 360;
     clone.setAttribute("width", targetW.toString());
     clone.setAttribute("height", targetH.toString());
@@ -192,12 +192,12 @@ function LineChart({ mode, title, series, years }) {
 
   const w = 700, h = 400, pl = 68, pr = 30, pt = 30, pb = 60;
   const chartW = w - pl - pr, chartH = h - pt - pb;
-  
+
   const allData = series.flatMap(s => s.data);
   const maxDataVal = Math.max(0, ...allData);
   let maxG = maxDataVal / 1e9;
   if (maxG === 0) maxG = 100;
-  
+
   const order = Math.pow(10, Math.floor(Math.log10(maxG)));
   const fraction = maxG / order;
   let niceFraction;
@@ -220,7 +220,7 @@ function LineChart({ mode, title, series, years }) {
     <div>
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-[15px] font-bold text-[#111]">
-          {title} – {mode === "original" ? "Original" : "Actual"}
+          {title} – {mode === "original" ? "Original Budget" : "Actual"}
         </h3>
         <DownloadMenu
           chartRef={chartRef}
@@ -365,7 +365,7 @@ export default function StateLineChartsPage({ slug, profile: initialProfile }) {
 
   const stateName = formatStateName(profile.state?.name);
   const allYears = profile.timeSeries?.actual?.expenditure ? profile.timeSeries.actual.expenditure.map(v => v.year) : [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
-  
+
   const getYearsForMode = (mode) => {
     return allYears.filter(year => {
       if (!profile.timeSeries) return true;
@@ -407,8 +407,8 @@ export default function StateLineChartsPage({ slug, profile: initialProfile }) {
             mode={modeLeft}
             title={`${stateName} Total Revenue & Expenditure`}
             series={[
-              { key: "revenue",     label: "Total Revenue",     color: "#1D9E75", data: getSeriesData(yearsLeft, modeLeft, "revenue") },
-              { key: "expenditure", label: "Total Expenditure",  color: "#E8534A", data: getSeriesData(yearsLeft, modeLeft, "expenditure") },
+              { key: "revenue", label: "Total Revenue", color: "#1D9E75", data: getSeriesData(yearsLeft, modeLeft, "revenue") },
+              { key: "expenditure", label: "Total Expenditure", color: "#E8534A", data: getSeriesData(yearsLeft, modeLeft, "expenditure") },
             ]}
             years={yearsLeft}
           />
@@ -424,7 +424,7 @@ export default function StateLineChartsPage({ slug, profile: initialProfile }) {
             title={`${stateName} Total Capital & Recurrent Expenditure`}
             series={[
               { key: "recurrent", label: "Recurrent", color: "#1D9E75", data: getSeriesData(yearsRight, modeRight, "recurrent") },
-              { key: "capital",   label: "Capital",   color: "#E8534A", data: getSeriesData(yearsRight, modeRight, "capital") },
+              { key: "capital", label: "Capital", color: "#E8534A", data: getSeriesData(yearsRight, modeRight, "capital") },
             ]}
             years={yearsRight}
           />

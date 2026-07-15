@@ -180,9 +180,9 @@ function BarChart({ mode, stateName, data, years }) {
         <div className="bg-white p-5">
             <div className="flex items-center justify-between mb-3">
                 <h3 className="text-[15px] font-bold text-[#111]">
-                    {stateName} Total Expenditure – <span className="capitalize">{mode === "original" ? "Original" : "Actual"}</span>
+                    {stateName} Total Expenditure – <span className="capitalize">{mode === "original" ? "Original Budget" : "Actual"}</span>
                 </h3>
-                <DownloadMenu chartRef={chartRef} title={`${stateName.replace(/\s+/g, '_').toLowerCase()}_expenditure_${mode}`} chartTitle={`${stateName} Total Expenditure – ${mode === "original" ? "Original" : "Actual"}`} dataSeries={data} years={years} />
+                <DownloadMenu chartRef={chartRef} title={`${stateName.replace(/\s+/g, '_').toLowerCase()}_expenditure_${mode}`} chartTitle={`${stateName} Total Expenditure – ${mode === "original" ? "Original Budget" : "Actual"}`} dataSeries={data} years={years} />
             </div>
             <div ref={chartRef}>
                 <svg width="100%" viewBox={`0 0 ${w} ${h}`}>
@@ -213,7 +213,7 @@ function BarChart({ mode, stateName, data, years }) {
 
                     {/* Legend */}
                     <circle cx={pl + 10} cy={h - 12} r="5" fill="#1D9E75" />
-                    <text x={pl + 20} y={h - 8} fontSize="11" fill="#555" fontFamily="sans-serif">Budget</text>
+                    <text x={pl + 20} y={h - 8} fontSize="11" fill="#555" fontFamily="sans-serif">{mode === "original" ? "Original Budget" : "Actual"}</text>
 
                     <text x={w / 2} y={h - pb + 32} textAnchor="middle" fontSize="10" fill="#999" fontFamily="sans-serif">Years</text>
                     <text x={w - pr} y={h - 2} textAnchor="end" fontSize="12" fill="#bbb" fontFamily="sans-serif">Source: NGF Public Finance Database</text>
