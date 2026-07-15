@@ -216,7 +216,7 @@ function BarChart({ mode, data }) {
     <div className="bg-white rounded-xl border border-[#e8e8e8] p-4 sm:p-5">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <h3 className="text-[15px] font-bold text-[#111]">
-          Total Expenditure for the 36 States – <span className="capitalize">{mode === "original" ? "Original" : "Actual"}</span>
+          Total Expenditure for the 36 States – <span className="capitalize">{mode === "original" ? "Original Budget" : "Actual"}</span>
         </h3>
         <DownloadMenu
           chartRef={chartRef}
@@ -296,7 +296,7 @@ function LineChart({ mode, data }) {
     <div className="bg-white rounded-xl border border-[#e8e8e8] p-4 sm:p-5">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <h3 className="text-[15px] font-bold text-[#111]">
-          Total Revenue and Expenditure for the 36 States – <span className="capitalize">{mode === "original" ? "Original" : "Actual"}</span>
+          Total Revenue and Expenditure for the 36 States – <span className="capitalize">{mode === "original" ? "Original Budget" : "Actual"}</span>
         </h3>
         <DownloadMenu
           chartRef={chartRef}
@@ -416,7 +416,7 @@ export default function ExpenditureCharts({ mode: defaultMode = "original", onMo
       )}
       <div className="flex justify-center">
         <span className="text-[13px] mt-2 font-medium transition-colors duration-150 text-[#555]">
-          Source: NGF Public Finance database
+          Source: NGF Public Finance Database
         </span>
       </div>
     </div>

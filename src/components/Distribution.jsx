@@ -32,7 +32,7 @@ function DownloadMenu({ data, total, svgRef, title }) {
 
   const prepareSvgClone = (el) => {
     const clone = el.cloneNode(true);
-    
+
     // Add white background
     const bgRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
     bgRect.setAttribute("width", "100%");
@@ -99,7 +99,7 @@ function DownloadMenu({ data, total, svgRef, title }) {
 
     // Create a container group for the legends
     const legendG = document.createElementNS("http://www.w3.org/2000/svg", "g");
-    
+
     allLabels.forEach(l => {
       // Draw polyline
       const poly = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
@@ -128,8 +128,9 @@ function DownloadMenu({ data, total, svgRef, title }) {
 
     // Add title text
     const titleText = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    titleText.setAttribute("x", "-260");
-    titleText.setAttribute("y", "-20");
+    titleText.setAttribute("x", "195");
+    titleText.setAttribute("y", "-30");
+    titleText.setAttribute("text-anchor", "middle");
     titleText.setAttribute("font-family", "sans-serif");
     titleText.setAttribute("font-size", "11px");
     titleText.setAttribute("font-weight", "bold");
@@ -139,12 +140,12 @@ function DownloadMenu({ data, total, svgRef, title }) {
 
     // Add source text
     const sourceText = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    sourceText.setAttribute("x", "650");
+    sourceText.setAttribute("x", "195");
     sourceText.setAttribute("y", "425");
+    sourceText.setAttribute("text-anchor", "middle");
     sourceText.setAttribute("font-family", "sans-serif");
     sourceText.setAttribute("font-size", "10px");
     sourceText.setAttribute("fill", "#999999");
-    sourceText.setAttribute("text-anchor", "end");
     sourceText.textContent = "Source: NGF Public Finance Database";
     clone.appendChild(sourceText);
 
@@ -169,7 +170,7 @@ function DownloadMenu({ data, total, svgRef, title }) {
   const downloadPNG = () => {
     const el = getSvg(); if (!el) return;
     const clone = prepareSvgClone(el);
-    
+
     const targetW = 950, targetH = 500;
     clone.setAttribute("width", targetW.toString());
     clone.setAttribute("height", targetH.toString());

@@ -5,7 +5,7 @@ import budgetService from "../service/budgetService";
 
 const colorPalette = ["#3B5998", "#9B59B6", "#7F8C8D", "#27AE60", "#E67E22", "#3498DB", "#2ECC71", "#E74C3C"];
 
-function DownloadMenu({ zone, svgRef }) {
+function DownloadMenu({ zone, year, svgRef }) {
     const [open, setOpen] = useState(false);
     const menuRef = useRef(null);
 
@@ -28,13 +28,14 @@ function DownloadMenu({ zone, svgRef }) {
 
         // Add title text
         const titleText = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        titleText.setAttribute("x", "-120");
-        titleText.setAttribute("y", "-45");
+        titleText.setAttribute("x", "140");
+        titleText.setAttribute("y", "-40");
+        titleText.setAttribute("text-anchor", "middle");
         titleText.setAttribute("font-family", "sans-serif");
         titleText.setAttribute("font-size", "11px");
         titleText.setAttribute("font-weight", "bold");
         titleText.setAttribute("fill", "#111111");
-        titleText.textContent = `Share of Total Expenditure – ${zone.name} Geopolitical Zone`;
+        titleText.textContent = `Share of Total Expenditure, ${year} – ${zone.name} Nigeria`;
         clone.appendChild(titleText);
 
         // Add source text
@@ -71,13 +72,14 @@ function DownloadMenu({ zone, svgRef }) {
 
         // Add title text
         const titleText = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        titleText.setAttribute("x", "-120");
-        titleText.setAttribute("y", "-45");
+        titleText.setAttribute("x", "140");
+        titleText.setAttribute("y", "-40");
+        titleText.setAttribute("text-anchor", "middle");
         titleText.setAttribute("font-family", "sans-serif");
         titleText.setAttribute("font-size", "11px");
         titleText.setAttribute("font-weight", "bold");
         titleText.setAttribute("fill", "#111111");
-        titleText.textContent = `Share of Total Expenditure – ${zone.name} Geopolitical Zone`;
+        titleText.textContent = `Share of Total Expenditure, ${year} – ${zone.name}`;
         clone.appendChild(titleText);
 
         // Add source text
@@ -127,13 +129,14 @@ function DownloadMenu({ zone, svgRef }) {
 
         // Add title text
         const titleText = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        titleText.setAttribute("x", "-120");
-        titleText.setAttribute("y", "-45");
+        titleText.setAttribute("x", "140");
+        titleText.setAttribute("y", "-40");
+        titleText.setAttribute("text-anchor", "middle");
         titleText.setAttribute("font-family", "sans-serif");
         titleText.setAttribute("font-size", "11px");
         titleText.setAttribute("font-weight", "bold");
         titleText.setAttribute("fill", "#111111");
-        titleText.textContent = `Share of Total Expenditure – ${zone.name} Geopolitical Zone`;
+        titleText.textContent = `Share of Total Expenditure, ${year} – ${zone.name}`;
         clone.appendChild(titleText);
 
         // Add source text
@@ -241,7 +244,7 @@ function DownloadMenu({ zone, svgRef }) {
     );
 }
 
-function PieChart({ zone }) {
+function PieChart({ zone, year }) {
     const [hovered, setHovered] = useState(null);
     const svgRef = useRef(null);
     const size = 300;
@@ -282,7 +285,7 @@ function PieChart({ zone }) {
         <div className="flex flex-col items-center">
             <div className="flex items-center justify-between w-full px-1 mb-1">
                 <h3 className="text-lg font-bold text-[#111]">{zone.name}</h3>
-                <DownloadMenu zone={zone} svgRef={svgRef} />
+                <DownloadMenu zone={zone} year={year} svgRef={svgRef} />
             </div>
             <svg
                 ref={svgRef}
@@ -424,7 +427,7 @@ const GeoZone = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                         {zonesData.map((zone) => (
                             <div key={zone.name} className="p-2 sm:p-3 flex justify-center min-w-0">
-                                <PieChart zone={zone} />
+                                <PieChart zone={zone} year={year} />
                             </div>
                         ))}
                     </div>
