@@ -73,7 +73,7 @@ export default function Topbar() {
               className="w-48 h-auto object-contain"
             />
 
-            <h1 className="text-white text-2xl font-bold">
+            <h1 className="text-white text-2xl font-bold pt-4">
               Public Finance Database
             </h1>
           </div>
@@ -396,7 +396,7 @@ export default function Topbar() {
                 .map((item) => (
                   <div key={item.path}>
                     <Link
-                       href={item.path}
+                      href={item.path}
                       onClick={() => setMobileMenuOpen(false)}
                       className={`
                         flex items-center justify-between px-4 py-3 rounded-xl

@@ -33,7 +33,7 @@ const Footer = () => {
                         <Image src="/ngf-logo.png" alt="NGF Logo" width={100} height={100} loading="lazy" />
                         <div>
                             {/* <p className="text-xs font-bold text-white leading-tight">Nigeria Governors' Forum</p> */}
-                            <p className="text-sm text-[#5DCAA5]">Public Finance Database</p>
+                            <p className="text-sm text-[#5DCAA5] pt-2">Public Finance Database</p>
                         </div>
                     </div>
                     <p className="text-sm text-[#7aad96]">
