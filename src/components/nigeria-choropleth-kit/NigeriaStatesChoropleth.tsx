@@ -242,7 +242,7 @@ export function NigeriaStatesChoropleth({
           <div className="flex items-end justify-between gap-4 mt-2">
             <div className="text-[10px] uppercase tracking-wider font-semibold text-gray-500">{valueLabel}</div>
             <div className="font-sans text-base font-bold leading-none text-[#1D9E75]">
-              {formatValue ? formatValue(tip.value) : Math.round(tip.value)}
+              &#x20A6; {formatValue ? formatValue(tip.value) : Math.round(tip.value)}
             </div>
           </div>
         </div>
