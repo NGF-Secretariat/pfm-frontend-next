@@ -234,6 +234,8 @@ function BarChart({ mode, data }) {
               <text x={pl - 6} y={by(v) + 4} textAnchor="end" fontSize="10" fill="#999" fontFamily="sans-serif">{v > 0 ? `${v}T` : "0"}</text>
             </g>
           ))}
+          <text x={16} y={h / 2} textAnchor="middle" fontSize="10" fill="#999" fontFamily="sans-serif" transform={`rotate(-90,16,${h / 2})`}>(NGN Trillion)</text>
+
           {data.expenditure.map((v, i) => (
             <g key={i} onMouseEnter={() => setHovered(i)} onMouseLeave={() => setHovered(null)} className="cursor-pointer">
               {v > 0 && (
@@ -317,6 +319,8 @@ function LineChart({ mode, data }) {
               <text x={pl - 6} y={py(v) + 4} textAnchor="end" fontSize="10" fill="#999" fontFamily="sans-serif">{v > 0 ? `${v}T` : "0"}</text>
             </g>
           ))}
+          <text x={16} y={h / 2} textAnchor="middle" fontSize="10" fill="#999" fontFamily="sans-serif" transform={`rotate(-90,16,${h / 2})`}>(NGN Trillion)</text>
+
           {series.map(s => (
             <polyline key={s.key} points={polyline(s.vals)} fill="none" stroke={s.color} strokeWidth="2" strokeLinejoin="round" />
           ))}
