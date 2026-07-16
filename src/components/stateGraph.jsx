@@ -278,23 +278,71 @@ function LineChart({ mode, title, series, years }) {
             ))
           )}
 
-          {/* Hover crosshair + tooltips */}
+          {/* Vertical Guide Line */}
           {hovered !== null && (
-            <g>
-              <line x1={px(hovered)} y1={pt} x2={px(hovered)} y2={py(0)} stroke="#ddd" strokeWidth="1" strokeDasharray="4,3" />
-              {series.map((s, si) => {
-                const v = s.data[hovered];
-                const tipX = px(hovered) + (si === 0 ? -118 : 8);
-                return (
-                  <g key={s.key}>
-                    <rect x={tipX} y={py(v) - 16} width={120} height={24} rx="4" fill="white" stroke="#e0e0e0" strokeWidth="0.8" className="shadow-sm" />
-                    <text x={tipX + 60} y={py(v) + 1} textAnchor="middle" fontSize="12" fontWeight="600" fill={s.color} fontFamily="sans-serif">
-                      {v.toLocaleString()}
-                    </text>
-                  </g>
-                );
-              })}
-            </g>
+            <line
+              x1={px(hovered)}
+              y1={pt}
+              x2={px(hovered)}
+              y2={py(0)}
+              stroke="#e2e8f0"
+              strokeWidth="1.5"
+              strokeDasharray="3 3"
+              style={{ pointerEvents: 'none' }}
+            />
+          )}
+
+          {/* Unified Tooltip Card (Renders all series values) */}
+          {hovered !== null && (
+            (() => {
+              const topY = Math.min(...series.map(s => py(s.data[hovered])));
+              return (
+                <g style={{ pointerEvents: 'none' }}>
+                  <rect
+                    x={px(hovered) - 75}
+                    y={topY - 60}
+                    width={150}
+                    height={52}
+                    rx="6"
+                    fill="white"
+                    stroke="#e2e8f0"
+                    strokeWidth="1.5"
+                    style={{ filter: "drop-shadow(0px 4px 6px rgba(0,0,0,0.06))" }}
+                  />
+                  {/* Year */}
+                  <text
+                    x={px(hovered)}
+                    y={topY - 48}
+                    textAnchor="middle"
+                    fontSize="9"
+                    fontWeight="bold"
+                    fill="#718096"
+                    fontFamily="sans-serif"
+                  >
+                    {years[hovered]}
+                  </text>
+                  {/* Series Values */}
+                  {series.map((s, idx) => {
+                    const val = s.data[hovered];
+                    const label = s.label.replace(" Expenditure", "");
+                    return (
+                      <text
+                        key={s.key}
+                        x={px(hovered)}
+                        y={topY - 35 + idx * 12}
+                        textAnchor="middle"
+                        fontSize="9"
+                        fontWeight="bold"
+                        fill={s.color}
+                        fontFamily="sans-serif"
+                      >
+                        {label}: &#x20A6;{(val / 1e9).toFixed(2)}B
+                      </text>
+                    );
+                  })}
+                </g>
+              );
+            })()
           )}
 
           {/* X axis labels */}
