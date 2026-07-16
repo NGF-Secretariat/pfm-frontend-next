@@ -198,15 +198,16 @@ function LineChart({ mode, title, series, years }) {
   let maxG = maxDataVal / 1e9;
   if (maxG === 0) maxG = 100;
 
-  const order = Math.pow(10, Math.floor(Math.log10(maxG)));
-  const fraction = maxG / order;
-  let niceFraction;
-  if (fraction <= 1) niceFraction = 1;
-  else if (fraction <= 2) niceFraction = 2;
-  else if (fraction <= 5) niceFraction = 5;
-  else niceFraction = 10;
+  let step;
+  if (maxG <= 10) step = 2;
+  else if (maxG <= 25) step = 5;
+  else if (maxG <= 50) step = 10;
+  else if (maxG <= 100) step = 20;
+  else if (maxG <= 250) step = 50;
+  else step = 100;
 
-  const maxVal = niceFraction * order * 1e9;
+  const niceMaxG = Math.ceil(maxG / step) * step;
+  const maxVal = niceMaxG * 1e9;
   const gridLines = [0, maxVal * 0.25, maxVal * 0.5, maxVal * 0.75, maxVal];
   const n = years.length;
 

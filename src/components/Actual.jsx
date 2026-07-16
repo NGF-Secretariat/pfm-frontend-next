@@ -186,7 +186,7 @@ function BarChart({ mode, data }) {
   const chartW = w - pl - pr, chartH = h - pt - pb;
 
   const { maxVal, gridLines } = useMemo(() => {
-    const rawMax = Math.max(30, ...data.expenditure);
+    const rawMax = Math.max(10, ...data.expenditure);
     const step = rawMax > 30 ? 10 : 5;
     const niceMax = Math.ceil(rawMax / step) * step;
     const grid = [];
@@ -242,7 +242,7 @@ function BarChart({ mode, data }) {
                 <rect x={bx(i)} y={by(v)} width={barW} height={bh(v)} fill={hovered === i ? "#0f6e56" : "#1D9E75"} rx="3" className="transition-colors duration-150" />
               )}
               {hovered === i && v > 0 && (
-                <text x={bx(i) + barW / 2} y={by(v) - 5} textAnchor="middle" fontSize="10" fontWeight="600" fill="#1D9E75" fontFamily="sans-serif">{v}T</text>
+                <text x={bx(i) + barW / 2} y={by(v) - 5} textAnchor="middle" fontSize="10" fontWeight="600" fill="#1D9E75" fontFamily="sans-serif">&#x20A6;{v}T</text>
               )}
               <text x={bx(i) + barW / 2} y={h - pb + 16} textAnchor="middle" fontSize="10" fill="#666" fontFamily="sans-serif">{data.years[i]}</text>
             </g>
@@ -263,7 +263,7 @@ function LineChart({ mode, data }) {
   const chartW = w - pl - pr, chartH = h - pt - pb;
 
   const { maxVal, gridLines } = useMemo(() => {
-    const rawMax = Math.max(30, ...data.expenditure, ...data.revenue);
+    const rawMax = Math.max(10, ...data.expenditure, ...data.revenue);
     const step = rawMax > 30 ? 10 : 5;
     const niceMax = Math.ceil(rawMax / step) * step;
     const grid = [];
@@ -319,16 +319,33 @@ function LineChart({ mode, data }) {
               <text x={pl - 6} y={py(v) + 4} textAnchor="end" fontSize="10" fill="#999" fontFamily="sans-serif">{v > 0 ? `${v}T` : "0"}</text>
             </g>
           ))}
+
           <text x={16} y={h / 2} textAnchor="middle" fontSize="10" fill="#999" fontFamily="sans-serif" transform={`rotate(-90,16,${h / 2})`}>(NGN Trillion)</text>
+
+          {/* Vertical Guide Line */}
+          {hovered !== null && (
+            <line
+              x1={px(hovered)}
+              y1={pt}
+              x2={px(hovered)}
+              y2={h - pb}
+              stroke="#e2e8f0"
+              strokeWidth="1.5"
+              strokeDasharray="3 3"
+              style={{ pointerEvents: 'none' }}
+            />
+          )}
 
           {series.map(s => (
             <polyline key={s.key} points={polyline(s.vals)} fill="none" stroke={s.color} strokeWidth="2" strokeLinejoin="round" />
           ))}
+
           {series.map(s => s.vals.map((v, i) => (
-            <circle key={`${s.key}-${i}`} cx={px(i)} cy={py(v)} r={hovered === i ? 5 : 3.5}
+            <circle key={`${s.key}-${i}`} cx={px(i)} cy={py(v)} r={hovered === i ? 6 : 3.5}
               fill={s.color} stroke="white" strokeWidth="1.5"
               className="cursor-pointer transition-all duration-100"
-              onMouseEnter={() => setHovered(i)} onMouseLeave={() => setHovered(null)}
+              onMouseEnter={() => setHovered(i)}
+              onMouseLeave={() => setHovered(null)}
             />
           )))}
           {data.years.map((y, i) => (
@@ -341,6 +358,56 @@ function LineChart({ mode, data }) {
               <text x={pl + 20 + idx * 150} y={h - 11} fontSize="11" fill="#555" fontFamily="sans-serif">{s.label}</text>
             </g>
           ))}
+
+          {/* Unified Tooltip Card (Renders both values) */}
+          {hovered !== null && (
+            <g style={{ pointerEvents: 'none' }}>
+              <rect
+                x={px(hovered) - 60}
+                y={Math.min(py(data.expenditure[hovered]), py(data.revenue[hovered])) - 56}
+                width={120}
+                height={48}
+                rx="6"
+                fill="white"
+                stroke="#e2e8f0"
+                strokeWidth="1.5"
+                style={{ filter: "drop-shadow(0px 4px 6px rgba(0,0,0,0.06))" }}
+              />
+              <text
+                x={px(hovered)}
+                y={Math.min(py(data.expenditure[hovered]), py(data.revenue[hovered])) - 44}
+                textAnchor="middle"
+                fontSize="8.5"
+                fontWeight="bold"
+                fill="#718096"
+                fontFamily="sans-serif"
+              >
+                {data.years[hovered]}
+              </text>
+              <text
+                x={px(hovered)}
+                y={Math.min(py(data.expenditure[hovered]), py(data.revenue[hovered])) - 32}
+                textAnchor="middle"
+                fontSize="9"
+                fontWeight="bold"
+                fill="#E8534A"
+                fontFamily="sans-serif"
+              >
+                Exp: &#x20A6;{data.expenditure[hovered]}T
+              </text>
+              <text
+                x={px(hovered)}
+                y={Math.min(py(data.expenditure[hovered]), py(data.revenue[hovered])) - 20}
+                textAnchor="middle"
+                fontSize="9"
+                fontWeight="bold"
+                fill="#1D9E75"
+                fontFamily="sans-serif"
+              >
+                Rev: &#x20A6;{data.revenue[hovered]}T
+              </text>
+            </g>
+          )}
         </svg>
       </div>
     </div>
