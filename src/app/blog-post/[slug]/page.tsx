@@ -5,6 +5,7 @@ import { CalendarDays, ArrowLeft, Loader2, Edit } from "lucide-react";
 import { useState, useEffect, use } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 import blogService from "../../../service/blogService";
 
 const formatContent = (content: string): string => {
@@ -258,7 +259,7 @@ export default function BlogDetailsPage({
                                 prose-li:text-gray-700
                             "
                         >
-                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                            <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
                                 {formatContent(blog.content)}
                             </ReactMarkdown>
                         </article>

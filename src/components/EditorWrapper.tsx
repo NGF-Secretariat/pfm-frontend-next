@@ -39,6 +39,16 @@ interface EditorWrapperProps {
 export default function EditorWrapper({ markdown, editorRef, onChange, imageUploadHandler }: EditorWrapperProps) {
   const [uploading, setUploading] = useState(false);
 
+  const wrappedImageUploadHandler = async (file: File): Promise<string> => {
+    if (!imageUploadHandler) return "";
+    setUploading(true);
+    try {
+      return await imageUploadHandler(file);
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handlePaste = async (e: React.ClipboardEvent) => {
     if (!imageUploadHandler) return;
     const files = e.clipboardData.files;
@@ -46,16 +56,13 @@ export default function EditorWrapper({ markdown, editorRef, onChange, imageUplo
       const file = files[0];
       if (file.type.startsWith("image/")) {
         e.preventDefault();
-        setUploading(true);
         try {
-          const url = await imageUploadHandler(file);
+          const url = await wrappedImageUploadHandler(file);
           if (editorRef?.current) {
             editorRef.current.insertMarkdown(`![image](${url})`);
           }
         } catch (err) {
           console.error("Paste image upload failed:", err);
-        } finally {
-          setUploading(false);
         }
       }
     }
@@ -83,16 +90,13 @@ export default function EditorWrapper({ markdown, editorRef, onChange, imageUplo
       const file = files[0];
       if (file.type.startsWith("image/")) {
         e.preventDefault();
-        setUploading(true);
         try {
-          const url = await imageUploadHandler(file);
+          const url = await wrappedImageUploadHandler(file);
           if (editorRef?.current) {
             editorRef.current.insertMarkdown(`![image](${url})`);
           }
         } catch (err) {
           console.error("Drop image upload failed:", err);
-        } finally {
-          setUploading(false);
         }
       }
     }
@@ -109,7 +113,7 @@ export default function EditorWrapper({ markdown, editorRef, onChange, imageUplo
         <div className="absolute inset-0 bg-white/60 flex items-center justify-center z-50">
           <div className="bg-white px-4 py-2 rounded-full shadow-md border border-gray-100 flex items-center gap-2">
             <Loader2 className="w-4 h-4 text-[#1D9E75] animate-spin" />
-            <span className="text-xs font-semibold text-gray-600">Uploading dropped image...</span>
+            <span className="text-xs font-semibold text-gray-600">Uploading image to Cloudinary... Please wait.</span>
           </div>
         </div>
       )}
@@ -127,7 +131,7 @@ export default function EditorWrapper({ markdown, editorRef, onChange, imageUplo
         linkPlugin(),
         linkDialogPlugin(),
         imagePlugin({
-          imageUploadHandler: imageUploadHandler
+          imageUploadHandler: wrappedImageUploadHandler
         }),
         tablePlugin(),
         toolbarPlugin({

@@ -58,6 +58,12 @@ export default function CreateBlogPage() {
         const file = e.target.files?.[0];
         if (!file) return;
 
+        const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+        if (file.size > MAX_SIZE) {
+            toast.warn("File is too large. Max file size is 5MB.");
+            return;
+        }
+
         setUploadingCover(true);
         try {
             const res = await blogService.uploadImage(file, tempUploadedImage);
@@ -75,6 +81,12 @@ export default function CreateBlogPage() {
     };
 
     const handleInlineImageUpload = async (file: File): Promise<string> => {
+        const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+        if (file.size > MAX_SIZE) {
+            toast.warn("File is too large. Max file size is 5MB.");
+            throw new Error("File is too large");
+        }
+
         try {
             const res = await blogService.uploadImage(file);
             if (res?.data?.success) {
@@ -254,7 +266,19 @@ export default function CreateBlogPage() {
                         </div>
 
                         {imageInputMode === "upload" ? (
-                            <div className="flex flex-col sm:flex-row items-center gap-6 p-6 border-2 border-dashed border-gray-200 rounded-3xl bg-gray-50 hover:border-[#1D9E75] transition-colors">
+                            <div 
+                                onClick={() => {
+                                    if (!uploadingCover) fileInputRef.current?.click();
+                                }}
+                                className="relative flex flex-col sm:flex-row items-center gap-6 p-6 border-2 border-dashed border-gray-200 rounded-3xl bg-gray-50 hover:bg-gray-100/50 hover:border-[#1D9E75] transition-all cursor-pointer select-none"
+                            >
+                                {uploadingCover && (
+                                    <div className="absolute inset-0 bg-white/80 backdrop-blur-[1px] flex flex-col items-center justify-center rounded-3xl z-10">
+                                        <Loader2 className="w-8 h-8 text-[#016630] animate-spin mb-2" />
+                                        <span className="text-sm font-semibold text-gray-700">Uploading image to Cloudinary... Please wait.</span>
+                                    </div>
+                                )}
+
                                 {/* Thumbnail Preview */}
                                 <div className="w-full sm:w-48 h-32 rounded-2xl overflow-hidden bg-gray-200 flex-shrink-0 relative border border-gray-200 flex items-center justify-center">
                                     {formData.image ? (
@@ -270,7 +294,7 @@ export default function CreateBlogPage() {
 
                                 <div className="flex-1 flex flex-col items-center sm:items-start text-center sm:text-left">
                                     <h4 className="font-bold text-gray-800 text-sm mb-1">
-                                        Upload a high-resolution cover image
+                                        Click here or choose a file to upload a high-resolution cover image
                                     </h4>
                                     <p className="text-xs text-gray-500 mb-4 leading-normal">
                                         Supports PNG, JPG, JPEG or WEBP formats. Max file size: 10MB.
@@ -285,7 +309,10 @@ export default function CreateBlogPage() {
                                     <button
                                         type="button"
                                         disabled={uploadingCover}
-                                        onClick={() => fileInputRef.current?.click()}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            if (!uploadingCover) fileInputRef.current?.click();
+                                        }}
                                         className="inline-flex items-center gap-2 px-6 py-2.5 bg-white border border-gray-300 hover:border-[#1D9E75] text-[#016630] font-bold text-xs rounded-full hover:bg-gray-50 transition-colors shadow-sm cursor-pointer disabled:opacity-50"
                                     >
                                         {uploadingCover ? (
