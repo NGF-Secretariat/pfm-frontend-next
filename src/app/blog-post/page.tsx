@@ -40,7 +40,7 @@ export default function BlogPage() {
                 {/* Header */}
                 <div className="mb-14 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                     <div>
-                        <h1 className="text-4xl sm:text-5xl font-bubblegum text-[#08542b]">
+                        <h1 className="text-4xl sm:text-5xl text-[#08542b]">
                             Public Finance: The Blog
                         </h1>
                         <p className="mt-4 text-gray-600 text-lg max-w-2xl">
