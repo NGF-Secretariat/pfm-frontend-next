@@ -24,6 +24,15 @@ import {
   InsertThematicBreak,
   CodeToggle,
   DiffSourceToggleWrapper,
+  diffSourcePlugin,
+  codeBlockPlugin,
+  codeMirrorPlugin,
+  directivesPlugin,
+  AdmonitionDirectiveDescriptor,
+  InsertCodeBlock,
+  InsertAdmonition,
+  StrikeThroughSupSubToggles,
+  Separator,
 } from '@mdxeditor/editor';
 import '@mdxeditor/editor/style.css';
 import { useState } from 'react';
@@ -107,10 +116,10 @@ export default function EditorWrapper({ markdown, editorRef, onChange, imageUplo
       onPaste={handlePaste}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
-      className="relative min-h-[400px] w-full"
+      className="relative min-h-[400px] w-full word-editor-container"
     >
       {uploading && (
-        <div className="absolute inset-0 bg-white/60 flex items-center justify-center z-50">
+        <div className="absolute inset-0 bg-white/60 flex items-center justify-center z-50 rounded-2xl">
           <div className="bg-white px-4 py-2 rounded-full shadow-md border border-gray-100 flex items-center gap-2">
             <Loader2 className="w-4 h-4 text-[#1D9E75] animate-spin" />
             <span className="text-xs font-semibold text-gray-600">Uploading image to Cloudinary... Please wait.</span>
@@ -134,70 +143,58 @@ export default function EditorWrapper({ markdown, editorRef, onChange, imageUplo
           imageUploadHandler: wrappedImageUploadHandler
         }),
         tablePlugin(),
+        codeBlockPlugin(),
+        codeMirrorPlugin({ codeBlockLanguages: { js: 'JavaScript', css: 'CSS', html: 'HTML', python: 'Python', txt: 'Plain Text' } }),
+        directivesPlugin({ directiveDescriptors: [AdmonitionDirectiveDescriptor] }),
+        diffSourcePlugin({ viewMode: 'rich-text', diffMarkdown: markdown }),
         toolbarPlugin({
           toolbarContents: () => (
-            <div className="flex flex-wrap items-center gap-1 border-b border-gray-200 pb-2 mb-4 bg-gray-50 p-2 rounded-t-xl">
+            <>
               {/* History */}
               <UndoRedo />
 
-              <div className="w-px h-6 bg-gray-300 mx-1" />
+              <Separator />
 
               {/* Headings */}
               <BlockTypeSelect />
 
-              <div className="w-px h-6 bg-gray-300 mx-1" />
+              <Separator />
 
               {/* Text Formatting */}
               <BoldItalicUnderlineToggles />
+              <StrikeThroughSupSubToggles />
 
-              <div className="w-px h-6 bg-gray-300 mx-1" />
+              <Separator />
 
               {/* Lists */}
               <ListsToggle />
 
-              <div className="w-px h-6 bg-gray-300 mx-1" />
+              <Separator />
 
-              {/* Quote */}
-              <ButtonWithTooltip
-                title="Blockquote"
-                onClick={() => { }}
-              >
-                "
-              </ButtonWithTooltip>
-
-              <div className="w-px h-6 bg-gray-300 mx-1" />
-
-              {/* Links */}
+              {/* Links & Rich media & Tables */}
               <CreateLink />
-
-              {/* Images */}
               <InsertImage />
-
-              {/* Tables */}
               <InsertTable />
+              <InsertCodeBlock />
+              <InsertAdmonition />
 
-              <div className="w-px h-6 bg-gray-300 mx-1" />
+              <Separator />
 
               {/* Horizontal Rule */}
               <InsertThematicBreak />
 
-              <div className="w-px h-6 bg-gray-300 mx-1" />
-
-              {/* Code */}
+              {/* Inline Code */}
               <CodeToggle />
 
-              {/* Inline Code */}
-              {/* <CodeFormat /> */}
+              <Separator />
 
-              <div className="w-px h-6 bg-gray-300 mx-1" />
-
-              {/* Clear formatting */}
+              {/* View modes toggle */}
               <DiffSourceToggleWrapper>
-                <button className="px-2 py-1 rounded hover:bg-gray-200">
-                  Markdown
+                <button className="px-2 py-1 rounded hover:bg-gray-200 text-xs font-semibold text-gray-700 transition-colors">
+                  Markdown Source
                 </button>
               </DiffSourceToggleWrapper>
-            </div>
+            </>
           ),
         }),
       ]}

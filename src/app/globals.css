@@ -309,3 +309,50 @@
 [class*="_popupContainer_"] button[type="submit"]:hover {
   background-color: #014c24 !important;
 }
+
+/* Premium Word-style Document Workspace for MDXEditor */
+.word-editor-container {
+  background-color: #f1f5f9 !important; /* Soft blue-gray workspace background */
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 24px !important;
+  padding: 32px 24px !important;
+}
+
+/* Float toolbar like Microsoft Word ribbon */
+.word-editor-container [class*="_toolbar_"] {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 30 !important;
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02) !important;
+  padding: 8px 12px !important;
+  margin-bottom: 28px !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+}
+
+/* Remove default editor border */
+.word-editor-container [class*="_root_"] {
+  border: none !important;
+  background: transparent !important;
+}
+
+/* Document page editor (A4 look and feel) */
+.word-editor-container [class*="_content_"] {
+  background-color: #ffffff !important;
+  min-height: 500px !important;
+  max-width: 850px !important; /* Premium writing margins */
+  margin: 0 auto !important;
+  padding: 48px 56px !important; /* Margins inside page */
+  border-radius: 12px !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.02), 0 8px 10px -6px rgba(0, 0, 0, 0.02) !important;
+  transition: box-shadow 0.2s ease !important;
+}
+
+.word-editor-container [class*="_content_"]:focus-within {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.03) !important;
+}
