@@ -61,8 +61,8 @@ const Footer = () => {
                     <p className="text-xs font-bold text-[#5DCAA5] uppercase tracking-widest mb-4 ">Budget Data</p>
                     <div className="flex flex-col gap-2">
                         {[
-                            { label: "Original Budget", href: "/group-explorer?type=original&year=2018&categories=all&states=all" },
-                            { label: "Actual Expenditure", href: "/group-explorer?type=actual&year=2018&categories=all&states=all" },
+                            { label: "Original Budget", href: "/group-explorer?type=original&categories=all&states=all" },
+                            { label: "Actual Expenditure", href: "/group-explorer?type=actual&categories=all&states=all" },
                             { label: "Performance Indicators", href: "/group-explorer?type=pi&year=2019&categories=all&states=all" },
                             { label: "Compare States", href: "/group-explorer" },
                             { label: "Rank States", href: "/rank-data" },
@@ -107,13 +107,13 @@ const Footer = () => {
                     <p className="text-[#7aad96] text-sm text-center sm:text-left">
                         © {new Date().getFullYear()} Nigeria Governors' Forum. All rights reserved.
                     </p>
-                    <div className="flex items-center gap-6">
+                    {/* <div className="flex items-center gap-6">
                         {["Privacy Policy", "Terms of Use"].map((t) => (
                             <a key={t} href="#" className="text-sm text-[#7aad96] hover:text-white transition-colors">
                                 {t}
                             </a>
                         ))}
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>
