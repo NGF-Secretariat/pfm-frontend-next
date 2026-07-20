@@ -218,12 +218,12 @@ class BudgetService {
       console.error("Element with id " + elementId + " not found.");
     }
   }
-  download(id = "", format) {
+  download(id = "", format, filename = "") {
     const table = document.getElementById(id);
     const result = this.tableToJson(table);
     if (format === "csv") {
-      this.jsonToCSVAndDownload(result);
-    } else this.jsonToExcelAndDownload(result);
+      this.jsonToCSVAndDownload(result, filename);
+    } else this.jsonToExcelAndDownload(result, filename);
   }
 
   tableToJson(table) {
@@ -244,7 +244,7 @@ class BudgetService {
     return data;
   }
 
-  jsonToCSVAndDownload(jsonData) {
+  jsonToCSVAndDownload(jsonData, filename = "") {
     let csv = "";
     if (jsonData.length > 0) {
       const keys = Object.keys(jsonData[0]);
@@ -266,7 +266,8 @@ class BudgetService {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${this.generateRandomId()}.csv`;
+    const downloadName = filename ? filename : this.generateRandomId();
+    a.download = `${downloadName}.csv`;
     document.body.appendChild(a);
     a.click();
     setTimeout(() => {
@@ -275,7 +276,7 @@ class BudgetService {
     }, 0);
   }
 
-  jsonToExcelAndDownload(jsonData) {
+  jsonToExcelAndDownload(jsonData, filename = "") {
     const worksheet = XLSX.utils.json_to_sheet(jsonData);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet 1");
@@ -290,7 +291,8 @@ class BudgetService {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${this.generateRandomId()}.xlsx`;
+    const downloadName = filename ? filename : this.generateRandomId();
+    a.download = `${downloadName}.xlsx`;
     document.body.appendChild(a);
     a.click();
     setTimeout(() => {

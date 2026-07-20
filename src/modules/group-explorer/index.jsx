@@ -147,14 +147,13 @@ const GroupExplorer = ({ isRank = false }) => {
       setCategories(getFlatCategories(type));
     } else if (categoriesParam) {
       setCategories(categoriesParam.split(","));
-    } else {
-      setCategories([]);
+    } else if (type && categories.length === 0) {
+      setCategories(getFlatCategories(type));
     }
   }, [nextSearchParams, type]);
 
   React.useEffect(() => {
-    if (type && states && year && categories.length > 0 && !hasAutoFetched.current) {
-      hasAutoFetched.current = true;
+    if (type && states && year && categories.length > 0) {
       getBudgets();
     }
   }, [type, states, year, categories.length]);
@@ -218,10 +217,24 @@ const GroupExplorer = ({ isRank = false }) => {
                 onClose={() => setIsMenu(null)}
               >
                 <MenuItem disabled>Export as</MenuItem>
-                <MenuItem onClick={() => budgetService.download("data-table", "xlsx")}>
+                <MenuItem
+                  onClick={() => {
+                    const typeLabel = BUDGET_TYPES.find((t) => t.value === type)?.label || type;
+                    const filename = [typeLabel, year].filter(Boolean).join(" ");
+                    budgetService.download("data-table", "xlsx", filename);
+                    setIsMenu(null);
+                  }}
+                >
                   Microsoft Excel (.xlsx)
                 </MenuItem>
-                <MenuItem onClick={() => budgetService.download("data-table", "csv")}>
+                <MenuItem
+                  onClick={() => {
+                    const typeLabel = BUDGET_TYPES.find((t) => t.value === type)?.label || type;
+                    const filename = [typeLabel, year].filter(Boolean).join(" ");
+                    budgetService.download("data-table", "csv", filename);
+                    setIsMenu(null);
+                  }}
+                >
                   Comma Separated Values (.csv)
                 </MenuItem>
               </Menu>
@@ -414,6 +427,10 @@ const GroupExplorer = ({ isRank = false }) => {
   function updateQueryParam(name, value) {
     const params = new URLSearchParams(nextSearchParams.toString());
     params.set(name, value);
+    if (categories.length > 0 && !params.get("categories")) {
+      const allFlat = type ? getFlatCategories(type) : [];
+      params.set("categories", categories.length === allFlat.length ? "all" : categories.join(","));
+    }
     router.replace(`${pathname}?${params.toString()}`);
   }
 
@@ -421,13 +438,14 @@ const GroupExplorer = ({ isRank = false }) => {
     const value = e.target.value;
 
     if (name === "type") {
+      const defaultCats = getFlatCategories(value);
+      setCategories(defaultCats);
+      setBudgets({ data: [], states: [] });
+
       const params = new URLSearchParams(nextSearchParams.toString());
       params.set("type", value);
-      params.delete("categories");
+      params.set("categories", "all");
       router.replace(`${pathname}?${params.toString()}`);
-
-      setCategories([]);
-      setBudgets({ data: [], states: [] });
     } else {
       updateQueryParam(name, value);
     }
