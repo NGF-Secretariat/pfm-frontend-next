@@ -164,6 +164,13 @@ const DataTable = ({ data, type, componentRef, categories = [] }) => {
               <ExpenditureByProgrammeTotalExpenditure data={payload} categories={categories} />
               <ExpenditureByProgrammeTotalRevenue data={payload} categories={categories} />
             </tbody>
+            <tfoot>
+              <tr>
+                <td colSpan={(states?.length || 0) + 1} className="text-right py-3 px-4 bg-gray-50/50 text-xs text-gray-500 font-normal italic">
+                  Source: NGF Public Finance Database
+                </td>
+              </tr>
+            </tfoot>
           </table>
         ) : (
           <table ref={componentRef} id="data-table" className="data-table standard-table">
@@ -198,6 +205,13 @@ const DataTable = ({ data, type, componentRef, categories = [] }) => {
               <ExpenditureByProgrammeRecurrent data={payload} categories={categories} />
               <ExpenditureByProgrammeCapital data={payload} categories={categories} />
             </tbody>
+            <tfoot>
+              <tr>
+                <td colSpan={(states?.length || 0) + 2} className="text-right py-3 px-4 bg-gray-50/50 text-xs text-gray-500 font-normal italic">
+                  Source: NGF Public Finance Database
+                </td>
+              </tr>
+            </tfoot>
           </table>
         )}
       </div>

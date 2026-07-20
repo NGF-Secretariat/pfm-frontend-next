@@ -241,6 +241,16 @@ class BudgetService {
       data.push(rowData);
     });
 
+    if (data.length > 0 && headers.length > 0) {
+      let sourceRow = {};
+      const firstColHeader = headers[0] || "Code";
+      sourceRow[firstColHeader] = "Source: NGF Public Finance Database";
+      for (let i = 1; i < headers.length; i++) {
+        sourceRow[headers[i]] = "";
+      }
+      data.push(sourceRow);
+    }
+
     return data;
   }
 
