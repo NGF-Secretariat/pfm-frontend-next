@@ -47,7 +47,7 @@ export default function RootLayout({
       <body>
         <Topbar />
         <TrafficTracker />
-        <main className="font-geistMono">
+        <main className="font-geistMono min-h-screen">
           {children}
         </main>
         <Footer />
