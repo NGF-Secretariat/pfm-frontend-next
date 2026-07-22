@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import budgetService from "../../service/budgetService";
 import {
   Button,
@@ -68,14 +68,14 @@ const getAmountForRanking = (item, type) => {
       if (!isNaN(val)) return val;
     }
   }
-  
+
   let sum = 0;
   const traverse = (val, key) => {
     if (["year", "code", "id", "state", "status", "createdAt", "updatedAt"].includes(key)) {
       return;
     }
     if (val === null || val === undefined) return;
-    
+
     if (typeof val === "object") {
       if (val.value !== undefined) {
         const valNum = cleanValue(val.value);
@@ -141,7 +141,7 @@ const GroupExplorer = ({ isRank = false }) => {
 
   const hasAutoFetched = React.useRef(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const categoriesParam = nextSearchParams.get("categories");
     if (categoriesParam === "all" && type) {
       setCategories(getFlatCategories(type));
@@ -152,7 +152,7 @@ const GroupExplorer = ({ isRank = false }) => {
     }
   }, [nextSearchParams, type]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (type && states && year && categories.length > 0) {
       getBudgets();
     }
@@ -184,211 +184,209 @@ const GroupExplorer = ({ isRank = false }) => {
   }, [budgets, sortBy, type]);
 
   return (
-    <div>
-      <div className="px-8">
-        <div className="flex items-center justify-between flex-nowrap gap-3">
-          {/* Title */}
-          <div className="pt-4">
-            <h4 className="text-[32px] font-poppins py-12">
-              {isRank ? "Rank States" : "Compare State Expenditure"}
-            </h4>
-          </div>
+    <div className="px-8">
+      <div className="flex items-center justify-between flex-nowrap gap-3">
+        {/* Title */}
+        <div className="pt-4">
+          <h4 className="text-[32px] font-poppins py-12">
+            {isRank ? "Rank States" : "Compare State Expenditure"}
+          </h4>
+        </div>
 
-          {/* Actions */}
-          <div className="flex gap-2 items-center pt-4">
-            <Button
-              endIcon={<Save />}
-              variant="outlined"
-              onClick={(e) => setIsMenu(e.currentTarget)}
-              color="success"
-            >
-              Export
+        {/* Actions */}
+        <div className="flex gap-2 items-center pt-4">
+          <Button
+            endIcon={<Save />}
+            variant="outlined"
+            onClick={(e) => setIsMenu(e.currentTarget)}
+            color="success"
+          >
+            Export
+          </Button>
+
+          <div>
+            <Button variant="outlined" endIcon={<Print />} onClick={handlePrint}
+              color="success">
+              Print
             </Button>
 
-            <div>
-              <Button variant="outlined" endIcon={<Print />} onClick={handlePrint}
-                color="success">
-                Print
-              </Button>
-
-              <Menu
-                open={!!isMenu}
-                anchorEl={isMenu}
-                onClose={() => setIsMenu(null)}
+            <Menu
+              open={!!isMenu}
+              anchorEl={isMenu}
+              onClose={() => setIsMenu(null)}
+            >
+              <MenuItem disabled>Export as</MenuItem>
+              <MenuItem
+                onClick={() => {
+                  const typeLabel = BUDGET_TYPES.find((t) => t.value === type)?.label || type;
+                  const filename = [typeLabel, year].filter(Boolean).join(" ");
+                  budgetService.download("data-table", "xlsx", filename);
+                  setIsMenu(null);
+                }}
               >
-                <MenuItem disabled>Export as</MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    const typeLabel = BUDGET_TYPES.find((t) => t.value === type)?.label || type;
-                    const filename = [typeLabel, year].filter(Boolean).join(" ");
-                    budgetService.download("data-table", "xlsx", filename);
-                    setIsMenu(null);
-                  }}
-                >
-                  Microsoft Excel (.xlsx)
-                </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    const typeLabel = BUDGET_TYPES.find((t) => t.value === type)?.label || type;
-                    const filename = [typeLabel, year].filter(Boolean).join(" ");
-                    budgetService.download("data-table", "csv", filename);
-                    setIsMenu(null);
-                  }}
-                >
-                  Comma Separated Values (.csv)
-                </MenuItem>
-              </Menu>
-            </div>
+                Microsoft Excel (.xlsx)
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  const typeLabel = BUDGET_TYPES.find((t) => t.value === type)?.label || type;
+                  const filename = [typeLabel, year].filter(Boolean).join(" ");
+                  budgetService.download("data-table", "csv", filename);
+                  setIsMenu(null);
+                }}
+              >
+                Comma Separated Values (.csv)
+              </MenuItem>
+            </Menu>
           </div>
         </div>
-        <Grid container spacing={3} mb={3}>
-          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 2 }}>
-            <FormControl fullWidth size="small">
-              <InputLabel id="type_select">Budget Type</InputLabel>
-              <Select
-                fullWidth
-                value={type}
-                size="small"
-                label="Budget Type"
-                variant="outlined"
-                labelId="type_select"
-                onChange={(e) => handleChange(e, "type")}
-              >
-                <MenuItem value="" disabled>
-                  Budget Type
+      </div>
+      <Grid container spacing={3} mb={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 4, lg: 2 }}>
+          <FormControl fullWidth size="small">
+            <InputLabel id="type_select">Budget Type</InputLabel>
+            <Select
+              fullWidth
+              value={type}
+              size="small"
+              label="Budget Type"
+              variant="outlined"
+              labelId="type_select"
+              onChange={(e) => handleChange(e, "type")}
+            >
+              <MenuItem value="" disabled>
+                Budget Type
+              </MenuItem>
+              {BUDGET_TYPES.map((item) => (
+                <MenuItem value={item.value} key={item.value}>
+                  {item.label}
                 </MenuItem>
-                {BUDGET_TYPES.map((item) => (
-                  <MenuItem value={item.value} key={item.value}>
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid size={{ xs: 12, sm: 6, md: 4, lg: isRank ? 2 : 3 }}>
-            <FormControl fullWidth size="small">
-              <InputLabel id="state_select">States</InputLabel>
-              <Select
-                size="small"
-                fullWidth
-                multiple
-                label="States"
-                labelId="state_select"
-                variant="outlined"
-                onChange={handleSelectState}
-                value={states ? states?.split(",") : []}
-                renderValue={(selected) =>
-                  selected.map((s) => s.split("_").join(" ")).join(", ")
-                }
-              >
-                <MenuItem value="" disabled>
-                  States
-                </MenuItem>
-                <MenuItem value="">
-                  <Checkbox
-                    size="small"
-                    onChange={handleSelectAllStates}
-                    checked={states.split(",").length === STATES.length}
-                    indeterminate={
-                      states && states.split(",").length !== STATES.length
-                    }
-                  />
-                  Select All
-                </MenuItem>
-                {STATES.map((item) => (
-                  <MenuItem value={item.value} key={item.value}>
-                    <Checkbox
-                      size="small"
-                      checked={states.split(",").indexOf(item.value) > -1}
-                    />
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid size={{ xs: 12, sm: 6, md: 4, lg: isRank ? 2 : 3 }}>
-            <CategorySelect
-              type={type}
-              value={categories}
-              onChange={(value) => setCategories(value)}
-            />
-          </Grid>
-          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 2 }}>
-            <FormControl fullWidth size="small">
-              <InputLabel id="year_select">Year</InputLabel>
-              <Select
-                fullWidth
-                size="small"
-                value={year}
-                label="Year"
-                labelId="year_select"
-                variant="outlined"
-                onChange={(e) => handleChange(e, "year")}
-              >
-                <MenuItem value="" disabled>
-                  Select Year
-                </MenuItem>
-                {type === "revised" ? (
-                  <MenuItem value="2020">2020</MenuItem>
-                ) : (
-                  YEARS.map((item) => (
-                    <MenuItem value={item.value} key={item.value}>
-                      {item.label}
-                    </MenuItem>
-                  ))
-                )}
-              </Select>
-            </FormControl>
-          </Grid>
-          {isRank && (
-            <Grid size={{ xs: 12, sm: 6, md: 4, lg: 2 }}>
-              <FormControl fullWidth size="small">
-                <InputLabel id="sort_by_select">Sort By</InputLabel>
-                <Select
-                  fullWidth
-                  size="small"
-                  value={sortBy}
-                  label="Sort By"
-                  labelId="sort_by_select"
-                  variant="outlined"
-                  onChange={(e) => setSortBy(e.target.value)}
-                >
-                  <MenuItem value="">
-                    None
-                  </MenuItem>
-                  <MenuItem value="asc">Ascending</MenuItem>
-                  <MenuItem value="desc">Descending</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-          )}
-          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 2 }}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={getBudgets}
-              disabled={isLoading}
-              endIcon={
-                isLoading && (
-                  <CircularProgress
-                    style={{ color: "#fff", width: "20px", height: "20px" }}
-                  />
-                )
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 4, lg: isRank ? 2 : 3 }}>
+          <FormControl fullWidth size="small">
+            <InputLabel id="state_select">States</InputLabel>
+            <Select
+              size="small"
+              fullWidth
+              multiple
+              label="States"
+              labelId="state_select"
+              variant="outlined"
+              onChange={handleSelectState}
+              value={states ? states?.split(",") : []}
+              renderValue={(selected) =>
+                selected.map((s) => s.split("_").join(" ")).join(", ")
               }
             >
-              Filter
-            </Button>
-          </Grid>
+              <MenuItem value="" disabled>
+                States
+              </MenuItem>
+              <MenuItem value="">
+                <Checkbox
+                  size="small"
+                  onChange={handleSelectAllStates}
+                  checked={states.split(",").length === STATES.length}
+                  indeterminate={
+                    states && states.split(",").length !== STATES.length
+                  }
+                />
+                Select All
+              </MenuItem>
+              {STATES.map((item) => (
+                <MenuItem value={item.value} key={item.value}>
+                  <Checkbox
+                    size="small"
+                    checked={states.split(",").indexOf(item.value) > -1}
+                  />
+                  {item.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Grid>
-        <DataTable
-          type={type}
-          data={sortedBudgets}
-          componentRef={printRef}
-          categories={categories}
-        />
-        <Preloader data={sortedBudgets} isLoading={isLoading} />
-      </div>
+        <Grid size={{ xs: 12, sm: 6, md: 4, lg: isRank ? 2 : 3 }}>
+          <CategorySelect
+            type={type}
+            value={categories}
+            onChange={(value) => setCategories(value)}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 4, lg: 2 }}>
+          <FormControl fullWidth size="small">
+            <InputLabel id="year_select">Year</InputLabel>
+            <Select
+              fullWidth
+              size="small"
+              value={year}
+              label="Year"
+              labelId="year_select"
+              variant="outlined"
+              onChange={(e) => handleChange(e, "year")}
+            >
+              <MenuItem value="" disabled>
+                Select Year
+              </MenuItem>
+              {type === "revised" ? (
+                <MenuItem value="2020">2020</MenuItem>
+              ) : (
+                YEARS.map((item) => (
+                  <MenuItem value={item.value} key={item.value}>
+                    {item.label}
+                  </MenuItem>
+                ))
+              )}
+            </Select>
+          </FormControl>
+        </Grid>
+        {isRank && (
+          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 2 }}>
+            <FormControl fullWidth size="small">
+              <InputLabel id="sort_by_select">Sort By</InputLabel>
+              <Select
+                fullWidth
+                size="small"
+                value={sortBy}
+                label="Sort By"
+                labelId="sort_by_select"
+                variant="outlined"
+                onChange={(e) => setSortBy(e.target.value)}
+              >
+                <MenuItem value="">
+                  None
+                </MenuItem>
+                <MenuItem value="asc">Ascending</MenuItem>
+                <MenuItem value="desc">Descending</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+        )}
+        <Grid size={{ xs: 12, sm: 6, md: 4, lg: 2 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={getBudgets}
+            disabled={isLoading}
+            endIcon={
+              isLoading && (
+                <CircularProgress
+                  style={{ color: "#fff", width: "20px", height: "20px" }}
+                />
+              )
+            }
+          >
+            Filter
+          </Button>
+        </Grid>
+      </Grid>
+      <DataTable
+        type={type}
+        data={sortedBudgets}
+        componentRef={printRef}
+        categories={categories}
+      />
+      <Preloader data={sortedBudgets} isLoading={isLoading} />
     </div>
   );
 

@@ -103,7 +103,7 @@ const Footer = () => {
 
             {/* Bottom Bar */}
             <div className="bg-[#08542b] px-6 py-6">
-                <div className="max-w-[1140px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div className="max-w-285 mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
                     <p className="text-[#7aad96] text-sm text-center sm:text-left">
                         © {new Date().getFullYear()} Nigeria Governors' Forum. All rights reserved.
                     </p>

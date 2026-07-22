@@ -8,7 +8,7 @@ const Preloader = ({ isLoading, data = { data: [] } }) => {
         className="flex items-center justify-center"
       >
         <CircularProgress
-          style={{ color: "#059669", width: "50px", height: "50px" }}
+          style={{ color: "#059669", width: "50px", height: "50px", marginTop: "40px" }}
         />
       </div>
     );

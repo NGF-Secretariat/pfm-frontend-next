@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown } from "lucide-react";
 import RevenueByEconomic from "./datasets/revenue-by-economic";
-import { Box } from "@mui/material";
 import ExpenditureByEconomic from "./datasets/expenditure-by-economic";
 import ExpenditureByAdminRecurrent from "./datasets/expenditure-by-admin__recurrent";
 import ExpenditureByAdminCapital from "./datasets/expenditure-by-admin__capital";
@@ -47,13 +46,13 @@ const DataTable = ({ data, type, componentRef, categories = [] }) => {
     setShowDown(el.scrollTop < el.scrollHeight - el.clientHeight - 5);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const el = containerRef.current;
     if (el) {
       el.addEventListener("scroll", checkScroll);
       // Run initially
       checkScroll();
-      
+
       const observer = new ResizeObserver(checkScroll);
       observer.observe(el);
       return () => {
@@ -128,7 +127,7 @@ const DataTable = ({ data, type, componentRef, categories = [] }) => {
 
       <div
         ref={containerRef}
-        className="max-h-[600px] overflow-auto w-full border border-gray-100 rounded-3xl shadow-sm bg-white"
+        className="max-h-200 overflow-auto w-full border border-gray-100 rounded-3xl shadow-sm bg-white"
       >
         {type === "pi" ? (
           <table ref={componentRef} id="data-table" className="data-table pi-table">
