@@ -17,6 +17,10 @@ class BlogService {
     return httpService.patch(`/blogs/${slug}`, data);
   }
 
+  deleteBlog(slug) {
+    return httpService.delete(`/blogs/${slug}`);
+  }
+
   uploadImage(file, previousImage = null) {
     const formData = new FormData();
     formData.append("file", file);

@@ -1,11 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Lock, User, Plus, Trash2, ShieldCheck, Mail, Key, Eye, EyeOff, Map, Globe, BarChart2, Activity } from "lucide-react";
+import { Lock, User, Plus, Trash2, ShieldCheck, Mail, Key, Eye, EyeOff, Map, Globe, BarChart2, Activity, FileText, AlertTriangle, ExternalLink, Edit3 } from "lucide-react";
 import { toast } from "react-toastify";
+import Link from "next/link";
 import { login } from "../../service/authService";
 import { fetchUsers, createUser, updateUser, deleteUser } from "../../service/userService";
 import budgetService from "../../service/budgetService";
+import blogService from "../../service/blogService";
 
 export default function SettingsPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -26,6 +28,12 @@ export default function SettingsPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [showUserPassword, setShowUserPassword] = useState(false);
+
+  // Blog Management State
+  const [blogs, setBlogs] = useState<any[]>([]);
+  const [loadingBlogs, setLoadingBlogs] = useState(false);
+  const [blogToDelete, setBlogToDelete] = useState<any | null>(null);
+  const [deletingBlog, setDeletingBlog] = useState(false);
 
   // State Profile Editor State
   const [selectedStateSlug, setSelectedStateSlug] = useState("");
@@ -57,6 +65,41 @@ export default function SettingsPage() {
       setUsers(data);
     } catch (e) {
       console.error(e);
+    }
+  };
+
+  const loadBlogs = async () => {
+    setLoadingBlogs(true);
+    try {
+      const res = await blogService.getAllBlogs();
+      if (res?.data?.success) {
+        setBlogs(res.data.data);
+      }
+    } catch (e) {
+      console.error("Failed to load blogs:", e);
+      toast.error("Failed to load blog posts.");
+    } finally {
+      setLoadingBlogs(false);
+    }
+  };
+
+  const handleConfirmDeleteBlog = async () => {
+    if (!blogToDelete) return;
+    setDeletingBlog(true);
+    try {
+      const res = await blogService.deleteBlog(blogToDelete.slug);
+      if (res?.data?.success) {
+        toast.success(`Blog post "${blogToDelete.title}" deleted successfully!`);
+        setBlogToDelete(null);
+        loadBlogs();
+      } else {
+        toast.error("Failed to delete blog post.");
+      }
+    } catch (err: any) {
+      console.error("Delete blog failed:", err);
+      toast.error(err.response?.data?.message || "Failed to delete blog post.");
+    } finally {
+      setDeletingBlog(false);
     }
   };
 
@@ -115,8 +158,15 @@ export default function SettingsPage() {
       loadUsers();
       loadSubscribers();
       loadStatesList();
+      loadBlogs();
     }
   }, []);
+
+  useEffect(() => {
+    if (isLoggedIn && activeTab === "blogs") {
+      loadBlogs();
+    }
+  }, [activeTab, isLoggedIn]);
 
   useEffect(() => {
     if (isLoggedIn && activeTab === "state-data" && statesList.length === 0) {
@@ -425,6 +475,16 @@ export default function SettingsPage() {
               <span>Edit State Data</span>
             </button>
             <button
+              onClick={() => setActiveTab("blogs")}
+              className={`flex items-center gap-3 w-full px-4 py-3 rounded-2xl text-left font-medium transition-all ${activeTab === "blogs"
+                  ? "bg-green-50 text-[#016630] shadow-sm border-l-4 border-[#016630]"
+                  : "text-gray-600 hover:bg-gray-50 hover:text-[#016630]"
+                }`}
+            >
+              <FileText size={18} />
+              <span>Manage Blogs</span>
+            </button>
+            <button
               onClick={() => setActiveTab("traffic")}
               className={`flex items-center gap-3 w-full px-4 py-3 rounded-2xl text-left font-medium transition-all ${activeTab === "traffic"
                   ? "bg-green-50 text-[#016630] shadow-sm border-l-4 border-[#016630]"
@@ -447,6 +507,16 @@ export default function SettingsPage() {
             >
               <User size={16} />
               Users
+            </button>
+            <button
+              onClick={() => setActiveTab("blogs")}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm whitespace-nowrap transition-colors ${activeTab === "blogs"
+                  ? "bg-green-50 text-[#016630]"
+                  : "text-gray-600 hover:bg-gray-50"
+                }`}
+            >
+              <FileText size={16} />
+              Blogs
             </button>
             <button
               onClick={() => setActiveTab("subscribers")}
@@ -944,8 +1014,147 @@ export default function SettingsPage() {
               </div>
             </div>
           )}
+
+          {activeTab === "blogs" && (
+            <div className="space-y-8">
+              <div className="bg-white rounded-3xl shadow-md border border-gray-100 overflow-hidden">
+                <div className="p-6 sm:p-8 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 bg-green-50 text-[#016630] rounded-full">
+                      <FileText size={24} />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-bold text-[#08542b]">Blog Post Management</h2>
+                      <p className="text-gray-500 text-sm">Create, view, edit, or remove published blog articles.</p>
+                    </div>
+                  </div>
+
+                  <Link
+                    href="/blog-post/create"
+                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#016630] text-white rounded-full font-semibold hover:bg-[#014c24] transition-colors text-sm shadow-sm"
+                  >
+                    <Plus size={16} />
+                    Create Blog Post
+                  </Link>
+                </div>
+
+                {loadingBlogs ? (
+                  <div className="p-12 flex flex-col items-center justify-center text-gray-500 gap-3">
+                    <div className="w-8 h-8 border-4 border-[#016630] border-t-transparent rounded-full animate-spin"></div>
+                    <p className="text-sm font-medium">Loading blog posts...</p>
+                  </div>
+                ) : blogs.length === 0 ? (
+                  <div className="p-12 text-center text-gray-500">
+                    <FileText className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                    <p className="font-semibold text-gray-700">No blog posts found</p>
+                    <p className="text-sm text-gray-400 mt-1">Click the button above to publish your first blog article.</p>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left border-collapse">
+                      <thead>
+                        <tr className="bg-gray-50 border-b border-gray-100">
+                          <th className="py-4 px-6 font-semibold text-xs text-gray-500 uppercase tracking-wider">Article</th>
+                          <th className="py-4 px-6 font-semibold text-xs text-gray-500 uppercase tracking-wider">Date</th>
+                          <th className="py-4 px-6 font-semibold text-xs text-gray-500 uppercase tracking-wider text-right">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-100">
+                        {blogs.map((blog) => (
+                          <tr key={blog.id || blog.slug} className="hover:bg-gray-50/50 transition-colors">
+                            <td className="py-4 px-6">
+                              <div className="flex items-center gap-4">
+                                <div className="w-14 h-14 rounded-xl overflow-hidden bg-gray-100 border border-gray-200 flex-shrink-0">
+                                  <img
+                                    src={blog.image || "/ngf-logo.png"}
+                                    alt={blog.title}
+                                    onError={(e: any) => { e.currentTarget.src = "/ngf-logo.png"; }}
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
+                                <div className="min-w-0 max-w-md">
+                                  <h3 className="font-bold text-gray-800 text-sm truncate">{blog.title}</h3>
+                                  <p className="text-xs text-gray-400 font-mono truncate">/blog-post/{blog.slug}</p>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="py-4 px-6 whitespace-nowrap">
+                              <span className="text-xs font-semibold text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
+                                {blog.date || "N/A"}
+                              </span>
+                            </td>
+                            <td className="py-4 px-6 text-right whitespace-nowrap">
+                              <div className="flex items-center justify-end gap-2">
+                                <Link
+                                  href={`/blog-post/${blog.slug}`}
+                                  target="_blank"
+                                  className="p-2 text-gray-500 hover:text-[#016630] hover:bg-green-50 rounded-lg transition-colors"
+                                  title="View Published Post"
+                                >
+                                  <ExternalLink size={16} />
+                                </Link>
+                                <Link
+                                  href={`/blog-post/${blog.slug}/edit`}
+                                  className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                  title="Edit Post"
+                                >
+                                  <Edit3 size={16} />
+                                </Link>
+                                <button
+                                  type="button"
+                                  onClick={() => setBlogToDelete(blog)}
+                                  className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                  title="Delete Post"
+                                >
+                                  <Trash2 size={16} />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Delete Blog Confirmation Modal */}
+      {blogToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-gray-100 animate-scale-up">
+            <div className="w-12 h-12 rounded-full bg-red-50 text-red-600 flex items-center justify-center mb-4">
+              <AlertTriangle size={24} />
+            </div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Delete Blog Post?</h3>
+            <p className="text-gray-500 text-sm mb-6 leading-relaxed">
+              Are you sure you want to delete <span className="font-semibold text-gray-800">"{blogToDelete.title}"</span>? This will permanently erase the post and any uploaded images associated with it. This action cannot be undone.
+            </p>
+            <div className="flex gap-3 justify-end">
+              <button
+                type="button"
+                onClick={() => setBlogToDelete(null)}
+                disabled={deletingBlog}
+                className="px-5 py-2.5 rounded-full border border-gray-200 text-gray-600 font-semibold hover:bg-gray-50 transition-colors disabled:opacity-50 text-sm"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmDeleteBlog}
+                disabled={deletingBlog}
+                className="px-5 py-2.5 rounded-full bg-red-600 text-white font-semibold hover:bg-red-700 transition-colors disabled:opacity-50 text-sm flex items-center gap-2"
+              >
+                {deletingBlog && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>}
+                {deletingBlog ? "Deleting..." : "Yes, Delete Post"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { CalendarDays, ArrowLeft, Loader2, Edit } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { CalendarDays, ArrowLeft, Loader2, Edit, Trash2, AlertTriangle } from "lucide-react";
 import { useState, useEffect, use } from "react";
+import { toast } from "react-toastify";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
@@ -38,11 +40,32 @@ export default function BlogDetailsPage({
 }: {
     params: Promise<{ slug: string }>;
 }) {
+    const router = useRouter();
     // Next.js 16 requires unwrapping params with use() if they are async
     const { slug } = use(params);
     const [blog, setBlog] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+
+    const handleDelete = async () => {
+        setDeleting(true);
+        try {
+            const res = await blogService.deleteBlog(slug);
+            if (res?.data?.success) {
+                toast.success("Blog post deleted successfully!");
+                router.push("/blog-post");
+            } else {
+                toast.error("Failed to delete blog post.");
+            }
+        } catch (err: any) {
+            console.error("Delete failed:", err);
+            toast.error(err.response?.data?.message || "Failed to delete blog post.");
+        } finally {
+            setDeleting(false);
+        }
+    };
 
     useEffect(() => {
         setIsLoggedIn(localStorage.getItem("isLoggedIn") === "true");
@@ -115,19 +138,33 @@ export default function BlogDetailsPage({
                         Back to Blog
                     </Link>
 
-                    {/* Edit */}
+                    {/* Actions for Logged in session */}
                     {isLoggedIn && (
-                        <Link
-                            href={`/blog-post/${blog.slug}/edit`}
-                            className="
-                                inline-flex items-center gap-2
-                                text-[#016630] font-semibold bg-green-50
-                                px-4 py-2 rounded-full hover:bg-green-100 transition-colors
-                            "
-                        >
-                            <Edit size={16} />
-                            Edit Post
-                        </Link>
+                        <div className="flex items-center gap-3">
+                            <Link
+                                href={`/blog-post/${blog.slug}/edit`}
+                                className="
+                                    inline-flex items-center gap-2
+                                    text-[#016630] font-semibold bg-green-50
+                                    px-4 py-2 rounded-full hover:bg-green-100 transition-colors text-sm
+                                "
+                            >
+                                <Edit size={16} />
+                                Edit Post
+                            </Link>
+                            <button
+                                type="button"
+                                onClick={() => setShowDeleteConfirm(true)}
+                                className="
+                                    inline-flex items-center gap-2
+                                    text-red-600 font-semibold bg-red-50
+                                    px-4 py-2 rounded-full hover:bg-red-100 transition-colors text-sm
+                                "
+                            >
+                                <Trash2 size={16} />
+                                Delete Post
+                            </button>
+                        </div>
                     )}
                 </div>
 
@@ -259,13 +296,60 @@ export default function BlogDetailsPage({
                                 prose-li:text-gray-700
                             "
                         >
-                            <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
-                                {formatContent(blog.content)}
+                            <ReactMarkdown
+                                remarkPlugins={[remarkGfm]}
+                                rehypePlugins={[rehypeRaw]}
+                                components={{
+                                    img: ({ node, ...props }) => (
+                                        <img
+                                            {...props}
+                                            className="rounded-2xl shadow-md mx-auto max-h-[550px] w-auto object-cover my-6 border border-gray-100"
+                                            onError={(e: any) => {
+                                                console.warn("Blog body image failed to load:", props.src);
+                                            }}
+                                        />
+                                    )
+                                }}
+                            >
                             </ReactMarkdown>
                         </article>
                     </div>
                 </div>
             </div>
+
+            {/* Delete Confirmation Modal */}
+            {showDeleteConfirm && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+                    <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-gray-100 animate-scale-up">
+                        <div className="w-12 h-12 rounded-full bg-red-50 text-red-600 flex items-center justify-center mb-4">
+                            <AlertTriangle size={24} />
+                        </div>
+                        <h3 className="text-xl font-bold text-gray-900 mb-2">Delete Blog Post?</h3>
+                        <p className="text-gray-500 text-sm mb-6 leading-relaxed">
+                            Are you sure you want to delete <span className="font-semibold text-gray-800">"{blog.title}"</span>? This will permanently erase the post and any uploaded images associated with it. This action cannot be undone.
+                        </p>
+                        <div className="flex gap-3 justify-end">
+                            <button
+                                type="button"
+                                onClick={() => setShowDeleteConfirm(false)}
+                                disabled={deleting}
+                                className="px-5 py-2.5 rounded-full border border-gray-200 text-gray-600 font-semibold hover:bg-gray-50 transition-colors disabled:opacity-50 text-sm"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="button"
+                                onClick={handleDelete}
+                                disabled={deleting}
+                                className="px-5 py-2.5 rounded-full bg-red-600 text-white font-semibold hover:bg-red-700 transition-colors disabled:opacity-50 text-sm flex items-center gap-2"
+                            >
+                                {deleting && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>}
+                                {deleting ? "Deleting..." : "Yes, Delete Post"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </section>
     );
 }
