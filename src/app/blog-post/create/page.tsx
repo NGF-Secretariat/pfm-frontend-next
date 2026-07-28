@@ -116,31 +116,35 @@ export default function CreateBlogPage() {
     };
 
     const handleSave = async () => {
-        if (!editorRef.current) return;
+        if (!editorRef.current) {
+            toast.error("Editor is not ready yet. Please try again.");
+            return;
+        }
 
         setSaving(true);
         try {
-            // Find the Lexical editor instance from the DOM
-            const editorDom = document.querySelector('.prose [contenteditable="true"]') as any;
-            const lexicalEditor = editorDom?.__lexicalEditor;
-            if (lexicalEditor) {
-                // Run a Lexical update to fill empty paragraphs with a non-breaking space
-                // so Lexical's markdown exporter won't strip them!
-                lexicalEditor.update(() => {
-                    const root = $getRoot();
-                    const children = root.getChildren();
-                    children.forEach(node => {
-                        if (node.getType() === 'paragraph') {
-                            const paragraph = node as any;
-                            if (paragraph.isEmpty() || paragraph.getTextContent() === '') {
-                                paragraph.clear();
-                                paragraph.append($createTextNode('\u00a0'));
+            // Find the Lexical editor instance from the DOM (safely)
+            try {
+                const editorDom = document.querySelector('.prose [contenteditable="true"]') as any;
+                const lexicalEditor = editorDom?.__lexicalEditor;
+                if (lexicalEditor) {
+                    lexicalEditor.update(() => {
+                        const root = $getRoot();
+                        const children = root.getChildren();
+                        children.forEach(node => {
+                            if (node.getType() === 'paragraph') {
+                                const paragraph = node as any;
+                                if (paragraph.getChildrenSize?.() === 0 || paragraph.getTextContent?.().trim() === '') {
+                                    paragraph.clear();
+                                    paragraph.append($createTextNode('\u00a0'));
+                                }
                             }
-                        }
+                        });
                     });
-                });
-                // Wait for the state update to commit
-                await new Promise(resolve => setTimeout(resolve, 50));
+                    await new Promise(resolve => setTimeout(resolve, 50));
+                }
+            } catch (e) {
+                console.warn("Lexical paragraph spacing optimization skipped:", e);
             }
 
             const content = editorRef.current.getMarkdown();
@@ -155,9 +159,9 @@ export default function CreateBlogPage() {
                 toast.success("Blog post created successfully!");
                 router.push("/blog-post");
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error("Create failed:", error);
-            toast.error("Failed to create blog post");
+            toast.error(error.response?.data?.message || "Failed to create blog post");
         } finally {
             setSaving(false);
         }
