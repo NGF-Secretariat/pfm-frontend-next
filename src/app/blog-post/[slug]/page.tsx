@@ -311,6 +311,7 @@ export default function BlogDetailsPage({
                                     )
                                 }}
                             >
+                                {formatContent(blog.content)}
                             </ReactMarkdown>
                         </article>
                     </div>
