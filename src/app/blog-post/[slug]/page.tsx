@@ -296,23 +296,30 @@ export default function BlogDetailsPage({
                                 prose-li:text-gray-700
                             "
                         >
-                            <ReactMarkdown
-                                remarkPlugins={[remarkGfm]}
-                                rehypePlugins={[rehypeRaw]}
-                                components={{
-                                    img: ({ node, ...props }) => (
-                                        <img
-                                            {...props}
-                                            className="rounded-2xl shadow-md mx-auto max-h-[550px] w-auto object-cover my-6 border border-gray-100"
-                                            onError={(e: any) => {
-                                                console.warn("Blog body image failed to load:", props.src);
-                                            }}
-                                        />
-                                    )
-                                }}
-                            >
-                                {formatContent(blog.content)}
-                            </ReactMarkdown>
+                            {blog.content && (blog.content.trim().startsWith("<") || blog.content.includes("ql-align")) ? (
+                                <div
+                                    className="blog-rich-content text-gray-700 leading-8"
+                                    dangerouslySetInnerHTML={{ __html: blog.content }}
+                                />
+                            ) : (
+                                <ReactMarkdown
+                                    remarkPlugins={[remarkGfm]}
+                                    rehypePlugins={[rehypeRaw]}
+                                    components={{
+                                        img: ({ node, ...props }) => (
+                                            <img
+                                                {...props}
+                                                className="rounded-2xl shadow-md mx-auto max-h-[550px] w-full sm:w-auto object-contain my-6 border border-gray-100 block"
+                                                onError={(e: any) => {
+                                                    console.warn("Blog body image failed to load:", props.src);
+                                                }}
+                                            />
+                                        )
+                                    }}
+                                >
+                                    {formatContent(blog.content)}
+                                </ReactMarkdown>
+                            )}
                         </article>
                     </div>
                 </div>

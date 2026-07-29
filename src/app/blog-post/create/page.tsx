@@ -123,30 +123,6 @@ export default function CreateBlogPage() {
 
         setSaving(true);
         try {
-            // Find the Lexical editor instance from the DOM (safely)
-            try {
-                const editorDom = document.querySelector('.prose [contenteditable="true"]') as any;
-                const lexicalEditor = editorDom?.__lexicalEditor;
-                if (lexicalEditor) {
-                    lexicalEditor.update(() => {
-                        const root = $getRoot();
-                        const children = root.getChildren();
-                        children.forEach(node => {
-                            if (node.getType() === 'paragraph') {
-                                const paragraph = node as any;
-                                if (paragraph.getChildrenSize?.() === 0 || paragraph.getTextContent?.().trim() === '') {
-                                    paragraph.clear();
-                                    paragraph.append($createTextNode('\u00a0'));
-                                }
-                            }
-                        });
-                    });
-                    await new Promise(resolve => setTimeout(resolve, 50));
-                }
-            } catch (e) {
-                console.warn("Lexical paragraph spacing optimization skipped:", e);
-            }
-
             const content = editorRef.current.getMarkdown();
 
             if (!formData.title || !formData.slug) {
