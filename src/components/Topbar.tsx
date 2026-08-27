@@ -63,17 +63,17 @@ export default function Topbar() {
         <div className="hidden lg:flex items-center justify-between gap-4">
 
           {/* LEFT */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 pt-4">
             <Image
               src="/ngf-logo.png"
               alt="Logo"
               width={220}
               height={220}
               priority
-              className="w-48 h-auto object-contain"
+              className="w-52 h-auto object-contain"
             />
 
-            <h1 className="text-white text-2xl font-bold pt-4">
+            <h1 className="text-white text-xl font-bold pt-5">
               Public Finance Database
             </h1>
           </div>
@@ -161,7 +161,7 @@ export default function Topbar() {
                         href={item.path}
                         className="
                           relative px-3 py-2 flex items-center
-                          text-base text-white/90 hover:text-white
+                          text-sm text-white/90 hover:text-white
                         "
                       >
                         {/* Hover BG */}
@@ -219,7 +219,7 @@ export default function Topbar() {
                                 href={child.path}
                                 className="
                                 block w-full text-left
-                                px-6 py-3 text-base font-medium
+                                px-6 py-3 text-sm font-medium
                                 hover:bg-green-50 hover:pl-8
                                 transition-all duration-300
                               "

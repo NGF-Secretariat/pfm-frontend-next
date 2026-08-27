@@ -3,15 +3,13 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { ArrowLeft, Loader2, Save, Upload } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect, use, useRef } from "react";
 import { useRouter } from "next/navigation";
-import blogService from "../../../service/blogService";
+import blogService from "../../../../service/blogService";
 import { toast } from "react-toastify";
 import type { MDXEditorMethods } from '@mdxeditor/editor';
-import { $getRoot, $createTextNode } from 'lexical';
 
-// MDXEditor must be loaded dynamically with ssr disabled
-const EditorWrapper = dynamic(() => import("../../../components/EditorWrapper"), {
+const EditorWrapper = dynamic(() => import("../../../../components/EditorWrapper"), {
     ssr: false,
     loading: () => (
         <div className="flex items-center justify-center p-10">
@@ -20,8 +18,15 @@ const EditorWrapper = dynamic(() => import("../../../components/EditorWrapper"),
     )
 });
 
-export default function CreateBlogPage() {
+export default function EditBlogClient({
+    params,
+}: {
+    params: Promise<{ slug: string }>;
+}) {
     const router = useRouter();
+    const { slug } = use(params);
+    const [blog, setBlog] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [checkingAuth, setCheckingAuth] = useState(true);
     const editorRef = useRef<MDXEditorMethods>(null);
@@ -30,36 +35,59 @@ export default function CreateBlogPage() {
     const [uploadingCover, setUploadingCover] = useState(false);
     const [imageInputMode, setImageInputMode] = useState<"upload" | "url">("upload");
 
-    useEffect(() => {
-        const loggedIn = localStorage.getItem("isLoggedIn") === "true";
-        if (!loggedIn) {
-            toast.error("You must be logged in to access this page.");
-            router.replace("/blog-post");
-        } else {
-            setCheckingAuth(false);
-        }
-    }, [router]);
-
-
-    // Generate a unique 5-character string once when the component mounts
-    const [uniqueSuffix] = useState(() => Math.random().toString(36).substring(2, 7));
-
     const [formData, setFormData] = useState({
         title: "",
         slug: "",
-        author: "NGF Secretariat",
-        date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+        author: "",
+        date: "",
         image: "",
         excerpt: ""
     });
 
     const [tempUploadedImage, setTempUploadedImage] = useState<string | null>(null);
 
+    useEffect(() => {
+        const loggedIn = localStorage.getItem("isLoggedIn") === "true";
+        if (!loggedIn) {
+            toast.error("You must be logged in to access this page.");
+            router.replace(`/blog-post/${slug}`);
+        } else {
+            setCheckingAuth(false);
+        }
+    }, [slug, router]);
+
+    useEffect(() => {
+        let isMounted = true;
+        async function fetchBlog() {
+            try {
+                const res = await blogService.getBlogBySlug(slug);
+                if (isMounted && res?.data?.success) {
+                    setBlog(res.data.data);
+                    setFormData({
+                        title: res.data.data.title || "",
+                        slug: res.data.data.slug || "",
+                        author: res.data.data.author || "NGF Secretariat",
+                        date: res.data.data.date || "",
+                        image: res.data.data.image || "",
+                        excerpt: res.data.data.excerpt || ""
+                    });
+                }
+            } catch (err) {
+                console.error("Failed to fetch blog:", err);
+                toast.error("Failed to load blog post");
+            } finally {
+                if (isMounted) setLoading(false);
+            }
+        }
+        fetchBlog();
+        return () => { isMounted = false; };
+    }, [slug]);
+
     const handleCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+        const MAX_SIZE = 5 * 1024 * 1024;
         if (file.size > MAX_SIZE) {
             toast.warn("File is too large. Max file size is 5MB.");
             return;
@@ -82,7 +110,7 @@ export default function CreateBlogPage() {
     };
 
     const handleInlineImageUpload = async (file: File): Promise<string> => {
-        const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+        const MAX_SIZE = 5 * 1024 * 1024;
         if (file.size > MAX_SIZE) {
             toast.warn("File is too large. Max file size is 5MB.");
             throw new Error("File is too large");
@@ -100,22 +128,6 @@ export default function CreateBlogPage() {
         }
     };
 
-    const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const title = e.target.value;
-        const baseSlug = title
-            .toLowerCase()
-            .trim()
-            .replace(/[^\w\s-]/g, '') // Remove non-word chars
-            .replace(/[\s_-]+/g, '-') // Swap spaces for hyphens
-            .replace(/^-+|-+$/g, '') // Trim hyphens
-            .split('-')
-            .slice(0, 5) // Take first 5 words for short slug
-            .join('-');
-
-        const slug = baseSlug ? `${baseSlug}-${uniqueSuffix}` : "";
-        setFormData({ ...formData, title, slug });
-    };
-
     const handleSave = async () => {
         if (!editorRef.current) {
             toast.error("Editor is not ready yet. Please try again.");
@@ -124,21 +136,26 @@ export default function CreateBlogPage() {
 
         setSaving(true);
         try {
-            const content = editorRef.current.getMarkdown();
+            const newContent = editorRef.current.getMarkdown();
 
-            if (!formData.title || !formData.slug) {
-                toast.error("Title and Slug are required.");
-                return;
-            }
-
-            const res = await blogService.createBlog({ ...formData, content });
+            const res = await blogService.updateBlog(slug, {
+                title: formData.title,
+                slug: formData.slug,
+                author: formData.author,
+                date: formData.date,
+                image: formData.image,
+                excerpt: formData.excerpt,
+                content: newContent
+            });
             if (res?.data?.success) {
-                toast.success("Blog post created successfully!");
-                router.push("/blog-post");
+                toast.success("Blog updated successfully!");
+                if (formData.slug !== slug) {
+                    router.push(`/blog-post/${formData.slug}/edit`);
+                }
             }
         } catch (error: any) {
-            console.error("Create failed:", error);
-            toast.error(error.response?.data?.message || "Failed to create blog post");
+            console.error("Update failed:", error);
+            toast.error(error.response?.data?.message || "Failed to update blog post");
         } finally {
             setSaving(false);
         }
@@ -153,13 +170,30 @@ export default function CreateBlogPage() {
         );
     }
 
+    if (loading) {
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center bg-[#f8faf9]">
+                <Loader2 className="w-10 h-10 text-[#1D9E75] animate-spin mb-4" />
+                <p className="text-gray-500 font-medium">Loading editor...</p>
+            </div>
+        );
+    }
+
+    if (!blog) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <h1 className="text-3xl font-bold">Blog Not Found</h1>
+            </div>
+        );
+    }
+
     return (
         <section className="bg-[#f8faf9] min-h-screen py-12 px-4 sm:px-6 lg:px-10">
             <div className="max-w-5xl mx-auto">
                 <div className="flex justify-between items-center mb-8">
                     {/* Back */}
                     <Link
-                        href={`/blog-post`}
+                        href={`/blog-post/${blog.slug}`}
                         className="
                             inline-flex items-center gap-2
                             text-[#08542b]
@@ -167,7 +201,7 @@ export default function CreateBlogPage() {
                         "
                     >
                         <ArrowLeft size={18} />
-                        Back to Blogs
+                        Back to Post
                     </Link>
 
                     {/* Save */}
@@ -182,11 +216,12 @@ export default function CreateBlogPage() {
                         "
                     >
                         {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
-                        {saving ? "Publishing..." : "Publish Post"}
+                        {saving ? "Saving..." : "Save Changes"}
                     </button>
                 </div>
 
-                <h1 className="text-3xl font-bold text-[#08542b] mb-8">Create New Blog Post</h1>
+                <h1 className="text-3xl font-bold text-[#08542b] mb-2">Editing: {formData.title || blog.title}</h1>
+                <p className="text-gray-500 mb-8">Update the metadata and body content below. MDX features are fully supported.</p>
 
                 {/* Metadata Fields */}
                 <div className="bg-white p-6 rounded-3xl shadow-md mb-8 grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -195,7 +230,7 @@ export default function CreateBlogPage() {
                         <input
                             type="text"
                             value={formData.title}
-                            onChange={handleTitleChange}
+                            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                             className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#016630]"
                             placeholder="Enter blog title"
                         />
@@ -347,9 +382,9 @@ export default function CreateBlogPage() {
                 <p className="text-gray-500 mb-4">Post Body (MDX Supported)</p>
 
                 {/* Editor Container */}
-                <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-200 min-h-[400px]">
+                <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-200">
                     <EditorWrapper
-                        markdown={""}
+                        markdown={blog.content}
                         editorRef={editorRef}
                         imageUploadHandler={handleInlineImageUpload}
                     />

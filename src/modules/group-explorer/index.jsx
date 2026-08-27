@@ -109,20 +109,7 @@ const GroupExplorer = ({ isRank = false }) => {
   const printRef = React.useRef();
   const handlePrint = useReactToPrint({
     contentRef: printRef,
-
-    // onBeforePrint: () => {
-    //   toast.info("Preparing document for printing...");
-    // },
-
-    // onAfterPrint: () => {
-    //   toast.success("Print completed successfully!");
-    // },
-
-    // onPrintError: () => {
-    //   toast.error("Failed to print document!");
-    // },
   });
-
 
   const year = nextSearchParams.get("year") || "";
   const type = nextSearchParams.get("type") || "";
@@ -138,8 +125,6 @@ const GroupExplorer = ({ isRank = false }) => {
   const [sortBy, setSortBy] = React.useState(""); // "asc" | "desc" | ""
 
   const queries = { year, type, states };
-
-  const hasAutoFetched = React.useRef(false);
 
   useEffect(() => {
     const categoriesParam = nextSearchParams.get("categories");
@@ -162,13 +147,11 @@ const GroupExplorer = ({ isRank = false }) => {
     if (!sortBy || !budgets.data || !budgets.states || budgets.data.length === 0) {
       return budgets;
     }
-    // Zip states and data
     const zipped = budgets.states.map((state, idx) => ({
       state,
       item: budgets.data[idx],
       amount: getAmountForRanking(budgets.data[idx], type)
     }));
-    // Sort
     zipped.sort((a, b) => {
       if (sortBy === "asc") {
         return a.amount - b.amount;
@@ -176,12 +159,73 @@ const GroupExplorer = ({ isRank = false }) => {
         return b.amount - a.amount;
       }
     });
-    // Unzip
     return {
       states: zipped.map(z => z.state),
       data: zipped.map(z => z.item)
     };
   }, [budgets, sortBy, type]);
+
+  function updateQueryParam(name, value) {
+    const searchString = typeof window !== "undefined" ? window.location.search : nextSearchParams.toString();
+    const params = new URLSearchParams(searchString);
+    if (value !== undefined && value !== null && value !== "") {
+      params.set(name, value);
+    } else {
+      params.delete(name);
+    }
+    if (categories.length > 0 && !params.get("categories")) {
+      const allFlat = type ? getFlatCategories(type) : [];
+      params.set("categories", categories.length === allFlat.length ? "all" : categories.join(","));
+    }
+    const newSearch = params.toString();
+    const newUrl = `${pathname}?${newSearch}`;
+
+    if (typeof window !== "undefined") {
+      window.history.replaceState(null, "", newUrl);
+    }
+    router.replace(newUrl);
+  }
+
+  function handleChange(e, name) {
+    const value = e.target.value;
+
+    if (name === "type") {
+      const defaultCats = getFlatCategories(value);
+      setCategories(defaultCats);
+      setBudgets({ data: [], states: [] });
+
+      const searchString = typeof window !== "undefined" ? window.location.search : nextSearchParams.toString();
+      const params = new URLSearchParams(searchString);
+      params.set("type", value);
+      params.set("categories", "all");
+      const newUrl = `${pathname}?${params.toString()}`;
+
+      if (typeof window !== "undefined") {
+        window.history.replaceState(null, "", newUrl);
+      }
+      router.replace(newUrl);
+    } else {
+      updateQueryParam(name, value);
+    }
+  }
+
+  function handleSelectState(e) {
+    const value = e.target.value?.filter((item) => !!item);
+    updateQueryParam("states", value.join(","));
+  }
+
+  function handleSelectAllStates(e) {
+    try {
+      const checked = e.target.checked;
+      let value = [];
+
+      if (checked) value = STATES.map((item) => item?.value);
+
+      updateQueryParam("states", value.length === STATES.length ? "all" : value.join(","));
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <div className="px-8">
@@ -310,7 +354,12 @@ const GroupExplorer = ({ isRank = false }) => {
           <CategorySelect
             type={type}
             value={categories}
-            onChange={(value) => setCategories(value)}
+            onChange={(value) => {
+              setCategories(value);
+              const allFlat = type ? getFlatCategories(type) : [];
+              const catParam = value.length === allFlat.length ? "all" : value.join(",");
+              updateQueryParam("categories", catParam);
+            }}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 4, lg: 2 }}>
@@ -419,51 +468,6 @@ const GroupExplorer = ({ isRank = false }) => {
     if (!year) {
       toast.error('"Year" is not allowed to be empty');
       throw new Error('"Year" is not allowed to be empty');
-    }
-  }
-
-  function updateQueryParam(name, value) {
-    const params = new URLSearchParams(nextSearchParams.toString());
-    params.set(name, value);
-    if (categories.length > 0 && !params.get("categories")) {
-      const allFlat = type ? getFlatCategories(type) : [];
-      params.set("categories", categories.length === allFlat.length ? "all" : categories.join(","));
-    }
-    router.replace(`${pathname}?${params.toString()}`);
-  }
-
-  function handleChange(e, name) {
-    const value = e.target.value;
-
-    if (name === "type") {
-      const defaultCats = getFlatCategories(value);
-      setCategories(defaultCats);
-      setBudgets({ data: [], states: [] });
-
-      const params = new URLSearchParams(nextSearchParams.toString());
-      params.set("type", value);
-      params.set("categories", "all");
-      router.replace(`${pathname}?${params.toString()}`);
-    } else {
-      updateQueryParam(name, value);
-    }
-  }
-
-  function handleSelectState(e) {
-    const value = e.target.value?.filter((item) => !!item);
-    updateQueryParam("states", value.join(","));
-  }
-
-  function handleSelectAllStates(e) {
-    try {
-      const checked = e.target.checked;
-      let value = [];
-
-      if (checked) value = STATES.map((item) => item?.value);
-
-      updateQueryParam("states", value.join(","));
-    } catch (error) {
-      console.error(error);
     }
   }
 };

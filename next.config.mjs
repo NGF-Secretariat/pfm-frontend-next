@@ -1,5 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: process.env.NODE_ENV === 'production' || process.env.NEXT_EXPORT === 'true' ? 'export' : undefined,
+  trailingSlash: true,
+  images: {
+    unoptimized: true,
+  },
   async redirects() {
     return [
       {

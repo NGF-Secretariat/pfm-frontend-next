@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { CalendarDays, ArrowRight, Loader2 } from "lucide-react";
+import { CalendarDays, User, ArrowRight, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import blogService from "../../service/blogService";
 
@@ -95,10 +95,16 @@ export default function BlogPage() {
                                 {/* Content */}
                                 <div className="p-6">
 
-                                    {/* Date */}
-                                    <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
-                                        <CalendarDays size={16} />
-                                        <span>{blog.date}</span>
+                                    {/* Author & Date */}
+                                    <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500 mb-3">
+                                        <div className="flex items-center gap-1 text-[#016630] font-semibold bg-[#eafbf5] px-2.5 py-1 rounded-full border border-[#bbf7df]">
+                                            <User size={13} className="text-[#1D9E75]" />
+                                            <span>{blog.author || "NGF Secretariat"}</span>
+                                        </div>
+                                        <div className="flex items-center gap-1 font-medium">
+                                            <CalendarDays size={14} className="text-[#1D9E75]" />
+                                            <span>{blog.date}</span>
+                                        </div>
                                     </div>
 
                                     {/* Title */}

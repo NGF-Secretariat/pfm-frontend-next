@@ -9,12 +9,15 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^41.4.2",
+    "@ckeditor/ckeditor5-react": "^11.2.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mdxeditor/editor": "^4.0.3",
     "@mui/icons-material": "^9.0.1",
     "@mui/material": "^9.0.1",
     "@tailwindcss/postcss": "^4.3.0",
+    "@tinymce/tinymce-react": "^6.3.0",
     "axios": "^1.16.1",
     "clsx": "^2.1.1",
     "d3-geo": "^3.1.1",
@@ -25,7 +28,6 @@
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-markdown": "^10.1.0",
-    "react-quill-new": "^3.8.3",
     "react-to-print": "^3.3.0",
     "react-toastify": "^11.1.0",
     "rehype-raw": "^7.0.0",
