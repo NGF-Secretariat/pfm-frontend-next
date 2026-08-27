@@ -230,7 +230,7 @@ export default function EditBlogClient({
                         <input
                             type="text"
                             value={formData.title}
-                            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                            onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
                             className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#016630]"
                             placeholder="Enter blog title"
                         />
@@ -240,7 +240,7 @@ export default function EditBlogClient({
                         <input
                             type="text"
                             value={formData.slug}
-                            onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                            onChange={(e) => setFormData(prev => ({ ...prev, slug: e.target.value }))}
                             className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#016630]"
                             placeholder="e.g. my-new-post"
                         />
@@ -250,7 +250,7 @@ export default function EditBlogClient({
                         <input
                             type="text"
                             value={formData.date}
-                            onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                            onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
                             className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#016630]"
                             placeholder="e.g. July 29, 2026"
                         />
@@ -260,7 +260,7 @@ export default function EditBlogClient({
                         <input
                             type="text"
                             value={formData.author}
-                            onChange={(e) => setFormData({ ...formData, author: e.target.value })}
+                            onChange={(e) => setFormData(prev => ({ ...prev, author: e.target.value }))}
                             className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#016630]"
                             placeholder="e.g. NGF Secretariat"
                         />
@@ -361,7 +361,7 @@ export default function EditBlogClient({
                                 <input
                                     type="text"
                                     value={formData.image}
-                                    onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                                    onChange={(e) => setFormData(prev => ({ ...prev, image: e.target.value }))}
                                     className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#016630] text-sm"
                                     placeholder="https://example.com/image.jpg"
                                 />
@@ -372,7 +372,7 @@ export default function EditBlogClient({
                         <label className="block text-sm font-medium text-gray-700 mb-1">Excerpt (Short Summary)</label>
                         <textarea
                             value={formData.excerpt}
-                            onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
+                            onChange={(e) => setFormData(prev => ({ ...prev, excerpt: e.target.value }))}
                             className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#016630] min-h-[80px]"
                             placeholder="A brief summary of the post..."
                         />
