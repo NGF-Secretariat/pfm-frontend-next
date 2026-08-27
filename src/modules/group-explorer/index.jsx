@@ -49,7 +49,7 @@ function getFlatCategories(type) {
 const cleanValue = (val) => {
   if (val === null || val === undefined) return NaN;
   if (typeof val === "number") return val;
-  const cleaned = String(val).replace(/,/g, "");
+  const cleaned = String(val).replace(/,/g, "").replace(/%/g, "").trim();
   return parseFloat(cleaned);
 };
 
