@@ -12,9 +12,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, Search, X } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function Topbar() {
   const pathname = usePathname();
+  const router = useRouter();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -63,7 +65,7 @@ export default function Topbar() {
         <div className="hidden lg:flex items-center justify-between gap-4">
 
           {/* LEFT */}
-          <div className="flex items-center gap-2 pt-4">
+          <div className="flex items-center gap-2 pt-4" onClick={() => router.replace('/')}>
             <Image
               src="/ngf-logo.png"
               alt="Logo"
@@ -73,7 +75,7 @@ export default function Topbar() {
               className="w-52 h-auto object-contain"
             />
 
-            <h1 className="text-white text-xl font-bold pt-5">
+            <h1 className="text-white text-xl font-bold pt-5 hover:cursor-pointer">
               Public Finance Database
             </h1>
           </div>
@@ -241,7 +243,7 @@ export default function Topbar() {
         <div className="flex lg:hidden items-center justify-between">
 
           {/* LEFT SIDE */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3" onClick={() => router.replace('/')}>
 
             {/* Logo */}
             <Image

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import budgetService from "../../service/budgetService";
 
 interface StateProfile {
@@ -34,20 +35,19 @@ export default async function TotalExpenditureByState() {
         const href = `/state-explorer/${slug}`;
 
         return (
-            <div
+            <Link
                 key={state.id}
-                className="bg-[#ebebeb] rounded-lg border border-[#d6d6d6] shadow-sm flex flex-col overflow-hidden"
+                href={href}
+                className="bg-[#ebebeb] rounded-lg border border-[#d6d6d6] shadow-sm hover:shadow-md hover:border-[#1D9E75] transition-all flex flex-col overflow-hidden group cursor-pointer"
             >
                 <div className="px-6 pt-6 pb-4 flex-1">
-                    <h2 className="text-[17px] font-bold text-[#1a1a1a] mb-4">
+                    <h2 className="text-[17px] font-bold text-[#1a1a1a] group-hover:text-[#08542b] transition-colors mb-4">
                         {formattedName}
                     </h2>
-                    <a
-                        href={href}
-                        className="text-[12px] font-semibold tracking-widest text-[#1D9E75] hover:text-[#0f6e56] uppercase transition-colors"
-                    >
+                    <span className="text-[12px] font-semibold tracking-widest text-[#1D9E75] group-hover:text-[#0f6e56] uppercase transition-colors inline-flex items-center gap-1.5">
                         Explore Data
-                    </a>
+                        <span className="inline-block transition-transform duration-300 ease-in-out group-hover:translate-x-1.5">&rarr;</span>
+                    </span>
                 </div>
                 <div className="mx-6 border-t-2 border-[#1D9E75]" />
                 <div className="px-6 py-3">
@@ -59,7 +59,7 @@ export default async function TotalExpenditureByState() {
                         </span>
                     </p>
                 </div>
-            </div>
+            </Link>
         );
     });
 
