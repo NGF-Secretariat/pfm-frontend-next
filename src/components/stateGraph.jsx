@@ -444,7 +444,7 @@ export default function StateLineChartsPage({ slug, profile: initialProfile }) {
   };
 
   return (
-    <div className="bg-[#f8faf8] px-10 py-20">
+    <div className="bg-[#f8faf8] px-4 sm:px-10 py-10 sm:py-20">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-8 mx-auto">
 
         {/* LEFT chart */}

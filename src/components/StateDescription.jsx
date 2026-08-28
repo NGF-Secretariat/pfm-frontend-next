@@ -338,8 +338,8 @@ const StateExpenditurePage = ({ slug, profile: initialProfile }) => {
     return (
         <div className="bg-white">
             {/* Top bar */}
-            <div className="flex items-center justify-between px-8 py-4 border-b border-[#f0f0f0]">
-                <h1 className="text-2xl font-bold text-[#1a1a1a]">{stateName}</h1>
+            <div className="flex items-center justify-between px-4 sm:px-8 py-4 border-b border-[#f0f0f0]">
+                <h1 className="text-xl sm:text-2xl font-bold text-[#1a1a1a]">{stateName}</h1>
                 <Link href={dataTableUrl} className="text-[13px] text-[#1D9E75] hover:underline font-medium">View Data Table</Link>
             </div>
 
@@ -363,7 +363,7 @@ const StateExpenditurePage = ({ slug, profile: initialProfile }) => {
             </div>
 
             {/* Main two-column layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 px-8 py-6 mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 px-4 sm:px-8 py-6 mx-auto">
                 <BarChart
                     mode={mode}
                     stateName={stateName}
