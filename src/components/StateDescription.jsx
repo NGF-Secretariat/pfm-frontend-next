@@ -333,7 +333,7 @@ const StateExpenditurePage = ({ slug, profile: initialProfile }) => {
     const years = filteredYears.length > 0 ? filteredYears : allYears;
 
     const stateValue = profile.state?.name?.split(" ").join("_")?.toUpperCase() || "";
-    const dataTableUrl = `/group-explorer?states=${stateValue}&type=actual&categories=all`;
+    const dataTableUrl = `/group-explorer/?states=${stateValue}&type=actual&year=2024&categories=all`;
 
     return (
         <div className="bg-white">

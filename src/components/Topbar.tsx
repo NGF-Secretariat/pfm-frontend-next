@@ -41,20 +41,20 @@ export default function Topbar() {
     { name: "Home", path: "/", show: true },
     {
       name: "Group Explorer",
-      path: "/group-explorer",
+      path: "/group-explorer/",
       show: true,
       children: [
-        { name: "Compare Data", path: "/group-explorer", show: true },
-        { name: "Rank Data", path: "/rank-data", show: true },
+        { name: "Compare Data", path: "/group-explorer/?type=actual&categories=all&states=all", show: true },
+        { name: "Rank Data", path: "/rank-data/?type=actual&categories=all&states=all", show: true },
       ],
     },
-    { name: "State Explorer", path: "/state-explorer", show: true },
-    { name: "Blog Post", path: "/blog-post", show: true },
+    { name: "State Explorer", path: "/state-explorer/", show: true },
+    { name: "Blog Post", path: "/blog-post/", show: true },
     { name: "Resources", path: "https://ngfrepository.org.ng:8443/handle/123456789/5632", show: true },
-    { name: "Contact Us", path: "/contact-us", show: true },
-    { name: "Messages", path: "/contact-us/submissions", show: showItems },
-    { name: "Upload Data", path: "/upload", show: showItems },
-    { name: "Settings", path: "/settings", show: showItems },
+    { name: "Contact Us", path: "/contact-us/", show: true },
+    { name: "Messages", path: "/contact-us/submissions/", show: showItems },
+    { name: "Upload Data", path: "/upload/", show: showItems },
+    { name: "Settings", path: "/settings/", show: showItems },
   ];
 
   return (

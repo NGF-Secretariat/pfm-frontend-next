@@ -391,7 +391,7 @@ const Distribution = () => {
 
             <div className="pt-4">
               <button
-                onClick={() => router.push('/group-explorer')}
+                onClick={() => router.push('/group-explorer/?type=actual&year=2024&categories=all&states=all')}
                 className="inline-flex items-center gap-2 bg-[#1D9E75] text-white font-extrabold px-8 py-3.5 rounded-full hover:bg-[#157F5D] active:scale-[0.98] transition-all duration-150 shadow-md hover:shadow-lg text-sm cursor-pointer"
               >
                 Run Comparison

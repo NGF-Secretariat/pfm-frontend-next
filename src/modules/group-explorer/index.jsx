@@ -107,6 +107,7 @@ const GroupExplorer = ({ isRank = false }) => {
   const pathname = usePathname();
   const nextSearchParams = useSearchParams();
   const printRef = React.useRef();
+  const isLocalChange = React.useRef(false);
   const handlePrint = useReactToPrint({
     contentRef: printRef,
   });
@@ -132,6 +133,10 @@ const GroupExplorer = ({ isRank = false }) => {
   const queries = { year, type, states };
 
   useEffect(() => {
+    if (isLocalChange.current) {
+      isLocalChange.current = false;
+      return;
+    }
     const y = nextSearchParams.get("year") || "";
     const t = nextSearchParams.get("type") || "";
     const s = nextSearchParams.get("states") || "";
@@ -203,6 +208,7 @@ const GroupExplorer = ({ isRank = false }) => {
 
   function handleChange(e, name) {
     const value = e.target.value;
+    isLocalChange.current = true;
 
     if (name === "type") {
       setType(value);
@@ -232,6 +238,7 @@ const GroupExplorer = ({ isRank = false }) => {
   function handleSelectState(e) {
     const value = e.target.value?.filter((item) => !!item);
     const s = value.join(",");
+    isLocalChange.current = true;
     setStatesParam(s);
     updateQueryParam("states", s);
   }
@@ -244,6 +251,7 @@ const GroupExplorer = ({ isRank = false }) => {
       if (checked) value = STATES.map((item) => item?.value);
 
       const s = value.length === STATES.length ? "all" : value.join(",");
+      isLocalChange.current = true;
       setStatesParam(s);
       updateQueryParam("states", s);
     } catch (error) {
@@ -381,6 +389,7 @@ const GroupExplorer = ({ isRank = false }) => {
             type={type}
             value={categories}
             onChange={(value) => {
+              isLocalChange.current = true;
               setCategories(value);
               const allFlat = type ? getFlatCategories(type) : [];
               const catParam = value.length === allFlat.length ? "all" : value.join(",");
@@ -469,7 +478,7 @@ const GroupExplorer = ({ isRank = false }) => {
     try {
       inputValidator();
       setIsLoading(true);
-      const { data } = await budgetService.get(queries);
+      const { data } = await budgetService.get({ year, type, states });
       setBudgets(budgetService.formatData(data, type) || initialValues);
       setIsLoading(false);
     } catch (error) {
