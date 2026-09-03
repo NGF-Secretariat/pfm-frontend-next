@@ -103,22 +103,28 @@ const getAmountForRanking = (item, type) => {
 };
 
 const GroupExplorer = ({ isRank = false }) => {
-  const router = useRouter();
   const pathname = usePathname();
   const nextSearchParams = useSearchParams();
   const printRef = React.useRef();
-  const isLocalChange = React.useRef(false);
   const handlePrint = useReactToPrint({
     contentRef: printRef,
   });
 
+  // Read initial values from URL on mount
   const paramYear = nextSearchParams.get("year") || "";
-  const paramType = nextSearchParams.get("type") || "";
-  const paramStates = nextSearchParams.get("states") || "";
+  const paramType = nextSearchParams.get("type") || "actual";
+  const paramStates = nextSearchParams.get("states") || "all";
+  const paramCats = nextSearchParams.get("categories");
 
   const [year, setYear] = React.useState(paramYear);
   const [type, setType] = React.useState(paramType);
   const [statesParam, setStatesParam] = React.useState(paramStates);
+  const [categories, setCategories] = React.useState(() => {
+    if (paramCats && paramCats !== "all") {
+      return paramCats.split(",");
+    }
+    return getFlatCategories(paramType);
+  });
 
   const states = statesParam === "all"
     ? STATES.map((item) => item.value).join(",")
@@ -126,41 +132,32 @@ const GroupExplorer = ({ isRank = false }) => {
 
   const [budgets, setBudgets] = React.useState(initialValues);
   const [isLoading, setIsLoading] = React.useState(false);
-  const [categories, setCategories] = React.useState([]);
   const [isMenu, setIsMenu] = React.useState(null);
   const [sortBy, setSortBy] = React.useState(""); // "asc" | "desc" | ""
 
-  const queries = { year, type, states };
-
-  useEffect(() => {
-    if (isLocalChange.current) {
-      isLocalChange.current = false;
-      return;
-    }
-    const y = nextSearchParams.get("year") || "";
-    const t = nextSearchParams.get("type") || "";
-    const s = nextSearchParams.get("states") || "";
-    setYear(y);
-    setType(t);
-    setStatesParam(s);
-  }, [nextSearchParams]);
-
-  useEffect(() => {
-    const categoriesParam = nextSearchParams.get("categories");
-    if (categoriesParam === "all" && type) {
-      setCategories(getFlatCategories(type));
-    } else if (categoriesParam) {
-      setCategories(categoriesParam.split(","));
-    } else if (type && categories.length === 0) {
-      setCategories(getFlatCategories(type));
-    }
-  }, [nextSearchParams, type]);
-
+  // Automatically fetch data via API whenever type, states, year, and categories are present
   useEffect(() => {
     if (type && states && year && categories.length > 0) {
       getBudgets();
     }
   }, [type, states, year, categories.length]);
+
+  // Keep browser address bar updated purely for reference/sharing without router navigation
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams();
+      if (type) params.set("type", type);
+      if (year) params.set("year", year);
+      if (statesParam) params.set("states", statesParam);
+      const allFlat = type ? getFlatCategories(type) : [];
+      if (categories.length > 0) {
+        params.set("categories", categories.length === allFlat.length ? "all" : categories.join(","));
+      }
+      const basePath = pathname.endsWith("/") ? pathname : `${pathname}/`;
+      const search = params.toString();
+      window.history.replaceState(null, "", `${basePath}${search ? `?${search}` : ""}`);
+    }
+  }, [type, year, statesParam, categories.length, pathname]);
 
   const sortedBudgets = React.useMemo(() => {
     if (!sortBy || !budgets.data || !budgets.states || budgets.data.length === 0) {
@@ -184,79 +181,35 @@ const GroupExplorer = ({ isRank = false }) => {
     };
   }, [budgets, sortBy, type]);
 
-  function updateQueryParam(name, value) {
-    const searchString = typeof window !== "undefined" ? window.location.search : nextSearchParams.toString();
-    const params = new URLSearchParams(searchString);
-    if (value !== undefined && value !== null && value !== "") {
-      params.set(name, value);
-    } else {
-      params.delete(name);
-    }
-    if (categories.length > 0 && !params.get("categories")) {
-      const allFlat = type ? getFlatCategories(type) : [];
-      params.set("categories", categories.length === allFlat.length ? "all" : categories.join(","));
-    }
-    const newSearch = params.toString();
-    const basePath = pathname.endsWith("/") ? pathname : `${pathname}/`;
-    const newUrl = `${basePath}${newSearch ? `?${newSearch}` : ""}`;
-
-    if (typeof window !== "undefined") {
-      window.history.replaceState(null, "", newUrl);
-    }
-    router.replace(newUrl, { scroll: false });
+  function handleTypeChange(value) {
+    setType(value);
+    const defaultCats = getFlatCategories(value);
+    setCategories(defaultCats);
+    setBudgets({ data: [], states: [] });
   }
 
-  function handleChange(e, name) {
-    const value = e.target.value;
-    isLocalChange.current = true;
-
-    if (name === "type") {
-      setType(value);
-      const defaultCats = getFlatCategories(value);
-      setCategories(defaultCats);
-      setBudgets({ data: [], states: [] });
-
-      const searchString = typeof window !== "undefined" ? window.location.search : nextSearchParams.toString();
-      const params = new URLSearchParams(searchString);
-      params.set("type", value);
-      params.set("categories", "all");
-      const basePath = pathname.endsWith("/") ? pathname : `${pathname}/`;
-      const newUrl = `${basePath}?${params.toString()}`;
-
-      if (typeof window !== "undefined") {
-        window.history.replaceState(null, "", newUrl);
-      }
-      router.replace(newUrl, { scroll: false });
-    } else if (name === "year") {
-      setYear(value);
-      updateQueryParam("year", value);
-    } else {
-      updateQueryParam(name, value);
-    }
+  function handleYearChange(value) {
+    setYear(value);
   }
 
   function handleSelectState(e) {
     const value = e.target.value?.filter((item) => !!item);
-    const s = value.join(",");
-    isLocalChange.current = true;
-    setStatesParam(s);
-    updateQueryParam("states", s);
+    setStatesParam(value.join(","));
   }
 
   function handleSelectAllStates(e) {
     try {
       const checked = e.target.checked;
       let value = [];
-
       if (checked) value = STATES.map((item) => item?.value);
-
-      const s = value.length === STATES.length ? "all" : value.join(",");
-      isLocalChange.current = true;
-      setStatesParam(s);
-      updateQueryParam("states", s);
+      setStatesParam(value.length === STATES.length ? "all" : value.join(","));
     } catch (error) {
       console.error(error);
     }
+  }
+
+  function handleCategoryChange(value) {
+    setCategories(value);
   }
 
   return (
@@ -327,7 +280,7 @@ const GroupExplorer = ({ isRank = false }) => {
               label="Budget Type"
               variant="outlined"
               labelId="type_select"
-              onChange={(e) => handleChange(e, "type")}
+              onChange={(e) => handleTypeChange(e.target.value)}
             >
               <MenuItem value="" disabled>
                 Budget Type
@@ -388,13 +341,7 @@ const GroupExplorer = ({ isRank = false }) => {
           <CategorySelect
             type={type}
             value={categories}
-            onChange={(value) => {
-              isLocalChange.current = true;
-              setCategories(value);
-              const allFlat = type ? getFlatCategories(type) : [];
-              const catParam = value.length === allFlat.length ? "all" : value.join(",");
-              updateQueryParam("categories", catParam);
-            }}
+            onChange={handleCategoryChange}
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 4, lg: 2 }}>
@@ -407,7 +354,7 @@ const GroupExplorer = ({ isRank = false }) => {
               label="Year"
               labelId="year_select"
               variant="outlined"
-              onChange={(e) => handleChange(e, "year")}
+              onChange={(e) => handleYearChange(e.target.value)}
             >
               <MenuItem value="" disabled>
                 Select Year
