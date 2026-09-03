@@ -6,15 +6,16 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import Image from "next/image";
+import Link from "next/link";
 
 const Footer = () => {
     const NAV_LINKS = [
         { label: "Home", href: "/" },
-        { label: "Group Explorer", href: "/group-explorer" },
-        { label: "State Explorer", href: "/state-explorer" },
-        { label: "Blog Post", href: "/blog-post" },
+        { label: "Group Explorer", href: "/group-explorer/" },
+        { label: "State Explorer", href: "/state-explorer/" },
+        { label: "Blog Post", href: "/blog-post/" },
         { label: "Resources", href: "https://ngfrepository.org.ng:8443/handle/123456789/5632" },
-        { label: "Contact Us", href: "/contact-us" },
+        { label: "Contact Us", href: "/contact-us/" },
     ];
 
     const SOCIALS = [
@@ -45,13 +46,25 @@ const Footer = () => {
                     <p className="text-xs font-bold text-[#5DCAA5] uppercase tracking-widest mb-4">Navigation</p>
                     <nav className="flex flex-col gap-2">
                         {NAV_LINKS.map((l) => (
-                            <a
-                                key={l.label}
-                                href={l.href}
-                                className="text-[13px] text-[#a5c9bc] font-poppins hover:text-white hover:pl-1 transition-all duration-200"
-                            >
-                                {l.label}
-                            </a>
+                            l.href.startsWith("http") ? (
+                                <a
+                                    key={l.label}
+                                    href={l.href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-[13px] text-[#a5c9bc] font-poppins hover:text-white hover:pl-1 transition-all duration-200"
+                                >
+                                    {l.label}
+                                </a>
+                            ) : (
+                                <Link
+                                    key={l.label}
+                                    href={l.href}
+                                    className="text-[13px] text-[#a5c9bc] font-poppins hover:text-white hover:pl-1 transition-all duration-200"
+                                >
+                                    {l.label}
+                                </Link>
+                            )
                         ))}
                     </nav>
                 </div>
@@ -61,19 +74,19 @@ const Footer = () => {
                     <p className="text-xs font-bold text-[#5DCAA5] uppercase tracking-widest mb-4 ">Budget Data</p>
                     <div className="flex flex-col gap-2">
                         {[
-                            { label: "Original Budget", href: "/group-explorer?type=original&categories=all&states=all" },
-                            { label: "Actual Expenditure", href: "/group-explorer?type=actual&categories=all&states=all" },
-                            { label: "Performance Indicators", href: "/group-explorer?type=pi&year=2019&categories=all&states=all" },
-                            { label: "Compare States", href: "/group-explorer" },
-                            { label: "Rank States", href: "/rank-data" },
+                            { label: "Original Budget", href: "/group-explorer/?type=original&year=2024&categories=all&states=all" },
+                            { label: "Actual Expenditure", href: "/group-explorer/?type=actual&year=2024&categories=all&states=all" },
+                            { label: "Performance Indicators", href: "/group-explorer/?type=pi&year=2019&categories=all&states=all" },
+                            { label: "Compare States", href: "/group-explorer/?type=actual&year=2024&categories=all&states=all" },
+                            { label: "Rank States", href: "/rank-data/?type=actual&year=2024&categories=all&states=all" },
                         ].map((l) => (
-                            <a
+                            <Link
                                 key={l.label}
                                 href={l.href}
                                 className="text-[13px] text-[#a5c9bc] hover:text-white hover:pl-1 transition-all duration-200"
                             >
                                 {l.label}
-                            </a>
+                            </Link>
                         ))}
                     </div>
                 </div>

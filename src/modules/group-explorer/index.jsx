@@ -111,9 +111,14 @@ const GroupExplorer = ({ isRank = false }) => {
     contentRef: printRef,
   });
 
-  const year = nextSearchParams.get("year") || "";
-  const type = nextSearchParams.get("type") || "";
-  const statesParam = nextSearchParams.get("states") || "";
+  const paramYear = nextSearchParams.get("year") || "";
+  const paramType = nextSearchParams.get("type") || "";
+  const paramStates = nextSearchParams.get("states") || "";
+
+  const [year, setYear] = React.useState(paramYear);
+  const [type, setType] = React.useState(paramType);
+  const [statesParam, setStatesParam] = React.useState(paramStates);
+
   const states = statesParam === "all"
     ? STATES.map((item) => item.value).join(",")
     : statesParam;
@@ -125,6 +130,15 @@ const GroupExplorer = ({ isRank = false }) => {
   const [sortBy, setSortBy] = React.useState(""); // "asc" | "desc" | ""
 
   const queries = { year, type, states };
+
+  useEffect(() => {
+    const y = nextSearchParams.get("year") || "";
+    const t = nextSearchParams.get("type") || "";
+    const s = nextSearchParams.get("states") || "";
+    setYear(y);
+    setType(t);
+    setStatesParam(s);
+  }, [nextSearchParams]);
 
   useEffect(() => {
     const categoriesParam = nextSearchParams.get("categories");
@@ -178,18 +192,20 @@ const GroupExplorer = ({ isRank = false }) => {
       params.set("categories", categories.length === allFlat.length ? "all" : categories.join(","));
     }
     const newSearch = params.toString();
-    const newUrl = `${pathname}?${newSearch}`;
+    const basePath = pathname.endsWith("/") ? pathname : `${pathname}/`;
+    const newUrl = `${basePath}${newSearch ? `?${newSearch}` : ""}`;
 
     if (typeof window !== "undefined") {
       window.history.replaceState(null, "", newUrl);
     }
-    router.replace(newUrl);
+    router.replace(newUrl, { scroll: false });
   }
 
   function handleChange(e, name) {
     const value = e.target.value;
 
     if (name === "type") {
+      setType(value);
       const defaultCats = getFlatCategories(value);
       setCategories(defaultCats);
       setBudgets({ data: [], states: [] });
@@ -198,12 +214,16 @@ const GroupExplorer = ({ isRank = false }) => {
       const params = new URLSearchParams(searchString);
       params.set("type", value);
       params.set("categories", "all");
-      const newUrl = `${pathname}?${params.toString()}`;
+      const basePath = pathname.endsWith("/") ? pathname : `${pathname}/`;
+      const newUrl = `${basePath}?${params.toString()}`;
 
       if (typeof window !== "undefined") {
         window.history.replaceState(null, "", newUrl);
       }
-      router.replace(newUrl);
+      router.replace(newUrl, { scroll: false });
+    } else if (name === "year") {
+      setYear(value);
+      updateQueryParam("year", value);
     } else {
       updateQueryParam(name, value);
     }
@@ -211,7 +231,9 @@ const GroupExplorer = ({ isRank = false }) => {
 
   function handleSelectState(e) {
     const value = e.target.value?.filter((item) => !!item);
-    updateQueryParam("states", value.join(","));
+    const s = value.join(",");
+    setStatesParam(s);
+    updateQueryParam("states", s);
   }
 
   function handleSelectAllStates(e) {
@@ -221,7 +243,9 @@ const GroupExplorer = ({ isRank = false }) => {
 
       if (checked) value = STATES.map((item) => item?.value);
 
-      updateQueryParam("states", value.length === STATES.length ? "all" : value.join(","));
+      const s = value.length === STATES.length ? "all" : value.join(",");
+      setStatesParam(s);
+      updateQueryParam("states", s);
     } catch (error) {
       console.error(error);
     }
@@ -321,7 +345,9 @@ const GroupExplorer = ({ isRank = false }) => {
               onChange={handleSelectState}
               value={states ? states?.split(",") : []}
               renderValue={(selected) =>
-                selected.map((s) => s.split("_").join(" ")).join(", ")
+                selected.length === STATES.length
+                  ? "All States"
+                  : selected.map((s) => s.split("_").join(" ")).join(", ")
               }
             >
               <MenuItem value="" disabled>
