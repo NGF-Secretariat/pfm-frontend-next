@@ -37,6 +37,8 @@ const HomePage = () => {
         const response = await budgetService.mapdata();
         const result = response?.data ?? [];
 
+        // console.info("Map data loaded", { result });
+
         const map = {};
         let year = "";
         for (const item of result) {

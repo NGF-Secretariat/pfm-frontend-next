@@ -28,9 +28,13 @@ const josefinSans = Josefin_Sans({
 });
 
 export const metadata = {
-  title: "NGF PFM Data Portal",
-  description: "NGF PFM Created by Opemipo Alomaja",
+  title: "Public Finance Database",
+  description: "created by NGF",
+  authors: [{ name: "Opemipo Alomaja" }],
+  creator: "Opemipo Alomaja",
+  keywords: ["NGF", "PFM", "Data", "Database", "Public Finance", "Opemipo Alomaja"],
 };
+
 
 export default function RootLayout({
   children,
