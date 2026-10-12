@@ -72,9 +72,7 @@ export default function SettingsPage() {
     setLoadingBlogs(true);
     try {
       const res = await blogService.getAllBlogs();
-      if (res?.data?.success) {
-        setBlogs(res.data.data);
-      }
+      setBlogs(res?.data?.data || []);
     } catch (e) {
       console.error("Failed to load blogs:", e);
       toast.error("Failed to load blog posts.");
@@ -447,8 +445,8 @@ export default function SettingsPage() {
             <button
               onClick={() => setActiveTab("users")}
               className={`flex items-center gap-3 w-full px-4 py-3 rounded-2xl text-left font-medium transition-all ${activeTab === "users"
-                  ? "bg-green-50 text-[#016630] shadow-sm border-l-4 border-[#016630]"
-                  : "text-gray-600 hover:bg-gray-50 hover:text-[#016630]"
+                ? "bg-green-50 text-[#016630] shadow-sm border-l-4 border-[#016630]"
+                : "text-gray-600 hover:bg-gray-50 hover:text-[#016630]"
                 }`}
             >
               <User size={18} />
@@ -457,8 +455,8 @@ export default function SettingsPage() {
             <button
               onClick={() => setActiveTab("subscribers")}
               className={`flex items-center gap-3 w-full px-4 py-3 rounded-2xl text-left font-medium transition-all ${activeTab === "subscribers"
-                  ? "bg-green-50 text-[#016630] shadow-sm border-l-4 border-[#016630]"
-                  : "text-gray-600 hover:bg-gray-50 hover:text-[#016630]"
+                ? "bg-green-50 text-[#016630] shadow-sm border-l-4 border-[#016630]"
+                : "text-gray-600 hover:bg-gray-50 hover:text-[#016630]"
                 }`}
             >
               <Mail size={18} />
@@ -467,8 +465,8 @@ export default function SettingsPage() {
             <button
               onClick={() => setActiveTab("state-data")}
               className={`flex items-center gap-3 w-full px-4 py-3 rounded-2xl text-left font-medium transition-all ${activeTab === "state-data"
-                  ? "bg-green-50 text-[#016630] shadow-sm border-l-4 border-[#016630]"
-                  : "text-gray-600 hover:bg-gray-50 hover:text-[#016630]"
+                ? "bg-green-50 text-[#016630] shadow-sm border-l-4 border-[#016630]"
+                : "text-gray-600 hover:bg-gray-50 hover:text-[#016630]"
                 }`}
             >
               <Map size={18} />
@@ -477,8 +475,8 @@ export default function SettingsPage() {
             <button
               onClick={() => setActiveTab("blogs")}
               className={`flex items-center gap-3 w-full px-4 py-3 rounded-2xl text-left font-medium transition-all ${activeTab === "blogs"
-                  ? "bg-green-50 text-[#016630] shadow-sm border-l-4 border-[#016630]"
-                  : "text-gray-600 hover:bg-gray-50 hover:text-[#016630]"
+                ? "bg-green-50 text-[#016630] shadow-sm border-l-4 border-[#016630]"
+                : "text-gray-600 hover:bg-gray-50 hover:text-[#016630]"
                 }`}
             >
               <FileText size={18} />
@@ -487,8 +485,8 @@ export default function SettingsPage() {
             <button
               onClick={() => setActiveTab("traffic")}
               className={`flex items-center gap-3 w-full px-4 py-3 rounded-2xl text-left font-medium transition-all ${activeTab === "traffic"
-                  ? "bg-green-50 text-[#016630] shadow-sm border-l-4 border-[#016630]"
-                  : "text-gray-600 hover:bg-gray-50 hover:text-[#016630]"
+                ? "bg-green-50 text-[#016630] shadow-sm border-l-4 border-[#016630]"
+                : "text-gray-600 hover:bg-gray-50 hover:text-[#016630]"
                 }`}
             >
               <BarChart2 size={18} />
@@ -501,8 +499,8 @@ export default function SettingsPage() {
             <button
               onClick={() => setActiveTab("users")}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm whitespace-nowrap transition-colors ${activeTab === "users"
-                  ? "bg-green-50 text-[#016630]"
-                  : "text-gray-600 hover:bg-gray-50"
+                ? "bg-green-50 text-[#016630]"
+                : "text-gray-600 hover:bg-gray-50"
                 }`}
             >
               <User size={16} />
@@ -511,8 +509,8 @@ export default function SettingsPage() {
             <button
               onClick={() => setActiveTab("blogs")}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm whitespace-nowrap transition-colors ${activeTab === "blogs"
-                  ? "bg-green-50 text-[#016630]"
-                  : "text-gray-600 hover:bg-gray-50"
+                ? "bg-green-50 text-[#016630]"
+                : "text-gray-600 hover:bg-gray-50"
                 }`}
             >
               <FileText size={16} />
@@ -521,8 +519,8 @@ export default function SettingsPage() {
             <button
               onClick={() => setActiveTab("subscribers")}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm whitespace-nowrap transition-colors ${activeTab === "subscribers"
-                  ? "bg-green-50 text-[#016630]"
-                  : "text-gray-600 hover:bg-gray-50"
+                ? "bg-green-50 text-[#016630]"
+                : "text-gray-600 hover:bg-gray-50"
                 }`}
             >
               <Mail size={16} />
@@ -531,8 +529,8 @@ export default function SettingsPage() {
             <button
               onClick={() => setActiveTab("state-data")}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm whitespace-nowrap transition-colors ${activeTab === "state-data"
-                  ? "bg-green-50 text-[#016630]"
-                  : "text-gray-600 hover:bg-gray-50"
+                ? "bg-green-50 text-[#016630]"
+                : "text-gray-600 hover:bg-gray-50"
                 }`}
             >
               <Map size={16} />
@@ -541,8 +539,8 @@ export default function SettingsPage() {
             <button
               onClick={() => setActiveTab("traffic")}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm whitespace-nowrap transition-colors ${activeTab === "traffic"
-                  ? "bg-green-50 text-[#016630]"
-                  : "text-gray-600 hover:bg-gray-50"
+                ? "bg-green-50 text-[#016630]"
+                : "text-gray-600 hover:bg-gray-50"
                 }`}
             >
               <BarChart2 size={16} />
@@ -674,8 +672,8 @@ export default function SettingsPage() {
                         <td className="py-4 px-6 text-gray-500">{user.email}</td>
                         <td className="py-4 px-6">
                           <span className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold ${user.role === 'Super Admin' ? 'bg-purple-100 text-purple-700' :
-                              user.role === 'Editor' ? 'bg-blue-100 text-blue-700' :
-                                'bg-gray-100 text-gray-700'
+                            user.role === 'Editor' ? 'bg-blue-100 text-blue-700' :
+                              'bg-gray-100 text-gray-700'
                             }`}>
                             {user.role}
                           </span>
