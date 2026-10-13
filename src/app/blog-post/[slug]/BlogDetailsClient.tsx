@@ -186,7 +186,7 @@ export default function BlogDetailsClient({
                         onError={(e: any) => {
                             e.currentTarget.src = "/ngf-logo.png";
                         }}
-                        className="w-full h-[250px] sm:h-[400px] lg:h-[500px] object-contain sm:object-cover"
+                        className="w-full h-62.5 sm:h-100 lg:h-125 object-contain sm:object-cover"
                     />
                 </div>
 
