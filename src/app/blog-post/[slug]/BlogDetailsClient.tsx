@@ -22,7 +22,7 @@ const formatContent = (content: string): string => {
 
 const formatHtmlWithLinks = (html: string): string => {
     if (!html) return "";
-    
+
     return html.replace(/<a\s+(?:[^>]*?\s+)?href=["']([^"']+)["']/gi, (match, href) => {
         if (!match.includes('target=')) {
             return `<a href="${href}" target="_blank" rel="noopener noreferrer"`;
@@ -186,7 +186,7 @@ export default function BlogDetailsClient({
                         onError={(e: any) => {
                             e.currentTarget.src = "/ngf-logo.png";
                         }}
-                        className="w-full h-[250px] sm:h-[400px] lg:h-[500px] object-cover"
+                        className="w-full h-[250px] sm:h-[400px] lg:h-[500px] object-contain sm:object-cover"
                     />
                 </div>
 
